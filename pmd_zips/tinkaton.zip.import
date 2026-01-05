@@ -3,13 +3,14 @@
 importer="pmd.zip"
 type="AnimationLibrary"
 uid="uid://e1ylv0dvhu04"
-path="res://.godot/imported/tinkaton.zip-190da23aab0fb87aed0079a61d0b463b.tres"
+path="res://.godot/imported/tinkaton.zip-190da23aab0fb87aed0079a61d0b463b.res"
 
 [deps]
 
 source_file="res://pmd_zips/tinkaton.zip"
-dest_files=["res://.godot/imported/tinkaton.zip-190da23aab0fb87aed0079a61d0b463b.tres"]
+dest_files=["res://.godot/imported/tinkaton.zip-190da23aab0fb87aed0079a61d0b463b.res"]
 
 [params]
 
 FPS=30
+loops="Walk,Idle,Sleep,Charge"

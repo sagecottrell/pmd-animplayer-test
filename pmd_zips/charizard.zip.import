@@ -1,0 +1,16 @@
+[remap]
+
+importer="pmd.zip"
+type="AnimationLibrary"
+uid="uid://7qebx2tamdmu"
+path="res://.godot/imported/charizard.zip-4fe2696ca140e430eaf67a7db00c77ab.res"
+
+[deps]
+
+source_file="res://pmd_zips/charizard.zip"
+dest_files=["res://.godot/imported/charizard.zip-4fe2696ca140e430eaf67a7db00c77ab.res"]
+
+[params]
+
+FPS=30
+loops="Walk,Idle,Sleep,Charge"

@@ -14,13 +14,19 @@ func _get_resource_type():
 	return "AnimationLibrary"
 
 func _get_import_options(path: String, preset_index: int) -> Array[Dictionary]:
-	return [{
+	return [
+		{
 		"name": "FPS",
 		"default_value": 30
-	}]
+		},
+		{
+			"name": "loops",
+			"default_value": "Walk,Idle,Sleep,Charge"
+		}
+	]
 
 func _get_save_extension() -> String:
-	return "tres"
+	return "res"
 	
 func _get_option_visibility(path, option_name, options):
 	return true
@@ -33,6 +39,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 		return ERR_CANT_OPEN
 		
 	var DELTA = 1.0 / float(options.FPS)
+	var loops: PackedStringArray = options.loops.split(",")
 	
 	var anim_data = parse_anim_data_xml(zip.read_file("AnimData.xml"))
 	
@@ -71,6 +78,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 			
 			var aidx = animation.add_track(Animation.TYPE_VALUE)
 			animation.track_set_path(aidx, "Sprite2D:frame")
+			animation.value_track_set_update_mode(aidx, Animation.UPDATE_DISCRETE)
 			animation.track_set_interpolation_loop_wrap(aidx, false)
 			
 			var texidx = animation.add_track(Animation.TYPE_VALUE)
@@ -78,7 +86,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 			animation.track_insert_key(texidx, 0, atlas)
 			
 			var cbidx = animation.add_track(Animation.TYPE_METHOD)
-			animation.track_set_path(cbidx, "Sprite2D")
+			animation.track_set_path(cbidx, ".")
 			
 			var hfidx = animation.add_track(Animation.TYPE_VALUE)
 			animation.track_set_path(hfidx, "Sprite2D:hframes")
@@ -90,14 +98,17 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 				cur_time += anim.Durations[idx] * DELTA
 				
 				if anim.HitFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_hit", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "on_hit_frame", "args": []})
 				if anim.RushFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_rush", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "on_rush_frame", "args": []})
 				if anim.ReturnFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_return", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "on_return_frame", "args": []})
 	
 			animation.length = cur_time
-			animation.loop_mode = Animation.LOOP_LINEAR
+			if anim_name in loops:
+				animation.loop_mode = Animation.LOOP_LINEAR
+			else:
+				animation.loop_mode = Animation.LOOP_NONE
 			
 	return ResourceSaver.save(lib, "%s.%s" % [save_path, _get_save_extension()])
 

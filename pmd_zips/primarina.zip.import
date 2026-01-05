@@ -3,13 +3,14 @@
 importer="pmd.zip"
 type="AnimationLibrary"
 uid="uid://7jvoau1xakyj"
-path="res://.godot/imported/primarina.zip-9ba40f40d21df6968417572bf2c45d5a.tres"
+path="res://.godot/imported/primarina.zip-9ba40f40d21df6968417572bf2c45d5a.res"
 
 [deps]
 
 source_file="res://pmd_zips/primarina.zip"
-dest_files=["res://.godot/imported/primarina.zip-9ba40f40d21df6968417572bf2c45d5a.tres"]
+dest_files=["res://.godot/imported/primarina.zip-9ba40f40d21df6968417572bf2c45d5a.res"]
 
 [params]
 
 FPS=30
+loops="Walk,Idle,Sleep,Charge"

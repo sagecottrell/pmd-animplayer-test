@@ -1,0 +1,16 @@
+[remap]
+
+importer="pmd.zip"
+type="AnimationLibrary"
+uid="uid://d3j8a732cb8qh"
+path="res://.godot/imported/rapidash.zip-89ab3f02c601ad1ead0078052d6abbfc.res"
+
+[deps]
+
+source_file="res://pmd_zips/rapidash.zip"
+dest_files=["res://.godot/imported/rapidash.zip-89ab3f02c601ad1ead0078052d6abbfc.res"]
+
+[params]
+
+FPS=30
+loops="Walk,Idle,Sleep,Charge"

@@ -1,0 +1,16 @@
+[remap]
+
+importer="pmd.zip"
+type="AnimationLibrary"
+uid="uid://b6g0eokjk2q72"
+path="res://.godot/imported/machop.zip-e7225e6a433a9d9137ad49067f5cc160.res"
+
+[deps]
+
+source_file="res://pmd_zips/machop.zip"
+dest_files=["res://.godot/imported/machop.zip-e7225e6a433a9d9137ad49067f5cc160.res"]
+
+[params]
+
+FPS=30
+loops="Walk,Idle,Sleep,Charge"
