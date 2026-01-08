@@ -8,6 +8,11 @@ extends CharacterBody2D
 		sprites = value
 		if is_node_ready():
 			$PmdSprite.Sprites = value
+
+@export var team: int:
+	set(value):
+		team = value
+		$TeamComponent.TeamId = value
 	
 enum State {
 	idle = 0,
@@ -31,18 +36,25 @@ func _ready():
 	$PmdSprite.OnHit.connect(on_hit)
 	$PmdSprite.OnAnimFinish.connect(on_return)
 	
-	var input = $UserInputComponent
-	if input:
-		input.OnMovement.connect(on_move)
-		input.OnAttack.connect(on_attack)
-		
+	$UserInputComponent.OnMovement.connect(on_move)
+	$UserInputComponent.OnAttack.connect(on_attack)
+	$UserInputComponent.OnShoot.connect(on_shoot)
+	$UserInputComponent.OnCharge.connect(on_charge)
+	
+	$HurtComponent.OnHurt.connect($HealthComponent.TakeDamage)
+	
 	state = State.idle
 
 func on_hit():
 	print("hit")
 
 func on_return():
-	state = State.idle if velocity.is_zero_approx() else State.walking
+	if velocity.is_zero_approx():
+		state = State.idle 
+		$PmdSprite.Idle()
+	else:
+		state = State.walking
+		$PmdSprite.Walk()
 	
 	input_buffer.call()
 	input_buffer = noop
@@ -52,6 +64,20 @@ func on_attack() -> void:
 		State.idle, State.walking:
 			state = State.attacking
 			$PmdSprite.Attack()
+
+func on_shoot():
+	match state:
+		State.idle, State.walking:
+			state = State.attacking
+			$PmdSprite.Shoot()
+	
+func on_charge():
+	match state:
+		State.idle, State.walking:
+			state = State.attacking
+			$PmdSprite.Charge()
+		State.attacking:
+			on_return()
 
 func on_move(dir: Vector2):
 	match state:

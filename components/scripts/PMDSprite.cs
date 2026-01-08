@@ -10,8 +10,9 @@ public partial class PMDSprite : Node2D
     const string ANIMLIB_NAME = "animationlib";
     private static readonly double THRESHOLD = Math.Sin(Math.PI / 8);
 
-    string facing = "";
-    string previous_animation = "";
+    string? facing;
+    string Facing => facing ??= "down";
+    string? previous_animation;
 
     AnimationPlayer? Player => GetNode<AnimationPlayer>("AnimationPlayer");
 
@@ -69,7 +70,7 @@ public partial class PMDSprite : Node2D
 
     public void ResetToPrevious(StringName? animName = null)
     {
-        if (previous_animation != "")
+        if (!string.IsNullOrWhiteSpace(previous_animation))
         {
             Player?.Play(previous_animation);
             previous_animation = "";
@@ -84,12 +85,44 @@ public partial class PMDSprite : Node2D
         UpdateAnimation();
     }
 
+    public void Walk()
+    {
+        UpdateAnimation();
+    }
+
     public void Attack()
     {
         if (Player is not null)
         {
             previous_animation = Player.CurrentAnimation;
-            Player.Play($"{ANIMLIB_NAME}/Attack-{facing}");
+            Player.Play($"{ANIMLIB_NAME}/Attack-{Facing}");
+        }
+    }
+
+    public void Shoot()
+    {
+        if (Player is not null)
+        {
+            previous_animation = Player.CurrentAnimation;
+            Player.Play($"{ANIMLIB_NAME}/Shoot-{Facing}");
+        }
+    }
+
+    public void Charge()
+    {
+        if (Player is not null)
+        {
+            previous_animation = Player.CurrentAnimation;
+            Player.Play($"{ANIMLIB_NAME}/Charge-{Facing}");
+        }
+    }
+
+    public void Sleep()
+    {
+        if (Player is not null)
+        {
+            previous_animation = Player.CurrentAnimation;
+            Player.Play($"{ANIMLIB_NAME}/Sleep-{Facing}");
         }
     }
 
@@ -112,7 +145,7 @@ public partial class PMDSprite : Node2D
         }
         else
         {
-            Player?.Play($"{ANIMLIB_NAME}/Idle-{facing}");
+            Player?.Play($"{ANIMLIB_NAME}/Idle-{Facing}");
         }
     }
 

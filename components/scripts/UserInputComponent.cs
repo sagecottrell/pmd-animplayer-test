@@ -10,6 +10,10 @@ public partial class UserInputComponent : BaseComponent
 
     [Signal]
     public delegate void OnAttackEventHandler();
+    [Signal]
+    public delegate void OnShootEventHandler();
+    [Signal]
+    public delegate void OnChargeEventHandler();
 
     public Vector2 Direction;
     public override void _UnhandledInput(InputEvent @event)
@@ -23,6 +27,14 @@ public partial class UserInputComponent : BaseComponent
         if (@event.IsActionPressed("attack"))
         {
             EmitSignalOnAttack();
+        }
+        if (@event.IsActionPressed("shoot"))
+        {
+            EmitSignalOnShoot();
+        }
+        if (@event.IsActionPressed("charge"))
+        {
+            EmitSignalOnCharge();
         }
     }
 

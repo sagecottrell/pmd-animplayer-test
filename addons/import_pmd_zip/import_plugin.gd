@@ -16,12 +16,18 @@ func _get_resource_type():
 func _get_import_options(path: String, preset_index: int) -> Array[Dictionary]:
 	return [
 		{
-		"name": "FPS",
-		"default_value": 30
+			"name": "FPS",
+			"default_value": 30
 		},
 		{
 			"name": "loops",
 			"default_value": "Walk,Idle,Sleep,Charge"
+		},
+		{
+			"name": "Rename",
+			"default_value": {},
+			"property_hint": PROPERTY_HINT_DICTIONARY_TYPE,
+			"hint_string": "String;String"
 		}
 	]
 
@@ -63,7 +69,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 		var anim: Anim = anim_data.Anims[anim_name]
 		for dir_idx in range(DIRECTIONS.size()):
 			var direction = DIRECTIONS[dir_idx]
-			var aname = "%s-%s" % [anim_name, direction]
+			var aname = "%s-%s" % [options.Rename.get(anim_name, anim_name), direction]
 			
 			var atlas = AtlasTexture.new()
 			var img_info = images[anim_name]
@@ -106,10 +112,8 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 	
 			animation.length = cur_time
 			if anim_name in loops:
-				print("%s LOOPING" % anim_name)
 				animation.loop_mode = Animation.LOOP_LINEAR
 			else:
-				print("%s NOT LOOP" % anim_name)
 				animation.loop_mode = Animation.LOOP_NONE
 			
 	return ResourceSaver.save(lib, "%s.%s" % [save_path, _get_save_extension()])
@@ -136,8 +140,9 @@ func parse_anim_data_xml(content: PackedByteArray) -> AnimData:
 						current_anim = Anim.new()
 					"Name":
 						xml.read()
-						data.Anims[xml.get_node_data()] = current_anim
-						current_anim.Name = xml.get_node_data()
+						var name = xml.get_node_data()
+						data.Anims[name] = current_anim
+						current_anim.Name = name
 					"Index":
 						xml.read()
 						current_anim.Index = int(xml.get_node_data())
@@ -165,7 +170,8 @@ func parse_anim_data_xml(content: PackedByteArray) -> AnimData:
 						data.copies[current_anim.Name] = current_anim
 						data.Anims.erase(current_anim.Name)
 						xml.read()
-						current_anim.CopyOf = xml.get_node_data()
+						var to_name = xml.get_node_data()
+						current_anim.CopyOf = to_name
 	
 	return data
 
