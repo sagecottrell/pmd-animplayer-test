@@ -98,16 +98,18 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 				cur_time += anim.Durations[idx] * DELTA
 				
 				if anim.HitFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_hit_frame", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "OnHitFrame", "args": []})
 				if anim.RushFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_rush_frame", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "OnRushFrame", "args": []})
 				if anim.ReturnFrame == idx:
-					animation.track_insert_key(cbidx, cur_time, {"method": "on_return_frame", "args": []})
+					animation.track_insert_key(cbidx, cur_time, {"method": "OnReturnFrame", "args": []})
 	
 			animation.length = cur_time
 			if anim_name in loops:
+				print("%s LOOPING" % anim_name)
 				animation.loop_mode = Animation.LOOP_LINEAR
 			else:
+				print("%s NOT LOOP" % anim_name)
 				animation.loop_mode = Animation.LOOP_NONE
 			
 	return ResourceSaver.save(lib, "%s.%s" % [save_path, _get_save_extension()])

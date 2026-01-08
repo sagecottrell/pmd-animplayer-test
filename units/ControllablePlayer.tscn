@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://dm2idx7i3xmw1"]
+
+[ext_resource type="Script" uid="uid://0pi8wn2dj60p" path="res://units/controllable_player.gd" id="1_e2w0g"]
+[ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_e2w0g"]
+[ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="4_v058p"]
+[ext_resource type="PackedScene" uid="uid://beuenfvaakf27" path="res://components/UserInputComponent.tscn" id="5_3hach"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qmxph"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t6k31"]
+radius = 14.0
+
+[node name="ControllablePlayer" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_e2w0g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qmxph")
+
+[node name="PmdSprite" parent="." instance=ExtResource("2_e2w0g")]
+
+[node name="HealthComponent" parent="." instance=ExtResource("4_v058p")]
+
+[node name="UserInputComponent" parent="." instance=ExtResource("5_3hach")]
+
+[node name="Area2D" type="Area2D" parent="."]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_t6k31")
+debug_color = Color(0.9168353, 0.27352363, 0.23508272, 0.41960785)

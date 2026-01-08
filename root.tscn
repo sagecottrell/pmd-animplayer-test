@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1dngc4pumaig"]
+[gd_scene load_steps=5 format=3 uid="uid://d1dngc4pumaig"]
 
-[ext_resource type="PackedScene" uid="uid://dm2idx7i3xmw1" path="res://units/primarina.tscn" id="2_pyidc"]
+[ext_resource type="PackedScene" uid="uid://dm2idx7i3xmw1" path="res://units/ControllablePlayer.tscn" id="2_pyidc"]
+[ext_resource type="AnimationLibrary" uid="uid://7qebx2tamdmu" path="res://pmd_zips/charizard.zip" id="2_vvh5c"]
 
 [sub_resource type="Animation" id="Animation_pq8q7"]
 resource_name = "new_animation"
@@ -38,8 +39,9 @@ _data = {
 
 [node name="root" type="Node2D"]
 
-[node name="Primarina" parent="." instance=ExtResource("2_pyidc")]
+[node name="player" parent="." instance=ExtResource("2_pyidc")]
 position = Vector2(267, 225)
+sprites = ExtResource("2_vvh5c")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 

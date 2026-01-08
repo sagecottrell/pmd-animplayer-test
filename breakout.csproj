@@ -1,0 +1,14 @@
+﻿<Project Sdk="Godot.NET.Sdk/4.5.1">
+  <PropertyGroup>
+	  <LanguageVersion>14</LanguageVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+	  <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="components\HealthComponent.tscn" />
+    <None Include="components\PMDSprite.tscn" />
+    <None Include="components\UserInputComponent.tscn" />
+  </ItemGroup>
+</Project>
