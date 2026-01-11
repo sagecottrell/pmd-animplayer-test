@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://07bjns4fxecn"]
+
+[ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="1_060fm"]
+[ext_resource type="AnimationLibrary" uid="uid://d3j8a732cb8qh" path="res://pmd_zips/rapidash.zip" id="2_v6i6o"]
+[ext_resource type="Script" uid="uid://vq5t84rqrnf0" path="res://components/AIStrategies/LineLeaderStrategy.cs" id="3_3kdq7"]
+
+[sub_resource type="Resource" id="Resource_3kdq7"]
+script = ExtResource("3_3kdq7")
+Radius = 30.0
+metadata/_custom_type_script = "uid://vq5t84rqrnf0"
+
+[node name="BasicDirectUnit" instance=ExtResource("1_060fm")]
+sprites = ExtResource("2_v6i6o")
+
+[node name="PmdSprite" parent="." index="1"]
+Direction = Vector2(0, 0)
+Sprites = ExtResource("2_v6i6o")
+
+[node name="AIComponent" parent="." index="2"]
+Strategy = SubResource("Resource_3kdq7")

@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1dngc4pumaig"]
+[gd_scene load_steps=7 format=3 uid="uid://d1dngc4pumaig"]
 
+[ext_resource type="Script" uid="uid://cxg6u6e50gr03" path="res://root.gd" id="1_vvh5c"]
+[ext_resource type="PackedScene" uid="uid://07bjns4fxecn" path="res://units/named-basic-units/rapidash.tscn" id="2_28aoi"]
 [ext_resource type="PackedScene" uid="uid://dm2idx7i3xmw1" path="res://units/ControllablePlayer.tscn" id="2_pyidc"]
-[ext_resource type="AnimationLibrary" uid="uid://7qebx2tamdmu" path="res://pmd_zips/charizard.zip" id="2_vvh5c"]
+[ext_resource type="AnimationLibrary" uid="uid://d3j8a732cb8qh" path="res://pmd_zips/rapidash.zip" id="2_vvh5c"]
 
 [sub_resource type="Animation" id="Animation_pq8q7"]
 resource_name = "new_animation"
@@ -37,10 +39,14 @@ _data = {
 &"new_animation": SubResource("Animation_pq8q7")
 }
 
-[node name="root" type="Node2D"]
+[node name="root" type="Node2D" node_paths=PackedStringArray("spawn_points")]
+script = ExtResource("1_vvh5c")
+spawn_points = [NodePath("EnemySpawn2"), NodePath("EnemySpawn"), NodePath("EnemySpawn3")]
+spawn_timer = 3.0
+spawn_scene = ExtResource("2_28aoi")
 
 [node name="player" parent="." instance=ExtResource("2_pyidc")]
-position = Vector2(267, 225)
+position = Vector2(249, 844)
 sprites = ExtResource("2_vvh5c")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -49,3 +55,12 @@ sprites = ExtResource("2_vvh5c")
 libraries = {
 &"": SubResource("AnimationLibrary_pyidc")
 }
+
+[node name="EnemySpawn2" type="Node2D" parent="."]
+position = Vector2(60, 72)
+
+[node name="EnemySpawn" type="Node2D" parent="."]
+position = Vector2(248, 69)
+
+[node name="EnemySpawn3" type="Node2D" parent="."]
+position = Vector2(395, 70)

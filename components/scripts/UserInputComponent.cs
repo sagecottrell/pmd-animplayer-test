@@ -39,3 +39,7 @@ public partial class UserInputComponent : BaseComponent
     }
 
 }
+
+public interface IUserInputComponentModifier
+{
+}

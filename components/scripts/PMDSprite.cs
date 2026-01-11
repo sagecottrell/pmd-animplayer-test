@@ -13,6 +13,7 @@ public partial class PMDSprite : Node2D
     string? facing;
     string Facing => facing ??= "down";
     string? previous_animation;
+    string? current_animation;
 
     AnimationPlayer? Player => GetNode<AnimationPlayer>("AnimationPlayer");
 
@@ -28,14 +29,14 @@ public partial class PMDSprite : Node2D
     [Signal]
     public delegate void OnAnimFinishEventHandler();
 
-    Vector2 dir;
+    Vector2 dir = Vector2.Down;
     [Export]
     public Vector2 Direction
     {
         get => dir; set
         {
             dir = value.Normalized();
-            UpdateAnimation();
+            UpdateDirection();
         }
     }
 
@@ -65,7 +66,7 @@ public partial class PMDSprite : Node2D
     public override void _Ready()
     {
         _ensure_anim_lib(Sprites);
-        Player.AnimationFinished += ResetToPrevious;
+        Player!.AnimationFinished += ResetToPrevious;
     }
 
     public void ResetToPrevious(StringName? animName = null)
@@ -78,55 +79,44 @@ public partial class PMDSprite : Node2D
         EmitSignalOnAnimFinish();
     }
 
-    public void Idle()
-    {
-        if (Direction.IsZeroApprox())
-            Direction = Vector2.Down;
-        UpdateAnimation();
-    }
+    public void Idle() => Play("Idle");
+    public void Walk() => Play("Walk");
+    public void Hurt() => Play("Hurt");
+    public void Attack() => Play("Attack", "Strike", "Hit");
+    public void Shoot() => Play("Shoot");
+    public void Charge() => Play("Charge");
+    public void Sleep() => Play("Sleep");
+    public void Swing() => Play("Swing");
+    public void Rotate() => Play("Rotate");
+    public void Hop() => Play("Hop");
+    public void Double() => Play("Double");
+    public void Twirl() => Play("Twirl", "Rotate");
+    public void Kick() => Play("Kick", "Attack", "Strike", "Hit");
+    public void Appeal() => Play("Appeal", "Hop");
+    public void RearUp() => Play("RearUp", "Appeal", "Charge");
+    public void SpAttack() => Play("SpAttack", "RearUp", "Attack", "Strike", "Hit");
 
-    public void Walk()
-    {
-        UpdateAnimation();
-    }
-
-    public void Attack()
-    {
-        if (Player is not null)
-        {
-            previous_animation = Player.CurrentAnimation;
-            Player.Play($"{ANIMLIB_NAME}/Attack-{Facing}");
-        }
-    }
-
-    public void Shoot()
+    public void Play(params string[] animations)
     {
         if (Player is not null)
         {
-            previous_animation = Player.CurrentAnimation;
-            Player.Play($"{ANIMLIB_NAME}/Shoot-{Facing}");
+            foreach (var anim in animations)
+            {
+                var name = $"{ANIMLIB_NAME}/{anim}-{Facing}";
+                if (Player.HasAnimation(name))
+                {
+                    if (Player.CurrentAnimation == name)
+                        break;
+                    previous_animation = Player.CurrentAnimation;
+                    current_animation = anim;
+                    Player.Play(name);
+                    return;
+                }
+            }
         }
     }
 
-    public void Charge()
-    {
-        if (Player is not null)
-        {
-            previous_animation = Player.CurrentAnimation;
-            Player.Play($"{ANIMLIB_NAME}/Charge-{Facing}");
-        }
-    }
-
-    public void Sleep()
-    {
-        if (Player is not null)
-        {
-            previous_animation = Player.CurrentAnimation;
-            Player.Play($"{ANIMLIB_NAME}/Sleep-{Facing}");
-        }
-    }
-
-    public void UpdateAnimation()
+    public void UpdateDirection()
     {
         if (!IsNodeReady()) return;
         var f = "";
@@ -138,14 +128,10 @@ public partial class PMDSprite : Node2D
             f += "left";
         else if (Direction.X > THRESHOLD)
             f += "right";
-        if (f != "")
+        if (!string.IsNullOrWhiteSpace(f))
         {
             facing = f;
-            Player?.Play($"{ANIMLIB_NAME}/Walk-{f}");
-        }
-        else
-        {
-            Player?.Play($"{ANIMLIB_NAME}/Idle-{Facing}");
+            Play(current_animation ?? "Idle");
         }
     }
 

@@ -21,3 +21,7 @@ public partial class TeamComponent : BaseComponent
     }
 
 }
+
+public interface ITeamComponentModifier
+{
+}

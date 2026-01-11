@@ -1,13 +1,18 @@
 using Godot;
+using System.Collections.Generic;
 
 namespace breakout.components;
 
-public partial class HealthComponent: BaseComponent
+[GlobalClass]
+public partial class HealthComponent : BaseComponent
 {
     [Signal]
-    public delegate void OnDeathEventHandler();
+    public delegate void OnDeathEventHandler(DamageSource source);
     [Export]
     public int MaxHealth = 100;
+
+    public int ModifiedMaxHealth = 100;
+
     private int currentHealth;
     public override void _Ready()
     {
@@ -20,7 +25,7 @@ public partial class HealthComponent: BaseComponent
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            EmitSignalOnDeath();
+            EmitSignalOnDeath(amount);
         }
     }
     public void Heal(DamageSource amount)
@@ -35,4 +40,20 @@ public partial class HealthComponent: BaseComponent
     {
         return currentHealth;
     }
+
+    public override void Modify(IEnumerable<BaseModifier> modifiers)
+    {
+        foreach (var modifier in modifiers)
+        {
+            if (modifier is IHealthComponentModifier healthModifier)
+            {
+                // Apply health modifier logic here
+            }
+        }
+    }
+}
+
+public interface IHealthComponentModifier
+{
+
 }

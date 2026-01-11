@@ -15,13 +15,11 @@ radius = 14.0
 [node name="ControllablePlayer" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_e2w0g")
-team = null
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qmxph")
 
 [node name="PmdSprite" parent="." instance=ExtResource("2_e2w0g")]
-Direction = Vector2(0, 1)
 
 [node name="HealthComponent" parent="." instance=ExtResource("4_v058p")]
 
@@ -31,9 +29,8 @@ Direction = Vector2(0, 1)
 
 [node name="TeamComponent" parent="." instance=ExtResource("6_pu6ya")]
 
-[node name="Area2D" type="Area2D" parent="."]
-monitorable = false
+[node name="Hurtbox" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CircleShape2D_t6k31")
 debug_color = Color(0.9168353, 0.27352363, 0.23508272, 0.41960785)

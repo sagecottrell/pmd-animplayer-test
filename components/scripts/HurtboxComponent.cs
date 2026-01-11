@@ -5,7 +5,8 @@ namespace breakout.components;
 /// <summary>
 /// Where damage is received.
 /// </summary>
-public partial class HurtboxComponent: BaseComponent
+[GlobalClass]
+public partial class HurtboxComponent : BaseComponent
 {
     [Signal]
     public delegate void OnHurtEventHandler(DamageSource body);
@@ -31,4 +32,8 @@ public partial class HurtboxComponent: BaseComponent
         }
         return false;
     }
+}
+
+public interface IHurtboxComponentModifier
+{
 }

@@ -1,0 +1,44 @@
+[gd_scene load_steps=11 format=3 uid="uid://cfdwdenwybed7"]
+
+[ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
+[ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
+[ext_resource type="PackedScene" uid="uid://hrchtl6l4kjn" path="res://components/AIComponent.tscn" id="4_odw8u"]
+[ext_resource type="Script" uid="uid://cvlopqjmfmjsr" path="res://components/AIStrategies/DirectPursuitStrategy.cs" id="5_rjmnn"]
+[ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="5_uobji"]
+[ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="6_rjmnn"]
+[ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="7_uobji"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
+
+[sub_resource type="Resource" id="Resource_gjqrm"]
+script = ExtResource("5_rjmnn")
+metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
+radius = 14.0
+
+[node name="BasicDirectUnit" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_1bet7")
+team = 1
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_odw8u")
+
+[node name="PmdSprite" parent="." instance=ExtResource("2_ecyxk")]
+
+[node name="AIComponent" parent="." instance=ExtResource("4_odw8u")]
+Strategy = SubResource("Resource_gjqrm")
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_uobji")]
+
+[node name="HurtComponent" parent="." instance=ExtResource("6_rjmnn")]
+
+[node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
+TeamId = 1
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_1bet7")
+debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)

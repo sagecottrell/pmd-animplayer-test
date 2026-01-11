@@ -1,6 +1,14 @@
 @tool
 extends CharacterBody2D
 
+enum State {
+	idle = 0,
+	walking = 1,
+	attacking = 2,
+}
+
+var state: State = State.idle
+
 @export var sprites: AnimationLibrary:
 	get:
 		return sprites
@@ -14,19 +22,13 @@ extends CharacterBody2D
 		team = value
 		if is_node_ready():
 			$TeamComponent.TeamId = value
-	
-enum State {
-	idle = 0,
-	walking = 1,
-	attacking = 2,
-}
 
-var state: State = State.idle
+@export var target: Node2D:
+	set(value):
+		target = value
+		if is_node_ready():
+			$AIComponent.Target = value
 
-var input_buffer = noop
-func noop():
-	pass
-	
 func _physics_process(_delta: float) -> void:
 	match state:
 		State.walking:
@@ -35,21 +37,21 @@ func _physics_process(_delta: float) -> void:
 				state = State.idle
 			else:
 				$PmdSprite.Walk()
+	
 
 func _ready():
+	state = State.idle
 	$PmdSprite.Sprites = sprites
 	$TeamComponent.TeamId = team
+	$AIComponent.Target = target
 	$PmdSprite.OnHit.connect(on_hit)
 	$PmdSprite.OnAnimFinish.connect(on_return)
-	
-	$UserInputComponent.OnMovement.connect(on_move)
-	$UserInputComponent.OnAttack.connect(on_attack)
-	$UserInputComponent.OnShoot.connect(on_shoot)
-	$UserInputComponent.OnCharge.connect(on_charge)
 	
 	$HurtComponent.OnHurt.connect(on_hurt)
 	
 	$HealthComponent.OnDeath.connect(on_death)
+	
+	$AIComponent.OnNewVelocity.connect(on_move)
 	
 	on_return()
 
@@ -70,9 +72,6 @@ func on_return():
 	else:
 		state = State.walking
 		$PmdSprite.Walk()
-	
-	input_buffer.call()
-	input_buffer = noop
 
 func on_attack() -> void:
 	match state:
@@ -104,5 +103,4 @@ func on_move(dir: Vector2):
 				$PmdSprite.Idle()
 			else:
 				state = State.walking
-		_:
-			input_buffer = func(): on_move(dir)
+				$PmdSprite.Walk()
