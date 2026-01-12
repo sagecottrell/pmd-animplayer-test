@@ -3,6 +3,7 @@ using System;
 
 namespace breakout.components;
 
+[GlobalClass]
 public partial class TeamComponent : BaseComponent
 {
     [Export]

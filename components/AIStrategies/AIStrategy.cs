@@ -5,6 +5,6 @@ namespace breakout.components.AIStrategies;
 [GlobalClass]
 public abstract partial class AIStrategy : Resource
 {
-    public virtual bool Singleton => true;
-    public abstract Vector2 Pathfind(Node2D agent, Node2D target);
+    public virtual bool CreateCopyOnComponentReady => false;
+    public abstract Vector2 Pathfind(Node2D agent, AIComponent aiComponent);
 }

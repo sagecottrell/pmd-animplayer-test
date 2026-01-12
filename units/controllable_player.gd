@@ -22,6 +22,24 @@ enum State {
 }
 
 var state: State = State.idle
+var state_machine: StateMachine = StateMachine.Create({
+	State.idle: on_idle,
+	State.walking: on_walking,
+	State.attacking: on_attacking,
+})
+
+func on_idle():
+	velocity = Vector2.ZERO
+	state = State.idle
+	$PmdSprite.Idle()
+
+func on_walking():
+	state = State.walking
+	$PmdSprite.Walk()
+
+func on_attacking():
+	velocity = Vector2.ZERO
+	state = State.attacking
 
 var input_buffer = noop
 func noop():
@@ -31,10 +49,7 @@ func _physics_process(_delta: float) -> void:
 	match state:
 		State.walking:
 			if move_and_slide():
-				$PmdSprite.Idle()
-				state = State.idle
-			else:
-				$PmdSprite.Walk()
+				state_machine.Emit(State.idle)
 
 func _ready():
 	$PmdSprite.Sprites = sprites
@@ -65,11 +80,9 @@ func on_hurt(hurt):
 
 func on_return():
 	if velocity.is_zero_approx():
-		state = State.idle 
-		$PmdSprite.Idle()
+		state_machine.Emit(State.idle)
 	else:
-		state = State.walking
-		$PmdSprite.Walk()
+		state_machine.Emit(State.walking)
 	
 	input_buffer.call()
 	input_buffer = noop
@@ -77,19 +90,19 @@ func on_return():
 func on_attack() -> void:
 	match state:
 		State.idle, State.walking:
-			state = State.attacking
+			state_machine.Emit(State.attacking)
 			$PmdSprite.Attack()
 
 func on_shoot():
 	match state:
 		State.idle, State.walking:
-			state = State.attacking
+			state_machine.Emit(State.attacking)
 			$PmdSprite.Shoot()
 	
 func on_charge():
 	match state:
 		State.idle, State.walking:
-			state = State.attacking
+			state_machine.Emit(State.attacking)
 			$PmdSprite.Charge()
 		State.attacking:
 			on_return()
@@ -98,11 +111,10 @@ func on_move(dir: Vector2):
 	match state:
 		State.idle, State.walking:
 			velocity = dir * 100
-			$PmdSprite.Direction = velocity
-			if velocity.is_zero_approx():
-				state = State.idle
-				$PmdSprite.Idle()
+			if dir.is_zero_approx():
+				state_machine.Emit(State.idle)
 			else:
-				state = State.walking
+				$PmdSprite.Direction = velocity
+				state_machine.Emit(State.walking)
 		_:
 			input_buffer = func(): on_move(dir)

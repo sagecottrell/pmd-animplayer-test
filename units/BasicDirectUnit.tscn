@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cfdwdenwybed7"]
+[gd_scene load_steps=13 format=3 uid="uid://cfdwdenwybed7"]
 
 [ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="5_uobji"]
 [ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="6_rjmnn"]
 [ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="7_uobji"]
+[ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="8_rjmnn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 
@@ -17,10 +18,19 @@ metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
 radius = 14.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_uobji"]
+radius = 20.024984
+
 [node name="BasicDirectUnit" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_1bet7")
+clickable = null
 team = 1
+
+[node name="SelectableComponent" parent="." instance=ExtResource("8_rjmnn")]
+position = Vector2(0, -5)
+SelectionRadius = 20.0
+SelectionWidth = 3.0
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_odw8u")
@@ -42,3 +52,9 @@ TeamId = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
+
+[node name="ClickArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea"]
+position = Vector2(0, -5)
+shape = SubResource("CircleShape2D_uobji")

@@ -1,21 +1,24 @@
 using Godot;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace breakout.components.AIStrategies;
 
 [GlobalClass]
 public partial class LineLeaderStrategy : AIStrategy
 {
-    public override bool Singleton => false;
+    public override bool CreateCopyOnComponentReady => true;
 
     [Export]
     public float Radius;
     Queue<Vector2> positions = [];
     Vector2 _last_target_pos;
 
-    public override Vector2 Pathfind(Node2D agent, Node2D target)
+    public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
+        var target = aiStrategy.Target;
+        if (target is null)
+            return Vector2.Zero;
+
         var tp = target.GlobalPosition;
         var ap = agent.GlobalPosition;
 

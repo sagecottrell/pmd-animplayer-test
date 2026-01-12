@@ -35,6 +35,8 @@ public partial class PMDSprite : Node2D
     {
         get => dir; set
         {
+            if (value.LengthSquared() == 0)
+                return;
             dir = value.Normalized();
             UpdateDirection();
         }

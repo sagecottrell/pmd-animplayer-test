@@ -5,6 +5,7 @@ namespace breakout.components;
 /// <summary>
 /// Offensive component that deals damage to Hurtboxes on collision.
 /// </summary>
+[GlobalClass]
 public partial class HitboxComponent : BaseComponent
 {
 

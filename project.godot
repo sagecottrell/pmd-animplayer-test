@@ -15,6 +15,10 @@ run/main_scene="uid://d1dngc4pumaig"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GlobalSignals="*res://GlobalSignals.cs"
+
 [display]
 
 window/size/viewport_width=500

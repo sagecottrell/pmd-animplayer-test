@@ -16,7 +16,7 @@ public partial class AIComponent : BaseComponent
 
     public override void _Ready()
     {
-        Strategy = Strategy?.Singleton == true ? Strategy : Strategy?.Duplicate() as AIStrategy;
+        Strategy = Strategy?.CreateCopyOnComponentReady != true ? Strategy : Strategy?.Duplicate() as AIStrategy;
     }
 
     public override void _Process(double delta)
@@ -26,9 +26,8 @@ public partial class AIComponent : BaseComponent
 
     public void Pathfind()
     {
-        if (Target == null) return;
         if (GetParent() is not Node2D parent) return;
-        if (Strategy?.Pathfind(parent, Target) is Vector2 v)
+        if (Strategy?.Pathfind(parent, this) is Vector2 v)
             EmitSignalOnNewVelocity(v);
     }
 }
