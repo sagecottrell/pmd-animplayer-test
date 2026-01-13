@@ -3,7 +3,7 @@ using Godot;
 namespace breakout.components;
 
 [GlobalClass]
-public partial class UserInputComponent : BaseComponent
+public partial class UserInputComponent : Node
 {
     [Signal]
     public delegate void OnMovementEventHandler(Vector2 direction);

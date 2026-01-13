@@ -6,7 +6,7 @@ namespace breakout.components;
 /// Where damage is received.
 /// </summary>
 [GlobalClass]
-public partial class HurtboxComponent : BaseComponent
+public partial class HurtboxComponent : Node
 {
     [Signal]
     public delegate void OnHurtEventHandler(DamageSource body);
@@ -28,7 +28,7 @@ public partial class HurtboxComponent : BaseComponent
         {
             if (GetParent().FindChild(nameof(TeamComponent)) is not TeamComponent myTeam || otherTeam == null)
                 return false;
-            return myTeam.TeamId == otherTeam.TeamId;
+            return myTeam.Team == otherTeam.Team;
         }
         return false;
     }

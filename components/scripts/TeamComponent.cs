@@ -1,24 +1,27 @@
+using breakout.resourceTypes;
 using Godot;
 using System;
 
 namespace breakout.components;
 
 [GlobalClass]
-public partial class TeamComponent : BaseComponent
+public partial class TeamComponent : Node
 {
+    TeamInfo? team;
     [Export]
-    public int TeamId { get; private set; }
-
-    public void ClearTeam()
-    {
-        TeamId = -1;
+    public TeamInfo? Team { get => team; private set
+        {
+            if (value is null)
+                return;
+            team = value;
+        }
     }
 
-    public void SetTeam(int teamId)
+    public void SetTeam(TeamInfo team)
     {
-        if (teamId < 0)
-            throw new ArgumentException("Team ID must be non-negative.", nameof(teamId));
-        TeamId = teamId;
+        if (team is null)
+            throw new ArgumentException($"Team must not be null", nameof(team));
+        Team = team;
     }
 
 }

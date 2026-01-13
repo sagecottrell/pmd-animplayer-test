@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace breakout.components;
 
 [GlobalClass]
-public partial class HealthComponent : BaseComponent
+public partial class HealthComponent : Node
 {
     [Signal]
     public delegate void OnDeathEventHandler(DamageSource source);
@@ -41,7 +41,7 @@ public partial class HealthComponent : BaseComponent
         return currentHealth;
     }
 
-    public override void Modify(IEnumerable<BaseModifier> modifiers)
+    public void Modify(IEnumerable<BaseModifier> modifiers)
     {
         foreach (var modifier in modifiers)
         {

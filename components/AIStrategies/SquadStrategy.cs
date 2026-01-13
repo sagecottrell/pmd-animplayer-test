@@ -11,7 +11,7 @@ public partial class SquadStrategy : AIStrategy
 
     public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
-        if (aiStrategy.Target == null || SquadInfo == null)
+        if (SquadInfo == null)
             return Vector2.Zero;
         Vector2 desiredPosition = SquadInfo.GetUnitTargetPosition(agent);
         Vector2 d = desiredPosition - agent.GlobalPosition;

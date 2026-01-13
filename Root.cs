@@ -1,4 +1,6 @@
+using breakout.components.AIStrategies;
 using breakout.components.scripts;
+using breakout.resourceTypes;
 using Godot;
 using Godot.Collections;
 using System.Collections.Generic;
@@ -13,7 +15,11 @@ public partial class Root : Node2D
     [Export]
     public PackedScene? SpawnScene;
 
+    [Export]
+    public TeamInfo PlayerTeam;
+
     List<Node2D> selectedUnits = [];
+    SquadInfo? selectedSquad;
 
     bool click_drag;
     Vector2 start_drag;
@@ -26,6 +32,7 @@ public partial class Root : Node2D
         GetViewport().PhysicsObjectPickingSort = true;
         GlobalSignals.Instance!.OnToggleUnitSelect += (units) =>
         {
+            selectedSquad = null;
             foreach (var unit in units)
             {
                 if (!selectedUnits.Remove(unit))
@@ -36,11 +43,14 @@ public partial class Root : Node2D
                 }
                 else
                     if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                        selectable.Deselect();
+                    selectable.Deselect();
             }
+            CheckAllSameSquad();
+            ShowSquadTargetPosition();
         };
         GlobalSignals.Instance.OnUnitSelect += (units) =>
         {
+            selectedSquad = null;
             foreach (var unit in selectedUnits)
                 if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
                     selectable.Deselect();
@@ -53,7 +63,16 @@ public partial class Root : Node2D
                     selectedUnits.Add(unit);
                 }
             }
+            CheckAllSameSquad();
+            ShowSquadTargetPosition();
         };
+        GlobalSignals.Instance.OnSquadSelect += _instance_OnSquadSelect;
+    }
+
+    private void _instance_OnSquadSelect(SquadInfo squad)
+    {
+        GlobalSignals.Instance?.UnitSelect([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
+        selectedSquad = squad;
     }
 
     private void _root_InputEvent(Node viewport, InputEvent @event, long shapeIdx)
@@ -80,6 +99,10 @@ public partial class Root : Node2D
                     QueueRedraw();
                 }
                 break;
+            case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
+                NewOrExistingSquad().SetTargetPosition(mouseEvent.GlobalPosition);
+                ShowSquadTargetPosition();
+                break;
         }
     }
 
@@ -90,6 +113,8 @@ public partial class Root : Node2D
         var spawnPoint = SpawnPoints.PickRandom();
         var newNode = SpawnScene.Instantiate<Node2D>();
         newNode.GlobalPosition = spawnPoint.GlobalPosition;
+        if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent))
+            teamComponent.SetTeam(PlayerTeam);
         GetNode("%Units").AddChild(newNode);
     }
 
@@ -110,7 +135,41 @@ public partial class Root : Node2D
                 }
             }
         }
-        GlobalSignals.Instance!.UnitSelect([..units]);
+        GlobalSignals.Instance!.UnitSelect([.. units]);
+    }
+
+    public SquadInfo NewOrExistingSquad()
+    {
+        if (selectedSquad is null)
+            CheckAllSameSquad();
+
+        // if the selected squad matches the selected units, return it
+        if (selectedSquad is not null && selectedSquad.Members.Keys.ToHashSet().SetEquals(selectedUnits.Select(x => x.GetPath()).ToHashSet()))
+        {
+#if TOOLS
+            GD.Print($"Reusing existing squad with {selectedSquad.Members.Count} members");
+#endif
+            return selectedSquad;
+        }
+
+        // set up a new squad
+        var squad_info = new SquadInfo();
+        var strategy = new SquadStrategy
+        {
+            SquadInfo = squad_info
+        };
+
+        foreach (var unit in selectedUnits)
+        {
+            if (GetComponent.TryGetAIComponent(unit, out var ai) && ai.Strategy is SquadStrategy ss)
+            {
+                ss.SquadInfo.RemoveUnit(unit);
+            }
+            ai.Strategy = strategy;
+            squad_info.AddUnit(unit);
+        }
+        selectedSquad = squad_info;
+        return squad_info;
     }
 
     public override void _Draw()
@@ -121,6 +180,33 @@ public partial class Root : Node2D
                 new Vector2(Mathf.Min(start_drag.X, end_drag.X), Mathf.Min(start_drag.Y, end_drag.Y)),
                 new Vector2(Mathf.Abs(end_drag.X - start_drag.X), Mathf.Abs(end_drag.Y - start_drag.Y))
             ), Colors.Blue, false, 2.0f);
+        }
+    }
+
+    public void ShowSquadTargetPosition()
+    {
+        var flag = GetNode<SquadFlag>("%SquadFlag");
+        if (selectedSquad is not null)
+        {
+            flag.Visible = true;
+            flag.GlobalPosition = selectedSquad.TargetPosition;
+            flag.SetTeam(PlayerTeam);
+        }
+        else
+        {
+            flag.Visible = false;
+        }
+    }
+
+    public void CheckAllSameSquad()
+    {
+        // check if all the selected members are already in the same squad
+        var s = selectedUnits.Select(x => GetComponent.TryGetAIComponent(x, out var ai) && ai.Strategy is SquadStrategy ss ? ss : null)
+            .Distinct()
+            .ToList();
+        if (s.Count == 1 && s[0] is SquadStrategy ss)
+        {
+            selectedSquad = ss.SquadInfo;
         }
     }
 }

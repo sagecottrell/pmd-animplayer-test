@@ -10,24 +10,26 @@
 [ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="8_rjmnn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
+radius = 8.0
 
 [sub_resource type="Resource" id="Resource_gjqrm"]
 script = ExtResource("5_rjmnn")
 metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
-radius = 14.0
+radius = 14.035668
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uobji"]
 radius = 20.024984
 
 [node name="BasicDirectUnit" type="CharacterBody2D"]
+collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_1bet7")
-clickable = null
-team = 1
 
 [node name="SelectableComponent" parent="." instance=ExtResource("8_rjmnn")]
+z_index = -1
+z_as_relative = false
 position = Vector2(0, -5)
 SelectionRadius = 20.0
 SelectionWidth = 3.0
@@ -45,9 +47,9 @@ Strategy = SubResource("Resource_gjqrm")
 [node name="HurtComponent" parent="." instance=ExtResource("6_rjmnn")]
 
 [node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
-TeamId = 1
 
 [node name="Hurtbox" type="Area2D" parent="."]
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CircleShape2D_1bet7")

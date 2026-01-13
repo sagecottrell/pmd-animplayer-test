@@ -1,7 +1,9 @@
+using breakout.resourceTypes;
 using Godot;
 
 namespace breakout.components.scripts;
 
+[GlobalClass]
 public partial class SelectableComponent : Node2D
 {
     [Signal]
@@ -43,9 +45,15 @@ public partial class SelectableComponent : Node2D
 
     public override void _Draw()
     {
-        if (!IsSelected) return;
 
         // draw red circle
-        DrawCircle(Vector2.Zero, SelectionRadius, Colors.Red, filled: false, width: SelectionWidth);
+        var color = Colors.Red;
+        if (GetComponent.TryGetTeamComponent(GetParent(), out var team))
+        {
+            color = team.Team?.Color ?? color;
+        }
+        if (!IsSelected) color.A = 0.3f;
+
+        DrawCircle(Vector2.Zero, SelectionRadius, color, filled: false, width: SelectionWidth);
     }
 }

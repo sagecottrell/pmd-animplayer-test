@@ -20,17 +20,26 @@ public partial class SquadInfo : Resource
 
     public void AddUnit(Node2D unit)
     {
+#if TOOLS
         GD.Print($"Adding unit {unit.Name} to squad");
-        if (!Members.ContainsKey(unit.GetPath()))
-        {
-            Members[unit.GetPath()] = true;
-        }
+#endif
+        Members[unit.GetPath()] = true;
+    }
+
+    public void RemoveUnit(Node2D unit)
+    {
+#if TOOLS
+        GD.Print($"Removing unit {unit.Name} from squad");
+#endif
+        Members.Remove(unit.GetPath());
     }
 
     public Vector2 GetUnitTargetPosition(Node2D unit)
     {
         if (Members is null)
             return unit.GlobalPosition;
+        if (Members.Count == 1)
+            return TargetPosition;
         int index = Members.Keys.ToList().IndexOf(unit.GetPath());
         if (index == -1)
             return unit.GlobalPosition;

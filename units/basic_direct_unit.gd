@@ -44,11 +44,11 @@ func on_attacking():
 		if is_node_ready():
 			$PmdSprite.Sprites = value
 
-@export var team: int:
+@export var team: TeamInfo:
 	set(value):
 		team = value
 		if is_node_ready():
-			$TeamComponent.TeamId = value
+			$TeamComponent.Team = value
 
 @export var target: Node2D:
 	set(value):
@@ -68,7 +68,7 @@ func _physics_process(_delta: float) -> void:
 func _ready():
 	state = State.idle
 	$PmdSprite.Sprites = sprites
-	$TeamComponent.TeamId = team
+	$TeamComponent.Team = team
 	$AIComponent.Target = target
 	$PmdSprite.OnHit.connect(on_hit)
 	$PmdSprite.OnAnimFinish.connect(on_return)
@@ -135,15 +135,17 @@ func on_move(dir: Vector2):
 
 
 var start_click = false
+var double_click = false
 func _on_click_area_input_event(viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			start_click = true
-			if event.double_click:
-				print("double click")
+			if event.double_click and $AIComponent.Strategy is SquadStrategy and $AIComponent.Strategy.SquadInfo != null:
+				GlobalSignals.SquadSelect($AIComponent.Strategy.SquadInfo)
+			double_click = event.double_click
 		elif start_click and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			start_click = false
-			if not event.double_click:
+			if not double_click:
 				if Input.is_key_pressed(KEY_SHIFT):
 					GlobalSignals.ToggleUnitSelect([self])
 				else:

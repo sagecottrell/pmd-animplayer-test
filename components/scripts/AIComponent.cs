@@ -3,7 +3,7 @@ using Godot;
 namespace breakout.components;
 
 [GlobalClass]
-public partial class AIComponent : BaseComponent
+public partial class AIComponent : Node
 {
     [Export]
     public Node2D? Target { get; set; }

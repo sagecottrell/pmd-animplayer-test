@@ -1,9 +1,0 @@
-[gd_resource type="AnimationLibrary" load_steps=2 format=3 uid="uid://1jplxbnq4jd2"]
-
-[sub_resource type="Animation" id="Animation_ytk7y"]
-resource_name = "test"
-
-[resource]
-_data = {
-&"test": SubResource("Animation_ytk7y")
-}

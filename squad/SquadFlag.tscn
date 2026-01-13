@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://2c0w8mgcf8jv"]
+
+[ext_resource type="Script" uid="uid://d04phebykv4r1" path="res://components/scripts/SquadFlag.cs" id="1_r0i1u"]
+[ext_resource type="Texture2D" uid="uid://b6chp46iwc60a" path="res://squad/squadflag.png" id="1_vv5x1"]
+
+[node name="SquadFlag" type="Node2D"]
+script = ExtResource("1_r0i1u")
+
+[node name="FlagSprite" type="Sprite2D" parent="."]
+position = Vector2(11, -21)
+texture = ExtResource("1_vv5x1")
