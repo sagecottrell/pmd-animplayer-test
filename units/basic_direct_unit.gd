@@ -31,10 +31,7 @@ func on_attacking():
 	set(value):
 		clickable = value
 		if is_node_ready():
-			if not value:
-				$ClickArea.input_event.disconnect(_on_click_area_input_event)
-			else:
-				$ClickArea.input_event.connect(_on_click_area_input_event)
+			$UnitClickArea.SetEnabled(value)
 
 @export var sprites: AnimationLibrary:
 	get:
@@ -78,10 +75,9 @@ func _ready():
 	$HealthComponent.OnDeath.connect(on_death)
 	
 	$AIComponent.OnNewVelocity.connect(on_move)
-	if clickable:
-		$ClickArea.input_event.connect(_on_click_area_input_event)
+	$UnitClickArea.input_pickable = clickable
 	
-	var collide_shape = $ClickArea/CollisionShape2D.shape
+	var collide_shape = $UnitClickArea.GetShape()
 	if collide_shape is CircleShape2D:
 		$SelectableComponent.SelectionRadius = collide_shape.radius - $SelectableComponent.SelectionWidth / 2
 	
@@ -132,22 +128,3 @@ func on_move(dir: Vector2):
 				state_machine.Emit(State.idle)
 			else:
 				state_machine.Emit(State.walking)
-
-
-var start_click = false
-var double_click = false
-func _on_click_area_input_event(viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			start_click = true
-			if event.double_click and $AIComponent.Strategy is SquadStrategy and $AIComponent.Strategy.SquadInfo != null:
-				GlobalSignals.SquadSelect($AIComponent.Strategy.SquadInfo)
-			double_click = event.double_click
-		elif start_click and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			start_click = false
-			if not double_click:
-				if Input.is_key_pressed(KEY_SHIFT):
-					GlobalSignals.ToggleUnitSelect([self])
-				else:
-					GlobalSignals.UnitSelect([self])
-			viewport.set_input_as_handled()

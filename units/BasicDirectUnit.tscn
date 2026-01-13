@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cfdwdenwybed7"]
+[gd_scene load_steps=14 format=3 uid="uid://cfdwdenwybed7"]
 
 [ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="6_rjmnn"]
 [ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="7_uobji"]
 [ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="8_rjmnn"]
+[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickArea.tscn" id="9_gjqrm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 radius = 8.0
@@ -55,8 +56,8 @@ input_pickable = false
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
-[node name="ClickArea" type="Area2D" parent="."]
+[node name="UnitClickArea" parent="." instance=ExtResource("9_gjqrm")]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickArea"]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_uobji")

@@ -1,6 +1,5 @@
 using breakout.resourceTypes;
 using Godot;
-using System;
 
 namespace breakout.components;
 
@@ -19,8 +18,6 @@ public partial class TeamComponent : Node
 
     public void SetTeam(TeamInfo team)
     {
-        if (team is null)
-            throw new ArgumentException($"Team must not be null", nameof(team));
         Team = team;
     }
 

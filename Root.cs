@@ -16,7 +16,7 @@ public partial class Root : Node2D
     public PackedScene? SpawnScene;
 
     [Export]
-    public TeamInfo PlayerTeam;
+    public TeamInfo? PlayerTeam;
 
     List<Node2D> selectedUnits = [];
     SquadInfo? selectedSquad;
@@ -113,7 +113,7 @@ public partial class Root : Node2D
         var spawnPoint = SpawnPoints.PickRandom();
         var newNode = SpawnScene.Instantiate<Node2D>();
         newNode.GlobalPosition = spawnPoint.GlobalPosition;
-        if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent))
+        if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent) && PlayerTeam is not null)
             teamComponent.SetTeam(PlayerTeam);
         GetNode("%Units").AddChild(newNode);
     }
