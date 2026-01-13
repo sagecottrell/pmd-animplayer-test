@@ -79,7 +79,8 @@ func _ready():
 	
 	var collide_shape = $UnitClickArea.GetShape()
 	if collide_shape is CircleShape2D:
-		$SelectableComponent.SelectionRadius = collide_shape.radius - $SelectableComponent.SelectionWidth / 2
+		$SelectableComponent.SelectionRadius = collide_shape.radius \
+		 - $SelectableComponent.SelectionWidth / 2
 	
 	on_return()
 

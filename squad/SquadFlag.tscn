@@ -1,11 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://2c0w8mgcf8jv"]
+[gd_scene load_steps=5 format=3 uid="uid://2c0w8mgcf8jv"]
 
 [ext_resource type="Script" uid="uid://d04phebykv4r1" path="res://components/scripts/SquadFlag.cs" id="1_r0i1u"]
-[ext_resource type="Texture2D" uid="uid://b6chp46iwc60a" path="res://squad/squadflag.png" id="1_vv5x1"]
+[ext_resource type="Texture2D" uid="uid://dva6d7670c1yw" path="res://squad/squadflag-Sheet.png" id="2_r0i1u"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_77h3p"]
+atlas = ExtResource("2_r0i1u")
+region = Rect2(0, 0, 0, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r0i1u"]
+atlas = ExtResource("2_r0i1u")
+region = Rect2(0, 50, 0, 50)
 
 [node name="SquadFlag" type="Node2D"]
 script = ExtResource("1_r0i1u")
 
+[node name="pole" type="Sprite2D" parent="."]
+position = Vector2(9, -11)
+texture = SubResource("AtlasTexture_77h3p")
+
 [node name="FlagSprite" type="Sprite2D" parent="."]
-position = Vector2(11, -21)
-texture = ExtResource("1_vv5x1")
+position = Vector2(9, -11)
+texture = SubResource("AtlasTexture_r0i1u")
