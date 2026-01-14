@@ -35,6 +35,7 @@ script = ExtResource("5_jnlp7")
 FlagScenePrefab = NodePath("SquadFlag")
 
 [node name="SquadFlag" parent="SquadContainer" instance=ExtResource("3_vvh5c")]
+visible = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_right = 40.0

@@ -10,14 +10,24 @@ public partial class SquadStrategy : AIStrategy
     [Export]
     public SquadInfo SquadInfo { get; set; } = new();
 
+    [Export]
+    public Vector2 FacingDirection { get; set; } = Vector2.Down;
+
+    [Export]
+    public int RankInSquad { get; set; } = 0;
+
     public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
         if (SquadInfo == null || aiStrategy.Target is null)
             return Vector2.Zero;
         Vector2 desiredPosition = GetUnitTargetPosition(agent, aiStrategy.Target);
         Vector2 d = desiredPosition - agent.GlobalPosition;
-        if (d.LengthSquared() < 1)
+        if (d.LengthSquared() < 1) {
+            if (!aiStrategy.HasReachedTarget)
+                aiStrategy.ReachedTarget();
             return Vector2.Zero;
+        }
+        aiStrategy.HasReachedTarget = false;
         return d.Normalized();
     }
 

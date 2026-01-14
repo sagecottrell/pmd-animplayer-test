@@ -58,8 +58,7 @@ input_pickable = false
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
-[node name="UnitClickArea" parent="." node_paths=PackedStringArray("AI") instance=ExtResource("9_gjqrm")]
-AI = NodePath("../AIComponent")
+[node name="UnitClickArea" parent="." instance=ExtResource("9_gjqrm")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickArea"]
 position = Vector2(0, -5)

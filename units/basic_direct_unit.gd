@@ -75,6 +75,7 @@ func _ready():
 	$HealthComponent.OnDeath.connect(on_death)
 	
 	$AIComponent.OnNewVelocity.connect(on_move)
+	$AIComponent.OnReachedTarget.connect(on_reach_target)
 	$UnitClickArea.input_pickable = clickable
 	
 	var collide_shape = $UnitClickArea.GetShape()
@@ -119,6 +120,11 @@ func on_charge():
 			$PmdSprite.Charge()
 		State.attacking:
 			on_return()
+
+func on_reach_target():
+	var strat = $AIComponent.Strategy
+	if strat is SquadStrategy:
+		$PmdSprite.Direction = strat.FacingDirection
 
 func on_move(dir: Vector2):
 	match state:

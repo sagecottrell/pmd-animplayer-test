@@ -19,9 +19,13 @@ public partial class SquadSelectorOverlay : Area2D
     [Signal]
     public delegate void OnSquadSelectedEventHandler(SquadInfo? squadInfo);
 
-    bool click_drag;
-    Vector2 start_drag;
-    Vector2 end_drag;
+    bool m1_click_drag;
+    Vector2 m1_start_drag;
+    Vector2 m1_end_drag;
+
+    bool m2_click_drag;
+    Vector2 m2_start_drag;
+    Vector2 m2_end_drag;
 
     public override void _Ready()
     {
@@ -71,27 +75,40 @@ public partial class SquadSelectorOverlay : Area2D
         switch (@event)
         {
             case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
-                end_drag = mouseEvent.GlobalPosition;
-                start_drag = mouseEvent.GlobalPosition;
+                m1_end_drag = mouseEvent.GlobalPosition;
+                m1_start_drag = mouseEvent.GlobalPosition;
                 break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
-                click_drag = false;
+                m1_click_drag = false;
                 QueueRedraw();
                 OnFinishSelection();
                 break;
             case InputEventMouseMotion mouseMotion when Input.IsMouseButtonPressed(MouseButton.Left):
-                if (!click_drag && mouseMotion.GlobalPosition.DistanceTo(start_drag) > 5.0f)
+                if (!m1_click_drag && mouseMotion.GlobalPosition.DistanceTo(m1_start_drag) > 5.0f)
                 {
-                    click_drag = true;
+                    m1_click_drag = true;
                 }
-                if (click_drag)
+                if (m1_click_drag)
                 {
-                    end_drag = mouseMotion.GlobalPosition;
+                    m1_end_drag = mouseMotion.GlobalPosition;
                     QueueRedraw();
                 }
                 break;
+            case InputEventMouseButton when selectedUnits.Count == 0:
+                break;
+            case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
+                m2_end_drag = mouseEvent.GlobalPosition;
+                m2_start_drag = mouseEvent.GlobalPosition;
+                m2_click_drag = true;
+                break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
-                NewOrExistingSquad(mouseEvent.GlobalPosition);
+                m2_click_drag = false; 
+                QueueRedraw();
+                NewOrExistingSquad(m2_start_drag);
+                break;
+            case InputEventMouseMotion mouseMotion when Input.IsMouseButtonPressed(MouseButton.Right):
+                m2_end_drag = mouseMotion.GlobalPosition;
+                QueueRedraw();
                 break;
         }
     }
@@ -109,8 +126,8 @@ public partial class SquadSelectorOverlay : Area2D
     public void OnFinishSelection()
     {
         Rect2 selectionRect = new(
-            new Vector2(Mathf.Min(start_drag.X, end_drag.X), Mathf.Min(start_drag.Y, end_drag.Y)),
-            new Vector2(Mathf.Abs(end_drag.X - start_drag.X), Mathf.Abs(end_drag.Y - start_drag.Y))
+            new Vector2(Mathf.Min(m1_start_drag.X, m1_end_drag.X), Mathf.Min(m1_start_drag.Y, m1_end_drag.Y)),
+            new Vector2(Mathf.Abs(m1_end_drag.X - m1_start_drag.X), Mathf.Abs(m1_end_drag.Y - m1_start_drag.Y))
         );
         var units = new List<Node2D>();
         foreach (var unit in GetNode("%Units").GetChildren().Cast<Node2D>())
@@ -145,6 +162,7 @@ public partial class SquadSelectorOverlay : Area2D
         var strategy = new SquadStrategy
         {
             SquadInfo = squad_info,
+            FacingDirection = (m2_end_drag - m2_start_drag).Normalized(),
         };
 
         foreach (var unit in selectedUnits)
@@ -162,12 +180,24 @@ public partial class SquadSelectorOverlay : Area2D
 
     public override void _Draw()
     {
-        if (click_drag)
+        if (m1_click_drag)
         {
             DrawRect(new Rect2(
-                new Vector2(Mathf.Min(start_drag.X, end_drag.X), Mathf.Min(start_drag.Y, end_drag.Y)),
-                new Vector2(Mathf.Abs(end_drag.X - start_drag.X), Mathf.Abs(end_drag.Y - start_drag.Y))
+                new Vector2(Mathf.Min(m1_start_drag.X, m1_end_drag.X), Mathf.Min(m1_start_drag.Y, m1_end_drag.Y)),
+                new Vector2(Mathf.Abs(m1_end_drag.X - m1_start_drag.X), Mathf.Abs(m1_end_drag.Y - m1_start_drag.Y))
             ), PlayerTeam?.Color ?? Colors.Red, false, 2.0f);
+        }
+        if (m2_click_drag)
+        {
+            var dist = m2_end_drag.DistanceTo(m2_start_drag);
+            var dir = (m2_end_drag - m2_start_drag).Normalized();
+            var end = m2_start_drag + dir * Mathf.Min(dist, 100f);
+            DrawDashedLine(m2_start_drag, end, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
+            DrawCircle(m2_start_drag, 10.0f, PlayerTeam?.Color ?? Colors.Blue, filled: false, width: 2.0f);
+            // draw arrowhead
+            var perp = new Vector2(-dir.Y, dir.X);
+            DrawLine(end, end - dir * 20 + perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
+            DrawLine(end, end - dir * 20 - perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
         }
     }
 

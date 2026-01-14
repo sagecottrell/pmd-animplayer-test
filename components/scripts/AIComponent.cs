@@ -11,8 +11,13 @@ public partial class AIComponent : Node
     [Export]
     public AIStrategy? Strategy { get; set; }
 
+    public bool HasReachedTarget = false;
+
     [Signal]
     public delegate void OnNewVelocityEventHandler(Vector2 velocity);
+
+    [Signal]
+    public delegate void OnReachedTargetEventHandler();
 
     public override void _Ready()
     {
@@ -29,6 +34,15 @@ public partial class AIComponent : Node
         if (GetParent() is not Node2D parent) return;
         if (Strategy?.Pathfind(parent, this) is Vector2 v)
             EmitSignalOnNewVelocity(v);
+    }
+
+    public void ReachedTarget()
+    {
+        if (!HasReachedTarget)
+        {
+            HasReachedTarget = true;
+            EmitSignalOnReachedTarget();
+        }
     }
 }
 
