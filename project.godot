@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 
 [audio]
 
-buses/default_bus_layout=""
+buses/default_bus_layout="res://AudioBus.tres"
 
 [autoload]
 
