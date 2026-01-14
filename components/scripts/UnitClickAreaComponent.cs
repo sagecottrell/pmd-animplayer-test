@@ -8,6 +8,9 @@ public partial class UnitClickAreaComponent : Area2D
     [Signal]
     public delegate void UnitClickedEventHandler(UnitClickAreaComponent unitClickAreaComponent);
 
+    [Export]
+    public AIComponent? AI;
+
     bool _startClick;
     bool _doubleClick;
 
@@ -38,7 +41,7 @@ public partial class UnitClickAreaComponent : Area2D
             {
                 _startClick = true;
                 _doubleClick = mouseEvent.DoubleClick;
-                if (mouseEvent.DoubleClick && GetComponent.TryGetAIComponent(_parent, out var ai) && ai.Strategy is SquadStrategy ss)
+                if (mouseEvent.DoubleClick && AI?.Strategy is SquadStrategy ss)
                 {
                     GlobalSignals.Instance?.SquadSelect(ss.SquadInfo);
                 }

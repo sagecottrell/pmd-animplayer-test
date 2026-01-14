@@ -1,3 +1,4 @@
+using breakout.components.scripts;
 using Godot;
 
 namespace breakout.components;
@@ -11,10 +12,13 @@ public partial class HurtboxComponent : Node
     [Signal]
     public delegate void OnHurtEventHandler(DamageSource body);
 
+    [Export]
+    public TeamComponent? Team;
+
     public void OnHit(Area2D area)
     {
         var node = area.GetParent();
-        if (node.FindChild(nameof(HitboxComponent)) is HitboxComponent hit)
+        if (GetComponent.TryGetHitboxComponent(node, out var hit))
         {
             if (_isFriendly(node))
                 return;
@@ -24,9 +28,9 @@ public partial class HurtboxComponent : Node
 
     private bool _isFriendly(Node node)
     {
-        if (node.FindChild(nameof(TeamComponent)) is TeamComponent otherTeam)
+        if (GetComponent.TryGetTeamComponent(node, out var otherTeam))
         {
-            if (GetParent().FindChild(nameof(TeamComponent)) is not TeamComponent myTeam || otherTeam == null)
+            if (Team is not TeamComponent myTeam || otherTeam == null)
                 return false;
             return myTeam.Team == otherTeam.Team;
         }

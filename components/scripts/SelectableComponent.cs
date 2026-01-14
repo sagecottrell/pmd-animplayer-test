@@ -10,6 +10,9 @@ public partial class SelectableComponent : Node2D
     public delegate void OnSelectionChangedEventHandler(bool isSelected);
 
     [Export]
+    public TeamComponent? Team;
+
+    [Export]
     public float SelectionRadius = 40.0f;
 
     [Export]
@@ -48,9 +51,9 @@ public partial class SelectableComponent : Node2D
 
         // draw red circle
         var color = Colors.Red;
-        if (GetComponent.TryGetTeamComponent(GetParent(), out var team))
+        if (Team is not null)
         {
-            color = team.Team?.Color ?? color;
+            color = Team.Team?.Color ?? color;
         }
         if (!IsSelected) color.A = 0.3f;
 
