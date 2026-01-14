@@ -1,4 +1,3 @@
-using breakout.components.scripts;
 using Godot;
 using Godot.Collections;
 
@@ -23,7 +22,7 @@ public partial class GlobalSignals : Node
     [Signal]
     public delegate void OnGameOverEventHandler();
     [Signal]
-    public delegate void OnSquadSelectEventHandler(SquadInfo squad);
+    public delegate void OnUnitDoubleClickEventHandler(Node2D unit);
     [Signal]
     public delegate void OnUnitSelectEventHandler(Array<Node2D> units);
     [Signal]
@@ -36,9 +35,9 @@ public partial class GlobalSignals : Node
         EmitSignal(nameof(OnGameOver));
     }
 
-    public void SquadSelect(SquadInfo squad)
+    public void UnitDoubleClick(Node2D unit)
     {
-        EmitSignalOnSquadSelect(squad);
+        EmitSignalOnUnitDoubleClick(unit);
     }
 
     public void PrimaryAction()

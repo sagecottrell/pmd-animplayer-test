@@ -13,6 +13,12 @@ public partial class SquadSelectorOverlay : Area2D
     List<Node2D> selectedUnits = [];
     SquadInfo? selectedSquad;
 
+    [Signal]
+    public delegate void OnSquadSetPositionEventHandler(SquadInfo squadInfo, Vector2 squadGlobalPosition, TeamInfo team);
+
+    [Signal]
+    public delegate void OnSquadSelectedEventHandler(SquadInfo? squadInfo);
+
     bool click_drag;
     Vector2 start_drag;
     Vector2 end_drag;
@@ -37,7 +43,7 @@ public partial class SquadSelectorOverlay : Area2D
                     selectable.Deselect();
             }
             CheckAllSameSquad();
-            ShowSquadTargetPosition();
+            EmitSignalOnSquadSelected(selectedSquad);
         };
         GlobalSignals.Instance.OnUnitSelect += (units) =>
         {
@@ -55,9 +61,9 @@ public partial class SquadSelectorOverlay : Area2D
                 }
             }
             CheckAllSameSquad();
-            ShowSquadTargetPosition();
+            EmitSignalOnSquadSelected(selectedSquad);
         };
-        GlobalSignals.Instance.OnSquadSelect += _instance_OnSquadSelect;
+        GlobalSignals.Instance.OnUnitDoubleClick += _instance_OnSquadSelect;
     }
 
     private void _root_InputEvent(Node viewport, InputEvent @event, long shapeIdx)
@@ -85,16 +91,19 @@ public partial class SquadSelectorOverlay : Area2D
                 }
                 break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
-                NewOrExistingSquad().SetTargetPosition(mouseEvent.GlobalPosition);
-                ShowSquadTargetPosition();
+                NewOrExistingSquad(mouseEvent.GlobalPosition);
                 break;
         }
     }
 
-    private void _instance_OnSquadSelect(SquadInfo squad)
+    private void _instance_OnSquadSelect(Node2D unit)
     {
-        GlobalSignals.Instance?.UnitSelect([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
-        selectedSquad = squad;
+        if (GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
+        {
+            GlobalSignals.Instance?.UnitSelect([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
+            selectedSquad = squad;
+            EmitSignalOnSquadSelected(squad);
+        }
     }
 
     public void OnFinishSelection()
@@ -117,7 +126,7 @@ public partial class SquadSelectorOverlay : Area2D
         GlobalSignals.Instance!.UnitSelect([.. units]);
     }
 
-    public SquadInfo NewOrExistingSquad()
+    public void NewOrExistingSquad(Vector2 position)
     {
         if (selectedSquad is null)
             CheckAllSameSquad();
@@ -128,14 +137,14 @@ public partial class SquadSelectorOverlay : Area2D
 #if TOOLS
             GD.Print($"Reusing existing squad with {selectedSquad.Members.Count} members");
 #endif
-            return selectedSquad;
+            EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);
         }
 
         // set up a new squad
         var squad_info = new SquadInfo();
         var strategy = new SquadStrategy
         {
-            SquadInfo = squad_info
+            SquadInfo = squad_info,
         };
 
         foreach (var unit in selectedUnits)
@@ -148,7 +157,7 @@ public partial class SquadSelectorOverlay : Area2D
             squad_info.AddUnit(unit);
         }
         selectedSquad = squad_info;
-        return squad_info;
+        EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);
     }
 
     public override void _Draw()
@@ -159,21 +168,6 @@ public partial class SquadSelectorOverlay : Area2D
                 new Vector2(Mathf.Min(start_drag.X, end_drag.X), Mathf.Min(start_drag.Y, end_drag.Y)),
                 new Vector2(Mathf.Abs(end_drag.X - start_drag.X), Mathf.Abs(end_drag.Y - start_drag.Y))
             ), PlayerTeam?.Color ?? Colors.Red, false, 2.0f);
-        }
-    }
-
-    public void ShowSquadTargetPosition()
-    {
-        var flag = GetNode<SquadFlag>("%SquadFlag");
-        if (selectedSquad is not null)
-        {
-            flag.Visible = true;
-            flag.GlobalPosition = selectedSquad.TargetPosition;
-            flag.SetTeam(PlayerTeam);
-        }
-        else
-        {
-            flag.Visible = false;
         }
     }
 

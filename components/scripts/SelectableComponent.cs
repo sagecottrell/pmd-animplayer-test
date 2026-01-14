@@ -1,4 +1,3 @@
-using breakout.resourceTypes;
 using Godot;
 
 namespace breakout.components.scripts;

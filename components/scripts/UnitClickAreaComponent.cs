@@ -1,4 +1,3 @@
-using breakout.components.AIStrategies;
 using Godot;
 
 namespace breakout.components.scripts;
@@ -7,9 +6,6 @@ public partial class UnitClickAreaComponent : Area2D
 {
     [Signal]
     public delegate void UnitClickedEventHandler(UnitClickAreaComponent unitClickAreaComponent);
-
-    [Export]
-    public AIComponent? AI;
 
     bool _startClick;
     bool _doubleClick;
@@ -41,10 +37,8 @@ public partial class UnitClickAreaComponent : Area2D
             {
                 _startClick = true;
                 _doubleClick = mouseEvent.DoubleClick;
-                if (mouseEvent.DoubleClick && AI?.Strategy is SquadStrategy ss)
-                {
-                    GlobalSignals.Instance?.SquadSelect(ss.SquadInfo);
-                }
+                if (_doubleClick)
+                    GlobalSignals.Instance?.UnitDoubleClick(_parent);
             }
             else if (_startClick && !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
             {

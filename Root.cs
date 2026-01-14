@@ -1,5 +1,6 @@
 using breakout.components.scripts;
 using breakout.resourceTypes;
+using breakout.squad;
 using Godot;
 using Godot.Collections;
 
@@ -15,12 +16,22 @@ public partial class Root : Node2D
     [Export]
     public TeamInfo? PlayerTeam;
 
-
     public override void _Ready()
     {
-        GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
         GetViewport().PhysicsObjectPickingSort = true;
-        GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay)).PlayerTeam = PlayerTeam;
+
+        GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
+
+        var selectorOverlay = GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay));
+        selectorOverlay.PlayerTeam = PlayerTeam;
+
+        var squadContainer = GetNode<SquadContainer>(nameof(SquadContainer));
+        selectorOverlay.OnSquadSelected += squadContainer.OnSquadSelected;
+        selectorOverlay.OnSquadSetPosition += (s, p, t) =>
+        {
+            squadContainer.OnSquadSetPosition(s, p, t);
+            squadContainer.OnSquadSelected(s);
+        };
     }
 
     public void OnSpawn()
@@ -33,6 +44,7 @@ public partial class Root : Node2D
         if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent) && PlayerTeam is not null)
             teamComponent.SetTeam(PlayerTeam);
         GetNode("%Units").AddChild(newNode);
+        newNode.Owner = this;
     }
 
 }

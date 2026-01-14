@@ -8,7 +8,9 @@ public partial class TeamComponent : Node
 {
     TeamInfo? team;
     [Export]
-    public TeamInfo? Team { get => team; private set
+    public TeamInfo? Team
+    {
+        get => team; private set
         {
             if (value is null)
                 return;

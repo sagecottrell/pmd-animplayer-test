@@ -152,3 +152,8 @@ public partial class PMDSprite : Node2D
         EmitSignalOnReturn();
     }
 }
+
+
+public interface IPMDSpriteModifier
+{
+}
