@@ -31,20 +31,7 @@ public partial class SquadSelectorOverlay : Area2D
     {
         InputEvent += _root_InputEvent;
 
-        GlobalSignals.Instance!.OnSingleClick += (units) =>
-        {
-            if (Input.IsKeyPressed(Key.Shift))
-            {
-                // add clicked units to selection
-                _on_toggleUnit([units]);
-            }
-            else
-            {
-                _on_selectUnit([units]);
-            }
-            CheckAllSameSquad();
-            EmitSignalOnSquadSelected(selectedSquad);
-        };
+        GlobalSignals.Instance!.OnSingleClick += _on_SingleClick;
         GlobalSignals.Instance.OnDoubleClick += _instance_OnSquadSelect;
     }
 
@@ -80,7 +67,7 @@ public partial class SquadSelectorOverlay : Area2D
                 m2_click_drag = true;
                 break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
-                m2_click_drag = false; 
+                m2_click_drag = false;
                 QueueRedraw();
                 NewOrExistingSquad(m2_start_drag);
                 break;
@@ -91,9 +78,23 @@ public partial class SquadSelectorOverlay : Area2D
         }
     }
 
-    private void _instance_OnSquadSelect(Node2D unit)
+    private void _on_SingleClick(Node2D unit, MouseButton button)
     {
-        if (GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
+        if (button == MouseButton.Left)
+        {
+            if (Input.IsKeyPressed(Key.Shift))
+                // add clicked units to selection
+                _on_toggleUnit([unit]);
+            else
+                _on_selectUnit([unit]);
+            CheckAllSameSquad();
+            EmitSignalOnSquadSelected(selectedSquad);
+        }
+    }
+
+    private void _instance_OnSquadSelect(Node2D unit, MouseButton b)
+    {
+        if (b == MouseButton.Left && GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
         {
             _on_selectUnit([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
         }

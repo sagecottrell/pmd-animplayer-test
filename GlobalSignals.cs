@@ -21,22 +21,22 @@ public partial class GlobalSignals : Node
     [Signal]
     public delegate void OnGameOverEventHandler();
     [Signal]
-    public delegate void OnDoubleClickEventHandler(Node2D unit);
+    public delegate void OnDoubleClickEventHandler(Node2D unit, MouseButton button);
     [Signal]
-    public delegate void OnSingleClickEventHandler(Node2D units);
+    public delegate void OnSingleClickEventHandler(Node2D units, MouseButton button);
 
     public void GameOver()
     {
         EmitSignal(nameof(OnGameOver));
     }
 
-    public void DoubleClick(Node2D unit)
+    public void DoubleClick(Node2D unit, MouseButton button)
     {
-        EmitSignalOnDoubleClick(unit);
+        EmitSignalOnDoubleClick(unit, button);
     }
 
-    public void SingleClick(Node2D units)
+    public void SingleClick(Node2D units, MouseButton button)
     {
-        EmitSignalOnSingleClick(units);
+        EmitSignalOnSingleClick(units, button);
     }
 }

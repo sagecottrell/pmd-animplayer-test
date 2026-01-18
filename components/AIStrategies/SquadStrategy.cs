@@ -24,7 +24,8 @@ public partial class SquadStrategy : AIStrategy
             return Vector2.Zero;
         Vector2 desiredPosition = GetUnitTargetPosition(agent, aiStrategy.Target);
         Vector2 d = desiredPosition - agent.GlobalPosition;
-        if (d.LengthSquared() < 1) {
+        if (d.LengthSquared() < 1)
+        {
             if (!aiStrategy.HasReachedTarget)
                 aiStrategy.ReachedTarget();
             return Vector2.Zero;
@@ -51,7 +52,7 @@ public partial class SquadStrategy : AIStrategy
             int rankIndex = rankUnits.IndexOf(unit.GetPath());
             if (rankIndex != -1)
             {
-                var o = -depth * FacingDirection.Normalized() * FormationSpacing 
+                var o = -depth * FacingDirection.Normalized() * FormationSpacing
                     + FacingDirection.Rotated(Mathf.Pi / 2) * (rankIndex - (float)rankUnits.Count / 2) * FormationSpacing;
                 return o + target.GlobalPosition;
             }
