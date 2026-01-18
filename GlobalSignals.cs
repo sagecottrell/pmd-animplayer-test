@@ -1,5 +1,4 @@
 using Godot;
-using Godot.Collections;
 
 namespace breakout;
 
@@ -22,36 +21,22 @@ public partial class GlobalSignals : Node
     [Signal]
     public delegate void OnGameOverEventHandler();
     [Signal]
-    public delegate void OnUnitDoubleClickEventHandler(Node2D unit);
+    public delegate void OnDoubleClickEventHandler(Node2D unit);
     [Signal]
-    public delegate void OnUnitSelectEventHandler(Array<Node2D> units);
-    [Signal]
-    public delegate void OnToggleUnitSelectEventHandler(Array<Node2D> units);
-    [Signal]
-    public delegate void OnPrimaryActionEventHandler();
+    public delegate void OnSingleClickEventHandler(Node2D units);
 
     public void GameOver()
     {
         EmitSignal(nameof(OnGameOver));
     }
 
-    public void UnitDoubleClick(Node2D unit)
+    public void DoubleClick(Node2D unit)
     {
-        EmitSignalOnUnitDoubleClick(unit);
+        EmitSignalOnDoubleClick(unit);
     }
 
-    public void PrimaryAction()
+    public void SingleClick(Node2D units)
     {
-        EmitSignalOnPrimaryAction();
-    }
-
-    public void UnitSelect(Array<Node2D> units)
-    {
-        EmitSignalOnUnitSelect(units);
-    }
-
-    public void ToggleUnitSelect(Array<Node2D> units)
-    {
-        EmitSignalOnToggleUnitSelect(units);
+        EmitSignalOnSingleClick(units);
     }
 }

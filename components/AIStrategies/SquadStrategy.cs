@@ -4,17 +4,19 @@ using System.Linq;
 
 namespace breakout.components.AIStrategies;
 
+
 [GlobalClass]
 public partial class SquadStrategy : AIStrategy
 {
+    [Export]
+    public float FormationSpacing { get; set; } = 30.0f;
+
+
     [Export]
     public SquadInfo SquadInfo { get; set; } = new();
 
     [Export]
     public Vector2 FacingDirection { get; set; } = Vector2.Down;
-
-    [Export]
-    public int RankInSquad { get; set; } = 0;
 
     public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
@@ -37,6 +39,23 @@ public partial class SquadStrategy : AIStrategy
             return unit.GlobalPosition;
         if (SquadInfo.Members.Count == 1)
             return target.GlobalPosition;
+
+        if (SquadInfo.UnitRanks.TryGetValue(unit.GetPath(), out var rank))
+        {
+            var depth = 0;
+            for (var i = 0; i < (int)rank; i++)
+                if (SquadInfo.RanksInSquad.ContainsKey((SquadRank)i))
+                    depth++;
+
+            var rankUnits = SquadInfo.RanksInSquad.TryGetValue(rank, out var value) ? value : [];
+            int rankIndex = rankUnits.IndexOf(unit.GetPath());
+            if (rankIndex != -1)
+            {
+                var o = -depth * FacingDirection.Normalized() * FormationSpacing 
+                    + FacingDirection.Rotated(Mathf.Pi / 2) * (rankIndex - (float)rankUnits.Count / 2) * FormationSpacing;
+                return o + target.GlobalPosition;
+            }
+        }
         int index = SquadInfo.Members.Keys.ToList().IndexOf(unit.GetPath());
         if (index == -1)
             return unit.GlobalPosition;

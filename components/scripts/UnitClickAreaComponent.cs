@@ -38,21 +38,14 @@ public partial class UnitClickAreaComponent : Area2D
                 _startClick = true;
                 _doubleClick = mouseEvent.DoubleClick;
                 if (_doubleClick)
-                    GlobalSignals.Instance?.UnitDoubleClick(_parent);
+                    GlobalSignals.Instance?.DoubleClick(_parent);
             }
             else if (_startClick && !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
             {
                 _startClick = false;
                 if (!_doubleClick)
                 {
-                    if (Input.IsKeyPressed(Key.Shift))
-                    {
-                        GlobalSignals.Instance?.ToggleUnitSelect([_parent]);
-                    }
-                    else
-                    {
-                        GlobalSignals.Instance?.UnitSelect([_parent]);
-                    }
+                    GlobalSignals.Instance?.SingleClick(_parent);
                 }
                 (viewport as Viewport)?.SetInputAsHandled();
             }

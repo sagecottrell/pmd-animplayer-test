@@ -27,6 +27,7 @@ radius = 20.024984
 collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_1bet7")
+clickable = true
 
 [node name="SelectableComponent" parent="." node_paths=PackedStringArray("Team") instance=ExtResource("8_rjmnn")]
 z_index = -1
@@ -39,7 +40,7 @@ SelectionWidth = 3.0
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_odw8u")
 
-[node name="PmdSprite" parent="." instance=ExtResource("2_ecyxk")]
+[node name="PMDSprite" parent="." instance=ExtResource("2_ecyxk")]
 
 [node name="AIComponent" parent="." instance=ExtResource("4_odw8u")]
 Strategy = SubResource("Resource_gjqrm")

@@ -4,6 +4,12 @@ namespace breakout.components.scripts;
 [GlobalClass]
 public partial class GetComponent : GodotObject
 {
+    public static bool TryGetPmdSprite(Node node, out PMDSprite component)
+    {
+        component = node.GetNode<PMDSprite>(nameof(PMDSprite));
+        return component != null;
+    }
+
     public static bool TryGetAIComponent(Node node, out AIComponent component)
     {
         component = node.GetNode<AIComponent>(nameof(AIComponent));

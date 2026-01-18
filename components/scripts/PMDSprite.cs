@@ -48,6 +48,7 @@ public partial class PMDSprite : Node2D
     {
         get => sprites; set
         {
+            if (value is null) return;
             sprites = value;
             _ensure_anim_lib(value);
         }

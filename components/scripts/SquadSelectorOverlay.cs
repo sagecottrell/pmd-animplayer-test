@@ -31,43 +31,21 @@ public partial class SquadSelectorOverlay : Area2D
     {
         InputEvent += _root_InputEvent;
 
-        GlobalSignals.Instance!.OnToggleUnitSelect += (units) =>
+        GlobalSignals.Instance!.OnSingleClick += (units) =>
         {
-            selectedSquad = null;
-            foreach (var unit in units)
+            if (Input.IsKeyPressed(Key.Shift))
             {
-                if (!selectedUnits.Remove(unit))
-                {
-                    selectedUnits.Add(unit);
-                    if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                        selectable.Select();
-                }
-                else
-                    if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                    selectable.Deselect();
+                // add clicked units to selection
+                _on_toggleUnit([units]);
+            }
+            else
+            {
+                _on_selectUnit([units]);
             }
             CheckAllSameSquad();
             EmitSignalOnSquadSelected(selectedSquad);
         };
-        GlobalSignals.Instance.OnUnitSelect += (units) =>
-        {
-            selectedSquad = null;
-            foreach (var unit in selectedUnits)
-                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                    selectable.Deselect();
-            selectedUnits.Clear();
-            foreach (var unit in units)
-            {
-                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                {
-                    selectable.Select();
-                    selectedUnits.Add(unit);
-                }
-            }
-            CheckAllSameSquad();
-            EmitSignalOnSquadSelected(selectedSquad);
-        };
-        GlobalSignals.Instance.OnUnitDoubleClick += _instance_OnSquadSelect;
+        GlobalSignals.Instance.OnDoubleClick += _instance_OnSquadSelect;
     }
 
     private void _root_InputEvent(Node viewport, InputEvent @event, long shapeIdx)
@@ -117,10 +95,46 @@ public partial class SquadSelectorOverlay : Area2D
     {
         if (GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
         {
-            GlobalSignals.Instance?.UnitSelect([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
-            selectedSquad = squad;
-            EmitSignalOnSquadSelected(squad);
+            _on_selectUnit([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
         }
+    }
+
+    private void _on_toggleUnit(List<Node2D> units)
+    {
+        selectedSquad = null;
+        foreach (var unit in units)
+        {
+            if (!selectedUnits.Remove(unit))
+            {
+                selectedUnits.Add(unit);
+                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+                    selectable.Select();
+            }
+            else
+                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+                selectable.Deselect();
+        }
+        CheckAllSameSquad();
+        EmitSignalOnSquadSelected(selectedSquad);
+    }
+
+    private void _on_selectUnit(List<Node2D> units)
+    {
+        selectedSquad = null;
+        foreach (var unit in selectedUnits)
+            if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+                selectable.Deselect();
+        selectedUnits.Clear();
+        foreach (var unit in units)
+        {
+            if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+            {
+                selectable.Select();
+                selectedUnits.Add(unit);
+            }
+        }
+        CheckAllSameSquad();
+        EmitSignalOnSquadSelected(selectedSquad);
     }
 
     public void OnFinishSelection()
@@ -140,7 +154,7 @@ public partial class SquadSelectorOverlay : Area2D
                 }
             }
         }
-        GlobalSignals.Instance!.UnitSelect([.. units]);
+        _on_selectUnit([.. units]);
     }
 
     public void NewOrExistingSquad(Vector2 position)
@@ -162,17 +176,19 @@ public partial class SquadSelectorOverlay : Area2D
         var strategy = new SquadStrategy
         {
             SquadInfo = squad_info,
-            FacingDirection = (m2_end_drag - m2_start_drag).Normalized(),
+            FacingDirection = m2_end_drag.IsEqualApprox(m2_start_drag) ? Vector2.Up : (m2_end_drag - m2_start_drag).Normalized(),
         };
 
         foreach (var unit in selectedUnits)
         {
-            if (GetComponent.TryGetAIComponent(unit, out var ai) && ai.Strategy is SquadStrategy ss)
+            if (GetComponent.TryGetAIComponent(unit, out var ai) && ai.Strategy is SquadStrategy ss && ss.SquadInfo is not null)
             {
+                squad_info.AddUnit(unit, ss.SquadInfo.UnitRanks.TryGetValue(unit.GetPath(), out var rank) ? rank : SquadRank.Frontline);
                 ss.SquadInfo.RemoveUnit(unit);
+                ai.Strategy = strategy;
             }
-            ai.Strategy = strategy;
-            squad_info.AddUnit(unit);
+            else
+                squad_info.AddUnit(unit, SquadRank.Frontline);
         }
         selectedSquad = squad_info;
         EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);

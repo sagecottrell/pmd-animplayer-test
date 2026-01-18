@@ -16,16 +16,16 @@ var state_machine: StateMachine = StateMachine.Create({
 func on_idle():
 	velocity = Vector2.ZERO
 	state = State.idle
-	$PmdSprite.Idle()
+	$PMDSprite.Idle()
 
 func on_walking():
 	state = State.walking
-	$PmdSprite.Walk()
+	$PMDSprite.Walk()
 
 func on_attacking():
 	velocity = Vector2.ZERO
 	state = State.attacking
-	$PmdSprite.Attack()
+	$PMDSprite.Attack()
 
 @export var clickable: bool:
 	set(value):
@@ -64,11 +64,11 @@ func _physics_process(_delta: float) -> void:
 
 func _ready():
 	state = State.idle
-	$PmdSprite.Sprites = sprites
+	$PMDSprite.Sprites = sprites
 	$TeamComponent.Team = team
 	$AIComponent.Target = target
-	$PmdSprite.OnHit.connect(on_hit)
-	$PmdSprite.OnAnimFinish.connect(on_return)
+	$PMDSprite.OnHit.connect(on_hit)
+	$PMDSprite.OnAnimFinish.connect(on_return)
 	
 	$HurtComponent.OnHurt.connect(on_hurt)
 	
@@ -93,7 +93,7 @@ func on_death():
 
 func on_hurt(hurt):
 	$HealthComponent.TakeDamage(hurt)
-	$PmdSprite.Hurt()
+	$PMDSprite.Hurt()
 
 func on_return():
 	if velocity.is_zero_approx():
@@ -105,32 +105,32 @@ func on_attack() -> void:
 	match state:
 		State.idle, State.walking:
 			state_machine.Emit(State.attacking)
-			$PmdSprite.Attack()
+			$PMDSprite.Attack()
 
 func on_shoot():
 	match state:
 		State.idle, State.walking:
 			state_machine.Emit(State.attacking)
-			$PmdSprite.Shoot()
+			$PMDSprite.Shoot()
 	
 func on_charge():
 	match state:
 		State.idle, State.walking:
 			state_machine.Emit(State.attacking)
-			$PmdSprite.Charge()
+			$PMDSprite.Charge()
 		State.attacking:
 			on_return()
 
 func on_reach_target():
 	var strat = $AIComponent.Strategy
 	if strat is SquadStrategy:
-		$PmdSprite.Direction = strat.FacingDirection
+		$PMDSprite.Direction = strat.FacingDirection
 
 func on_move(dir: Vector2):
 	match state:
 		State.idle, State.walking:
 			velocity = dir * 100
-			$PmdSprite.Direction = dir
+			$PMDSprite.Direction = dir
 			if dir.is_zero_approx() or get_last_slide_collision() != null:
 				state_machine.Emit(State.idle)
 			else:

@@ -24,7 +24,7 @@ GlobalSignals="*res://GlobalSignals.cs"
 
 [display]
 
-window/size/viewport_width=500
+window/size/viewport_width=700
 window/size/viewport_height=700
 
 [dotnet]

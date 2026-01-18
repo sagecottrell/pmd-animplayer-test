@@ -14,6 +14,7 @@ public partial class HealthComponent : Node
     public int ModifiedMaxHealth = 100;
 
     private int currentHealth;
+
     public override void _Ready()
     {
         base._Ready();
