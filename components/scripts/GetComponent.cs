@@ -1,54 +1,25 @@
 using Godot;
+using System.Diagnostics.CodeAnalysis;
 namespace breakout.components.scripts;
 
 [GlobalClass]
 public partial class GetComponent : GodotObject
 {
-    public static bool TryGetPmdSprite(Node node, out PMDSprite component)
+    public static bool TryGetComponent<T>(Node node, [NotNullWhen(true)] out T component) where T : Node
     {
-        component = node.GetNode<PMDSprite>(nameof(PMDSprite));
+        component = null!;
+        if (node.FindChild(typeof(T).Name) is T found)
+            component = found;
         return component != null;
     }
 
-    public static bool TryGetAIComponent(Node node, out AIComponent component)
-    {
-        component = node.GetNode<AIComponent>(nameof(AIComponent));
-        return component != null;
-    }
-
-    public static bool TryGetHealthComponent(Node node, out HealthComponent component)
-    {
-        component = node.GetNode<HealthComponent>(nameof(HealthComponent));
-        return component != null;
-    }
-
-    public static bool TryGetHitboxComponent(Node node, out HitboxComponent component)
-    {
-        component = node.GetNode<HitboxComponent>(nameof(HitboxComponent));
-        return component != null;
-    }
-
-    public static bool TryGetHurtboxComponent(Node node, out HurtboxComponent component)
-    {
-        component = node.GetNode<HurtboxComponent>(nameof(HurtboxComponent));
-        return component != null;
-    }
-
-    public static bool TryGetTeamComponent(Node node, out TeamComponent component)
-    {
-        component = node.GetNode<TeamComponent>(nameof(TeamComponent));
-        return component != null;
-    }
-
-    public static bool TryGetUserInputComponent(Node node, out UserInputComponent component)
-    {
-        component = node.GetNode<UserInputComponent>(nameof(UserInputComponent));
-        return component != null;
-    }
-
-    public static bool TryGetSelectableComponent(Node node, out SelectableComponent component)
-    {
-        component = node.GetNode<SelectableComponent>(nameof(SelectableComponent));
-        return component != null;
-    }
+    public static bool TryGetAIComponent(Node node, out AIComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetHealthComponent(Node node, out HealthComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetHitboxComponent(Node node, out HitboxComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetHurtboxComponent(Node node, out HurtboxComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetPmdSprite(Node node, out PMDSprite component) => TryGetComponent(node, out component);
+    public static bool TryGetSelectableComponent(Node node, out SelectableComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetTeamComponent(Node node, out TeamComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetUnitClickAreaComponent(Node node, out UnitClickAreaComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetUserInputComponent(Node node, out UserInputComponent component) => TryGetComponent(node, out component);
 }

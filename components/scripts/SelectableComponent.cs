@@ -9,13 +9,24 @@ public partial class SelectableComponent : Node2D
     public delegate void OnSelectionChangedEventHandler(bool isSelected);
 
     [Export]
-    public TeamComponent? Team;
+    public bool CanMultiSelect = false;
+    [Export]
+    public bool Reselectable = true;
+
+    [Export(PropertyHint.Range, "0,1,0.1")]
+    public float UnselectedAlpha = 0f;
 
     [Export]
-    public float SelectionRadius = 40.0f;
+    public CollisionShape2D SelectionShape = new()
+    {
+        Shape = new CircleShape2D()
+        {
+            Radius = 16,
+        },
+    };
 
     [Export]
-    public float SelectionWidth = 10.0f;
+    public int SelectionBorderSize = 3;
 
     bool selected = false;
     [Export]
@@ -23,9 +34,11 @@ public partial class SelectableComponent : Node2D
     {
         get => selected; set
         {
-            if (selected != value) QueueRedraw();
-            selected = value;
-            EmitSignalOnSelectionChanged(selected);
+            if (selected != value) {
+                QueueRedraw();
+                selected = value;
+                EmitSignalOnSelectionChanged(selected);
+            }
         }
     }
 
@@ -37,25 +50,29 @@ public partial class SelectableComponent : Node2D
     public void Select()
     {
         IsSelected = true;
-        // You can add visual feedback for selection here
     }
     public void Deselect()
     {
         IsSelected = false;
-        // You can remove visual feedback for selection here
     }
 
     public override void _Draw()
     {
+        if (!GetComponent.TryGetTeamComponent(GetParent(), out var Team))
+            return;
 
         // draw red circle
-        var color = Colors.Red;
-        if (Team is not null)
-        {
-            color = Team.Team?.Color ?? color;
-        }
-        if (!IsSelected) color.A = 0.3f;
+        var color = Team.Team?.Color ?? Colors.WebGray;
+        if (!IsSelected) color.A = UnselectedAlpha;
 
-        DrawCircle(Vector2.Zero, SelectionRadius, color, filled: false, width: SelectionWidth);
+        switch (SelectionShape.Shape) 
+        { 
+            case CircleShape2D circleShape:
+                DrawCircle(Vector2.Zero, circleShape.Radius, color, filled: false, width: SelectionBorderSize);
+                return;
+            case RectangleShape2D rectShape:
+                DrawRect(rectShape.GetRect(), color, false, SelectionBorderSize);
+                return;
+        }
     }
 }

@@ -1,0 +1,4 @@
+[gd_resource type="Theme" format=3 uid="uid://cp4nesj42p88g"]
+
+[resource]
+VBoxContainer/colors/blue = Color(0.17860413, 0.41012383, 1, 1)

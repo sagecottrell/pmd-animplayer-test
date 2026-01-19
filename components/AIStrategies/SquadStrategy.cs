@@ -15,9 +15,6 @@ public partial class SquadStrategy : AIStrategy
     [Export]
     public SquadInfo SquadInfo { get; set; } = new();
 
-    [Export]
-    public Vector2 FacingDirection { get; set; } = Vector2.Down;
-
     public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
         if (SquadInfo == null || aiStrategy.Target is null)
@@ -52,8 +49,8 @@ public partial class SquadStrategy : AIStrategy
             int rankIndex = rankUnits.IndexOf(unit.GetPath());
             if (rankIndex != -1)
             {
-                var o = -depth * FacingDirection.Normalized() * FormationSpacing
-                    + FacingDirection.Rotated(Mathf.Pi / 2) * (rankIndex - (float)rankUnits.Count / 2) * FormationSpacing;
+                var o = -depth * SquadInfo.FacingDirection.Normalized() * FormationSpacing
+                    + SquadInfo.FacingDirection.Rotated(Mathf.Pi / 2) * (rankIndex - (float)rankUnits.Count / 2) * FormationSpacing;
                 return o + target.GlobalPosition;
             }
         }

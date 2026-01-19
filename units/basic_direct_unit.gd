@@ -78,11 +78,6 @@ func _ready():
 	$AIComponent.OnReachedTarget.connect(on_reach_target)
 	$UnitClickArea.input_pickable = clickable
 	
-	var collide_shape = $UnitClickArea.GetShape()
-	if collide_shape is CircleShape2D:
-		$SelectableComponent.SelectionRadius = collide_shape.radius \
-		 - $SelectableComponent.SelectionWidth / 2
-	
 	on_return()
 
 func on_hit():
@@ -124,7 +119,7 @@ func on_charge():
 func on_reach_target():
 	var strat = $AIComponent.Strategy
 	if strat is SquadStrategy:
-		$PMDSprite.Direction = strat.FacingDirection
+		$PMDSprite.Direction = strat.SquadInfo.FacingDirection
 
 func on_move(dir: Vector2):
 	match state:

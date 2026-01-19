@@ -1,3 +1,4 @@
+using breakout.components.scripts;
 using Godot;
 
 namespace breakout;
@@ -16,6 +17,23 @@ public static class NodeExtensions
             }
         }
         ctx = default!;
+        return false;
+    }
+
+    public static bool TryGetAncestorWithComponent<T>(this Node node, out Node ancestor, out T component) where T : Node
+    {
+        while (node != null)
+        {
+            node = node.GetParent();
+            if (GetComponent.TryGetComponent(node, out T found))
+            {
+                component = found;
+                ancestor = node;
+                return true;
+            }
+        }
+        component = default!;
+        ancestor = default!;
         return false;
     }
 }

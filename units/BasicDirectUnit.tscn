@@ -24,21 +24,21 @@ radius = 14.035668
 radius = 20.024984
 
 [node name="BasicDirectUnit" type="CharacterBody2D"]
-collision_mask = 0
+collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_1bet7")
 clickable = true
 
-[node name="SelectableComponent" parent="." node_paths=PackedStringArray("Team") instance=ExtResource("8_rjmnn")]
+[node name="SelectableComponent" parent="." node_paths=PackedStringArray("SelectionShape") instance=ExtResource("8_rjmnn")]
 z_index = -1
 z_as_relative = false
 position = Vector2(0, -5)
-Team = NodePath("../TeamComponent")
-SelectionRadius = 20.0
-SelectionWidth = 3.0
+CanMultiSelect = true
+SelectionShape = NodePath("../UnitClickArea/CollisionShape2D")
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_odw8u")
+debug_color = Color(0.19205204, 0.63322234, 0.313985, 0.41960785)
 
 [node name="PMDSprite" parent="." instance=ExtResource("2_ecyxk")]
 
@@ -50,14 +50,11 @@ Strategy = SubResource("Resource_gjqrm")
 [node name="HurtComponent" parent="." node_paths=PackedStringArray("Team") instance=ExtResource("6_rjmnn")]
 Team = NodePath("../TeamComponent")
 
-[node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
-
-[node name="Hurtbox" type="Area2D" parent="."]
-input_pickable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtComponent"]
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
+
+[node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
 
 [node name="UnitClickArea" parent="." instance=ExtResource("9_gjqrm")]
 

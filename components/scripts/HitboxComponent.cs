@@ -10,13 +10,15 @@ public partial class HitboxComponent : Node
 {
 
     [Export]
-    public DamageSource DamageSource;
+    public DamageSource? DamageSource;
 
-    public HitboxComponent(DamageSource damageSource) : base()
+    bool piercing = false;
+
+    public void DeleteFromFriendlyFire()
     {
-        DamageSource = damageSource;
+        if (!piercing)
+            GetParent().QueueFree();
     }
-
 }
 
 public interface IHitboxComponentModifier

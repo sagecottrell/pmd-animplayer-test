@@ -29,6 +29,9 @@ public partial class SquadInfo : Resource
     [Export]
     public Dictionary<NodePath, SquadRank> UnitRanks { get; set; } = [];
 
+    [Export]
+    public Vector2 FacingDirection { get; set; } = Vector2.Down;
+
     public void AddUnit(Node2D unit, SquadRank rank)
     {
 #if TOOLS

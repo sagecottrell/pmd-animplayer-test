@@ -9,7 +9,7 @@ namespace breakout.components.scripts;
 
 public partial class SquadSelectorOverlay : Area2D
 {
-    public TeamInfo? PlayerTeam;
+    TeamInfo? PlayerTeam;
     List<Node2D> selectedUnits = [];
     SquadInfo? selectedSquad;
 
@@ -29,6 +29,11 @@ public partial class SquadSelectorOverlay : Area2D
 
     public override void _Ready()
     {
+        if (this.TryGetContext<IGameState>(out var gameState))
+        {
+            PlayerTeam = gameState.PlayerTeam;
+        }
+
         InputEvent += _root_InputEvent;
 
         GlobalSignals.Instance!.OnSingleClick += _on_SingleClick;
@@ -102,34 +107,29 @@ public partial class SquadSelectorOverlay : Area2D
 
     private void _on_toggleUnit(List<Node2D> units)
     {
-        selectedSquad = null;
+        List<Node2D> selection = [..selectedUnits];
         foreach (var unit in units)
         {
-            if (!selectedUnits.Remove(unit))
-            {
-                selectedUnits.Add(unit);
-                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                    selectable.Select();
-            }
-            else
-                if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
-                selectable.Deselect();
+            if (!selection.Remove(unit))
+                selection.Add(unit);
         }
-        CheckAllSameSquad();
-        EmitSignalOnSquadSelected(selectedSquad);
+        _on_selectUnit(selection);
     }
 
     private void _on_selectUnit(List<Node2D> units)
     {
         selectedSquad = null;
         foreach (var unit in selectedUnits)
-            if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+            if (GetComponent.TryGetSelectableComponent(unit, out var selectable) && selectable.IsSelected && (!units.Contains(unit) || selectable.Reselectable))
                 selectable.Deselect();
         selectedUnits.Clear();
         foreach (var unit in units)
         {
-            if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+            // select unit only if it can be multi-selected or if it is the only unit selected
+            if (GetComponent.TryGetSelectableComponent(unit, out var selectable) && selectable.IsSelected == false && (selectable.CanMultiSelect || units.Count == 1))
             {
+                var teamMatch = !GetComponent.TryGetTeamComponent(unit, out var team) || team.Team is null || team.Team == PlayerTeam;
+                if (!teamMatch) continue;
                 selectable.Select();
                 selectedUnits.Add(unit);
             }
@@ -163,21 +163,26 @@ public partial class SquadSelectorOverlay : Area2D
         if (selectedSquad is null)
             CheckAllSameSquad();
 
+        var facingDirection = m2_end_drag.IsEqualApprox(m2_start_drag) ? Vector2.Up : (m2_end_drag - m2_start_drag).Normalized();
         // if the selected squad matches the selected units, return it
         if (selectedSquad is not null && selectedSquad.Members.Keys.ToHashSet().SetEquals(selectedUnits.Select(x => x.GetPath()).ToHashSet()))
         {
 #if TOOLS
             GD.Print($"Reusing existing squad with {selectedSquad.Members.Count} members");
 #endif
+            selectedSquad.FacingDirection = facingDirection;
             EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);
+            return;
         }
 
         // set up a new squad
-        var squad_info = new SquadInfo();
+        var squad_info = new SquadInfo
+        {
+            FacingDirection = facingDirection,
+        };
         var strategy = new SquadStrategy
         {
             SquadInfo = squad_info,
-            FacingDirection = m2_end_drag.IsEqualApprox(m2_start_drag) ? Vector2.Up : (m2_end_drag - m2_start_drag).Normalized(),
         };
 
         foreach (var unit in selectedUnits)

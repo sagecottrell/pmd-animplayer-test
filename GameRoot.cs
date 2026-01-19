@@ -16,7 +16,7 @@ public partial class GameRoot : Node2D, IGameState
     public PackedScene? SpawnScene;
 
     [Export]
-    public TeamInfo? PlayerTeam;
+    public TeamInfo? PlayerTeam { get; set; }
 
     private UnitDefinition? _selectedUnit;
 
@@ -30,6 +30,9 @@ public partial class GameRoot : Node2D, IGameState
 
         GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
 
+        if (GetComponent.TryGetTeamComponent(GetNode("BaseBuilding"), out var bteam) && PlayerTeam is not null)
+            bteam.SetTeam(PlayerTeam);
+
         foreach (var value in Enum.GetValues<SquadRank>())
         {
             var node = GetNode<Button>($"%{Enum.GetName(value)}");
@@ -41,8 +44,6 @@ public partial class GameRoot : Node2D, IGameState
         }
 
         var selectorOverlay = GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay));
-        selectorOverlay.PlayerTeam = PlayerTeam;
-
         var squadContainer = GetNode<SquadContainer>(nameof(SquadContainer));
         selectorOverlay.OnSquadSelected += squadContainer.OnSquadSelected;
         selectorOverlay.OnSquadSetPosition += (s, p, t) =>
@@ -59,8 +60,8 @@ public partial class GameRoot : Node2D, IGameState
             var res = ResourceLoader.Load<UnitDefinition>($"res://units/types/{file}");
             popup.AddIconItem(res.Icon, res.Name, resources.Count);
             resources[resources.Count] = res;
-            popup.IdPressed += (id) => pick(resources[id]);
         }
+        popup.IdPressed += (id) => pick(resources[id]);
         pick(resources[0]);
     }
 
@@ -83,9 +84,11 @@ public partial class GameRoot : Node2D, IGameState
             teamComponent.SetTeam(PlayerTeam);
         if (GetComponent.TryGetPmdSprite(newNode, out var sprite) && _selectedUnit is not null)
             sprite.Sprites = _selectedUnit.Sprites;
+        if (GetComponent.TryGetSelectableComponent(newNode, out var selectable))
+            selectable.UnselectedAlpha = 0.3f;
         GetNode("%Units").AddChild(newNode);
         newNode.Owner = this;
-        if (GetComponent.TryGetAIComponent(newNode, out var aIComponent) && baseSquadStrat.Duplicate() is SquadStrategy ss)
+        if (GetComponent.TryGetAIComponent(newNode, out var aIComponent) && baseSquadStrat.Duplicate(deep: true) is SquadStrategy ss)
         {
             aIComponent.Strategy = ss;
             ss.SquadInfo.AddUnit(newNode, squadRank);

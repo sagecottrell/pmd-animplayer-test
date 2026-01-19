@@ -1,3 +1,5 @@
+using breakout.resourceTypes;
+
 namespace breakout;
 
 public interface IGameState
@@ -10,4 +12,6 @@ public interface IGameState
     }
 
     bool TryBuy(Godot.Collections.Dictionary<ResourceNames, long> values);
+
+    TeamInfo? PlayerTeam { get; }
 }
