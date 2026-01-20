@@ -1,13 +1,12 @@
-using breakout.components.scripts;
 using Godot;
 
-namespace breakout.components;
+namespace breakout.components.scripts;
 
 /// <summary>
 /// Where damage is received.
 /// </summary>
 [GlobalClass]
-public partial class HurtboxComponent : Area2D
+public partial class HurtboxComponent : Area2D, INodeComponent
 {
     [Signal]
     public delegate void OnHurtEventHandler(DamageSource body);

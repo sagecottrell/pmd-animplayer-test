@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace breakout.components.scripts;
 
-public partial class UnitClickAreaComponent : Area2D
+public partial class UnitClickAreaComponent : Area2D, INodeComponent
 {
     [Signal]
     public delegate void UnitClickedEventHandler(UnitClickAreaComponent unitClickAreaComponent);

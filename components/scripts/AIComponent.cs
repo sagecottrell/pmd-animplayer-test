@@ -1,9 +1,10 @@
 using breakout.components.AIStrategies;
+using breakout.components.scripts;
 using Godot;
 namespace breakout.components;
 
 [GlobalClass]
-public partial class AIComponent : Node
+public partial class AIComponent : Node, INodeComponent
 {
     [Export]
     public Node2D? Target { get; set; }

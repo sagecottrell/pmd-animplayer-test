@@ -20,7 +20,8 @@ public static class NodeExtensions
         return false;
     }
 
-    public static bool TryGetAncestorWithComponent<T>(this Node node, out Node ancestor, out T component) where T : Node
+    public static bool TryGetAncestorWithComponent<T>(this Node node, out Node ancestor, out T component) 
+        where T : class, INodeComponent
     {
         while (node != null)
         {
@@ -36,4 +37,8 @@ public static class NodeExtensions
         ancestor = default!;
         return false;
     }
+
+    public static bool TryGetComponent<T>(this Node node, out T component) 
+        where T : class, INodeComponent 
+        => GetComponent.TryGetComponent(node, out component);
 }

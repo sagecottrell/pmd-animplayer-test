@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d1dngc4pumaig"]
+[gd_scene load_steps=9 format=3 uid="uid://d1dngc4pumaig"]
 
 [ext_resource type="Script" uid="uid://c76c28c0o5ods" path="res://GameRoot.cs" id="1_hirbl"]
 [ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="2_kxd06"]
@@ -13,8 +13,6 @@ script = ExtResource("3_xpglq")
 Id = 1
 Color = Color(0.24705882, 1, 1, 1)
 metadata/_custom_type_script = "uid://cgjulsb7a3hn1"
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_l8v81"]
 
 [node name="GameRoot" type="Node2D" node_paths=PackedStringArray("SpawnPoints")]
 script = ExtResource("1_hirbl")
@@ -46,42 +44,3 @@ unique_name_in_owner = true
 
 [node name="BaseBuilding" parent="." instance=ExtResource("7_kxd06")]
 position = Vector2(334, 347)
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_right = 699.0
-offset_bottom = 186.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
-layout_mode = 2
-
-[node name="SpawnUnit" type="Button" parent="HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_mode = 0
-text = "Spawn Unit
-"
-
-[node name="Frontline" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_l8v81")
-text = "Frontline"
-
-[node name="Support" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_l8v81")
-text = "Support
-"
-
-[node name="Rearguard" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_l8v81")
-text = "Rearguard
-"
-
-[node name="PokeSelector" type="MenuButton" parent="HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Pick"

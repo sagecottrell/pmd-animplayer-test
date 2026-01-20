@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="6_rjmnn"]
 [ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="7_uobji"]
 [ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="8_rjmnn"]
-[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickArea.tscn" id="9_gjqrm"]
+[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickAreaComponent.tscn" id="9_gjqrm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 radius = 8.0
@@ -34,7 +34,7 @@ z_index = -1
 z_as_relative = false
 position = Vector2(0, -5)
 CanMultiSelect = true
-SelectionShape = NodePath("../UnitClickArea/CollisionShape2D")
+SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_odw8u")
@@ -56,8 +56,8 @@ debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
 [node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
 
-[node name="UnitClickArea" parent="." instance=ExtResource("9_gjqrm")]
+[node name="UnitClickAreaComponent" parent="." instance=ExtResource("9_gjqrm")]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent"]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_uobji")

@@ -31,7 +31,7 @@ func on_attacking():
 	set(value):
 		clickable = value
 		if is_node_ready():
-			$UnitClickArea.SetEnabled(value)
+			$UnitClickAreaComponent.SetEnabled(value)
 
 @export var sprites: AnimationLibrary:
 	get:
@@ -76,7 +76,7 @@ func _ready():
 	
 	$AIComponent.OnNewVelocity.connect(on_move)
 	$AIComponent.OnReachedTarget.connect(on_reach_target)
-	$UnitClickArea.input_pickable = clickable
+	$UnitClickAreaComponent.input_pickable = clickable
 	
 	on_return()
 

@@ -24,6 +24,8 @@ public partial class GlobalSignals : Node
     public delegate void OnDoubleClickEventHandler(Node2D unit, MouseButton button);
     [Signal]
     public delegate void OnSingleClickEventHandler(Node2D units, MouseButton button);
+    [Signal]
+    public delegate void OnUnitSpawnEventHandler(Godot.Collections.Array<Node2D> units);
 
     public void GameOver()
     {
@@ -38,5 +40,10 @@ public partial class GlobalSignals : Node
     public void SingleClick(Node2D units, MouseButton button)
     {
         EmitSignalOnSingleClick(units, button);
+    }
+
+    public void UnitSpawn(Godot.Collections.Array<Node2D> units)
+    {
+        EmitSignalOnUnitSpawn(units);
     }
 }

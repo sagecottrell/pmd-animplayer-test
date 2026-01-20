@@ -1,11 +1,11 @@
 using Godot;
 using System;
 
-namespace breakout.components;
+namespace breakout.components.scripts;
 
 [Tool]
 [GlobalClass]
-public partial class PMDSprite : Node2D
+public partial class PMDSprite : Node2D, INodeComponent
 {
     const string ANIMLIB_NAME = "animationlib";
     private static readonly double THRESHOLD = Math.Sin(Math.PI / 8);

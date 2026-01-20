@@ -3,7 +3,7 @@ using Godot;
 namespace breakout.components.scripts;
 
 [GlobalClass]
-public partial class SelectableComponent : Node2D
+public partial class SelectableComponent : Node2D, INodeComponent
 {
     [Signal]
     public delegate void OnSelectionChangedEventHandler(bool isSelected);

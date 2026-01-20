@@ -1,11 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctstpyv0qcssy"]
+[gd_scene load_steps=11 format=3 uid="uid://ctstpyv0qcssy"]
 
 [ext_resource type="Script" uid="uid://cr8mywd6yctko" path="res://buildings/BaseBuilding.cs" id="1_nyv1e"]
 [ext_resource type="Texture2D" uid="uid://cpcmcfa75mg8d" path="res://buildings/pmdtent.png" id="1_w6qvt"]
-[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickArea.tscn" id="2_2idmy"]
+[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickAreaComponent.tscn" id="2_2idmy"]
 [ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="2_ggjgd"]
 [ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="3_ft1su"]
 [ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="4_nyv1e"]
+[ext_resource type="PackedScene" uid="uid://c1r3e7cp257os" path="res://components/UIComponent.tscn" id="6_vsrpd"]
+[ext_resource type="PackedScene" uid="uid://2t50no3vese8" path="res://buildings/UIs/BasicUnitSpawnMenu.tscn" id="7_x8ix5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w6qvt"]
 radius = 22.0
@@ -19,7 +21,7 @@ script = ExtResource("1_nyv1e")
 
 [node name="SelectableComponent" parent="." node_paths=PackedStringArray("SelectionShape") instance=ExtResource("2_ggjgd")]
 UnselectedAlpha = 0.3
-SelectionShape = NodePath("../UnitClickArea/CollisionShape2D")
+SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(14, 14)
@@ -37,8 +39,12 @@ texture = ExtResource("1_w6qvt")
 
 [node name="HealthComponent" parent="." instance=ExtResource("4_nyv1e")]
 
-[node name="UnitClickArea" parent="." instance=ExtResource("2_2idmy")]
+[node name="UIComponent" parent="." instance=ExtResource("6_vsrpd")]
+top_level = true
+SameTeam_Scene = ExtResource("7_x8ix5")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickArea"]
+[node name="UnitClickAreaComponent" parent="." instance=ExtResource("2_2idmy")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent"]
 position = Vector2(0, 1)
 shape = SubResource("CircleShape2D_ggjgd")

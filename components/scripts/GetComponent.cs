@@ -5,7 +5,8 @@ namespace breakout.components.scripts;
 [GlobalClass]
 public partial class GetComponent : GodotObject
 {
-    public static bool TryGetComponent<T>(Node node, [NotNullWhen(true)] out T component) where T : Node
+    public static bool TryGetComponent<T>(Node node, [NotNullWhen(true)] out T component) 
+        where T : class, INodeComponent
     {
         component = null!;
         if (node.FindChild(typeof(T).Name) is T found)
@@ -22,4 +23,5 @@ public partial class GetComponent : GodotObject
     public static bool TryGetTeamComponent(Node node, out TeamComponent component) => TryGetComponent(node, out component);
     public static bool TryGetUnitClickAreaComponent(Node node, out UnitClickAreaComponent component) => TryGetComponent(node, out component);
     public static bool TryGetUserInputComponent(Node node, out UserInputComponent component) => TryGetComponent(node, out component);
+    public static bool TryGetUIComponent(Node node, out UIComponent component) => TryGetComponent(node, out component);
 }

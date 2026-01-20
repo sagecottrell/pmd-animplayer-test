@@ -1,10 +1,10 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace breakout.components;
+namespace breakout.components.scripts;
 
 [GlobalClass]
-public partial class HealthComponent : Node
+public partial class HealthComponent : Node, INodeComponent
 {
     [Signal]
     public delegate void OnDeathEventHandler(DamageSource source);

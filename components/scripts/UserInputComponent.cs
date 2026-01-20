@@ -1,9 +1,9 @@
 using Godot;
 
-namespace breakout.components;
+namespace breakout.components.scripts;
 
 [GlobalClass]
-public partial class UserInputComponent : Node
+public partial class UserInputComponent : Node, INodeComponent
 {
     [Signal]
     public delegate void OnMovementEventHandler(Vector2 direction);
