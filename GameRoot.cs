@@ -1,27 +1,21 @@
-using breakout.components.AIStrategies;
 using breakout.components.scripts;
-using breakout.resourceTypes;
+using breakout.customResources;
 using breakout.squad;
 using Godot;
 using Godot.Collections;
-using System;
 
 namespace breakout;
 
+[Tool]
 public partial class GameRoot : Node2D, IGameState
 {
-    [Export]
-    public Array<Node2D> SpawnPoints = [];
-
     [Export]
     public TeamInfo? PlayerTeam { get; set; }
 
     public override void _Ready()
     {
         GetViewport().PhysicsObjectPickingSort = true;
-
-        if (GetComponent.TryGetTeamComponent(GetNode("BaseBuilding"), out var bteam) && PlayerTeam is not null)
-            bteam.SetTeam(PlayerTeam);
+        GlobalSignals.Instance?.PlayerResourcesChange(_resources);
 
         var selectorOverlay = GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay));
         var squadContainer = GetNode<SquadContainer>(nameof(SquadContainer));
@@ -43,27 +37,35 @@ public partial class GameRoot : Node2D, IGameState
                 }
             };
         }
-        
+
     }
 
+    [Export]
+    public Dictionary<GameResourceNames, long> Resources { get => _resources; 
+        set 
+        { 
+            _resources = value; 
+            GlobalSignals.Instance?.PlayerResourcesChange(_resources);
+        }
+    }
+    Dictionary<GameResourceNames, long> _resources = [];
 
-    public Dictionary<ResourceNames, long> Resources = [];
-
-    public bool TryBuy(Dictionary<ResourceNames, long> values)
+    public bool TryBuy(System.Collections.Generic.IDictionary<GameResourceNames, long> values)
     {
         foreach (var kvp in values)
         {
-            if (!Resources.TryGetValue(kvp.Key, out long value) || value < kvp.Value)
+            if (!_resources.TryGetValue(kvp.Key, out long value) || value < kvp.Value)
             {
                 return false;
             }
         }
         foreach (var kvp in values)
         {
-            Resources[kvp.Key] -= kvp.Value;
+            _resources[kvp.Key] -= kvp.Value;
         }
+        GlobalSignals.Instance?.PlayerResourcesChange(_resources);
         return true;
     }
 
-    public bool GetResourceCount(ResourceNames r, out long value) => Resources.TryGetValue(r, out value);
+    public bool GetResourceCount(GameResourceNames r, out long value) => _resources.TryGetValue(r, out value);
 }

@@ -1,4 +1,13 @@
-[gd_resource type="Theme" format=3 uid="uid://cp4nesj42p88g"]
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cp4nesj42p88g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yktqi"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.16924527, 0.16924533, 0.16924518, 1)
 
 [resource]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_yktqi")
 VBoxContainer/colors/blue = Color(0.17860413, 0.41012383, 1, 1)
+VBoxContainer/constants/separation = 0

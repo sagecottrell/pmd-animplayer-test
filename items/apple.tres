@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="GameResourceDefinition" load_steps=3 format=3 uid="uid://bn6ff12h56fpr"]
+
+[ext_resource type="Texture2D" uid="uid://ce6wpjnrfffhm" path="res://items/apple.png" id="1_dumep"]
+[ext_resource type="Script" uid="uid://71evlu0mlyfq" path="res://customResources/GameResourceDefinition.cs" id="1_pv0u0"]
+
+[resource]
+script = ExtResource("1_pv0u0")
+Name = 4
+Icon = ExtResource("1_dumep")
+metadata/_custom_type_script = "uid://71evlu0mlyfq"

@@ -1,5 +1,6 @@
-using breakout.resourceTypes;
+using breakout.customResources;
 using Godot;
+using System.Collections.Generic;
 
 namespace breakout.components.scripts;
 
@@ -19,7 +20,13 @@ public partial class UIComponent : Control, INodeComponent
     public PackedScene? DifferentTeam_Scene;
     [Export]
     public PackedScene? Neutral_Scene;
+
+    [Export]
+    /// if true, other UI components should restore this one when they hide themselves
+    public bool OthersCanStack = false;
+
     static UIComponent? currentDisplay;
+    static readonly Stack<UIComponent> displayStack = [];
     Node? ui;
     UIType currentType = UIType.None;
 
@@ -38,18 +45,34 @@ public partial class UIComponent : Control, INodeComponent
 
         if (scene is null || newType == currentType)
             return;
-        currentDisplay?.HideUI();
+        if (currentDisplay is UIComponent c) {
+            if (c.OthersCanStack) c.HideStackableUI(); 
+            else c.RemoveUI(); 
+        }
         currentDisplay = this;
         currentType = newType;
-        ui = scene.Instantiate();
+        ui ??= scene.Instantiate();
         AddChild(ui);
     }
 
-    public void HideUI()
+    public void RemoveUI()
     {
+        currentDisplay = null;
         currentType = UIType.None;
         ui?.QueueFree();
         ui = null;
+
+        if (displayStack.TryPop(out var nextDisplay))
+        {
+            nextDisplay.ShowUI();
+        }
+    }
+
+    public void HideStackableUI()
+    {
+        displayStack.Push(this);
+        currentType = UIType.None;
+        RemoveChild(ui);
     }
 
     public bool Displayed() => currentType != UIType.None;

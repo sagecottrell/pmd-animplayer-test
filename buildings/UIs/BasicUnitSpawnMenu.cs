@@ -2,10 +2,12 @@ using breakout;
 using breakout.buildings;
 using breakout.components.AIStrategies;
 using breakout.components.scripts;
-using breakout.resourceTypes;
+using breakout.customResources;
 using Godot;
 using System;
 using System.Collections.Generic;
+
+namespace breakout.buildings.UIs;
 
 public partial class BasicUnitSpawnMenu : Control
 {
@@ -72,4 +74,5 @@ public partial class BasicUnitSpawnMenu : Control
             ss.SquadInfo.AddUnit(newNode, squadRank);
         }
     }
+
 }

@@ -1,5 +1,5 @@
 using breakout.components.scripts;
-using breakout.resourceTypes;
+using breakout.customResources;
 using Godot;
 using Godot.Collections;
 using System.Linq;

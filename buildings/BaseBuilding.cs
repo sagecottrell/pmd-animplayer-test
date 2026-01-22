@@ -18,7 +18,7 @@ public partial class BaseBuilding : Node2D
             if (v)
                 uiComponent.ShowUI();
             else
-                uiComponent.HideUI();
+                uiComponent.RemoveUI();
         };
     }
 }

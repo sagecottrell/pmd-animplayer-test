@@ -1,35 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://d1dngc4pumaig"]
+[gd_scene load_steps=6 format=3 uid="uid://d1dngc4pumaig"]
 
 [ext_resource type="Script" uid="uid://c76c28c0o5ods" path="res://GameRoot.cs" id="1_hirbl"]
-[ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="2_kxd06"]
-[ext_resource type="Script" uid="uid://cgjulsb7a3hn1" path="res://resourceTypes/TeamInfo.cs" id="3_xpglq"]
 [ext_resource type="PackedScene" uid="uid://ctom5qyl12qqs" path="res://SquadSelectorOverlay.tscn" id="4_a4rlw"]
+[ext_resource type="PackedScene" uid="uid://c2ed5sibvp4wc" path="res://PlayerResourceDisplay.tscn" id="5_8pgip"]
 [ext_resource type="Script" uid="uid://cfvbqi6ju0566" path="res://squad/SquadContainer.cs" id="5_pv2v4"]
 [ext_resource type="PackedScene" uid="uid://2c0w8mgcf8jv" path="res://squad/SquadFlag.tscn" id="6_kjgx1"]
-[ext_resource type="PackedScene" uid="uid://ctstpyv0qcssy" path="res://buildings/BaseBuilding.tscn" id="7_kxd06"]
 
-[sub_resource type="Resource" id="Resource_drpm8"]
-script = ExtResource("3_xpglq")
-Id = 1
-Color = Color(0.24705882, 1, 1, 1)
-metadata/_custom_type_script = "uid://cgjulsb7a3hn1"
-
-[node name="GameRoot" type="Node2D" node_paths=PackedStringArray("SpawnPoints")]
+[node name="GameRoot" type="Node2D"]
 script = ExtResource("1_hirbl")
-SpawnPoints = [NodePath("EnemySpawn2"), NodePath("EnemySpawn"), NodePath("EnemySpawn3")]
-SpawnScene = ExtResource("2_kxd06")
-PlayerTeam = SubResource("Resource_drpm8")
+Resources = Dictionary[int, int]({
+1: 350,
+2: 117117,
+3: 16,
+4: 34221
+})
 
 [node name="SquadSelectorOverlay" parent="." instance=ExtResource("4_a4rlw")]
-
-[node name="EnemySpawn2" type="Node2D" parent="."]
-position = Vector2(174, 67)
-
-[node name="EnemySpawn" type="Node2D" parent="."]
-position = Vector2(248, 69)
-
-[node name="EnemySpawn3" type="Node2D" parent="."]
-position = Vector2(316, 69)
 
 [node name="SquadContainer" type="Node2D" parent="." node_paths=PackedStringArray("FlagScenePrefab")]
 unique_name_in_owner = true
@@ -42,5 +28,12 @@ visible = false
 [node name="Units" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="BaseBuilding" parent="." instance=ExtResource("7_kxd06")]
-position = Vector2(334, 347)
+[node name="PlayerResourceDisplay" parent="." instance=ExtResource("5_8pgip")]
+unique_name_in_owner = true
+size_flags_vertical = 3
+Resources = Dictionary[int, int]({
+1: 350,
+2: 117117,
+3: 16,
+4: 34221
+})

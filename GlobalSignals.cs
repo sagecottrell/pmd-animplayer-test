@@ -5,7 +5,7 @@ namespace breakout;
 public partial class GlobalSignals : Node
 {
 
-    private static GlobalSignals? _instance;
+    private static GlobalSignals? _instance = new();
     public static GlobalSignals? Instance => _instance;
 
     // Use _EnterTree to make sure the Singleton instance is avaiable in _Ready()
@@ -26,6 +26,8 @@ public partial class GlobalSignals : Node
     public delegate void OnSingleClickEventHandler(Node2D units, MouseButton button);
     [Signal]
     public delegate void OnUnitSpawnEventHandler(Godot.Collections.Array<Node2D> units);
+    [Signal]
+    public delegate void OnPlayerResourcesChangeEventHandler(Godot.Collections.Dictionary<GameResourceNames, long> resources);
 
     public void GameOver()
     {
@@ -45,5 +47,10 @@ public partial class GlobalSignals : Node
     public void UnitSpawn(Godot.Collections.Array<Node2D> units)
     {
         EmitSignalOnUnitSpawn(units);
+    }
+
+    public void PlayerResourcesChange(Godot.Collections.Dictionary<GameResourceNames, long> resources)
+    {
+        EmitSignalOnPlayerResourcesChange(resources);
     }
 }

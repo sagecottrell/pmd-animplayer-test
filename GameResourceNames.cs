@@ -1,6 +1,6 @@
 namespace breakout;
 
-public enum ResourceNames
+public enum GameResourceNames
 {
     None,
     XP,

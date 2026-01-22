@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2ed5sibvp4wc"]
+
+[ext_resource type="Script" uid="uid://10ojxik4jj2d" path="res://PlayerResourceDisplay.cs" id="1_27uom"]
+
+[node name="PlayerResourceDisplay" type="VBoxContainer"]
+offset_right = 58.0
+offset_bottom = 70.0
+script = ExtResource("1_27uom")
+Resources = Dictionary[int, int]({
+1: 345,
+2: 4
+})

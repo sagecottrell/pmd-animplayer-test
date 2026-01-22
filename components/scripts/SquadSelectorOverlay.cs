@@ -1,6 +1,6 @@
 
 using breakout.components.AIStrategies;
-using breakout.resourceTypes;
+using breakout.customResources;
 using Godot;
 using System.Collections.Generic;
 using System.Linq;

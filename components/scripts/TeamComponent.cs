@@ -1,4 +1,4 @@
-using breakout.resourceTypes;
+using breakout.customResources;
 using Godot;
 
 namespace breakout.components.scripts;

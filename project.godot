@@ -26,6 +26,7 @@ GlobalSignals="*res://GlobalSignals.cs"
 
 window/size/viewport_width=700
 window/size/viewport_height=700
+window/size/borderless=true
 
 [dotnet]
 
@@ -34,6 +35,10 @@ project/assembly_name="breakout"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/import_pmd_zip/plugin.cfg")
+
+[gui]
+
+theme/custom="uid://cp4nesj42p88g"
 
 [input]
 

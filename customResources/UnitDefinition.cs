@@ -1,6 +1,6 @@
 using Godot;
 
-namespace breakout.resourceTypes;
+namespace breakout.customResources;
 
 [Tool]
 [GlobalClass]
