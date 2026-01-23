@@ -13,7 +13,7 @@
 [sub_resource type="Resource" id="Resource_xpglq"]
 script = ExtResource("2_kxd06")
 Id = 1
-Color = Color(1, 0.5764706, 1, 1)
+Color = Color(0.1609711, 0.5334193, 0.75794095, 1)
 metadata/_custom_type_script = "uid://cgjulsb7a3hn1"
 
 [node name="GameRoot" type="Node2D"]
@@ -74,9 +74,5 @@ Resources = Dictionary[int, int]({
 })
 
 [node name="UIComponent" parent="CanvasLayer/TopUI" instance=ExtResource("7_a4rlw")]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-grow_vertical = 0
 Neutral_Scene = ExtResource("6_drpm8")
 OthersCanStack = true

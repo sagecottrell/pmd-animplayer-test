@@ -1,5 +1,3 @@
-using breakout;
-using breakout.buildings;
 using breakout.components.AIStrategies;
 using breakout.components.scripts;
 using breakout.customResources;
@@ -23,27 +21,21 @@ public partial class BasicUnitSpawnMenu : Control
     public override void _Ready()
     {
         GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
-        foreach (var value in Enum.GetValues<SquadRank>())
-        {
-            var node = GetNode<Button>($"%{Enum.GetName(value)}");
-            node.ButtonPressed = squadRank == value;
-            node.Pressed += () =>
-            {
-                squadRank = value;
-            };
-        }
 
         var selector = GetNode<MenuButton>("%PokeSelector");
         var popup = selector.GetPopup();
         var resources = new Dictionary<long, UnitDefinition>();
-        foreach (var file in DirAccess.Open("res://units/types/").GetFiles())
+        foreach (var (id, res) in UnitDefinition.AllDefinitions)
         {
-            var res = ResourceLoader.Load<UnitDefinition>($"res://units/types/{file}");
             popup.AddIconItem(res.Icon, res.Name, resources.Count);
             resources[resources.Count] = res;
         }
         popup.IdPressed += (id) => pick(resources[id]);
         pick(resources[0]);
+
+        var rank = GetNode<OptionButton>("%RankSelector");
+        rank.ItemSelected += RankSelected;
+        rank.Select(0);
     }
 
     public void pick(UnitDefinition? def)
@@ -52,6 +44,12 @@ public partial class BasicUnitSpawnMenu : Control
         var selector = GetNode<MenuButton>("%PokeSelector");
         selector.Icon = def.Icon;
         _selectedUnit = def;
+    }
+
+    public void RankSelected(long idx)
+    {
+        var text = GetNode<OptionButton>("%RankSelector").GetItemText((int)idx);
+        squadRank = Enum.Parse<SquadRank>(text);
     }
 
     public void OnSpawn()

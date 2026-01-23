@@ -1,16 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://2t50no3vese8"]
+[gd_scene load_steps=3 format=3 uid="uid://2t50no3vese8"]
 
 [ext_resource type="Script" uid="uid://dp8f8scgnhkbc" path="res://buildings/UIs/BasicUnitSpawnMenu.cs" id="1_pye2l"]
 [ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="2_egvtj"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_ysu5i"]
 
 [node name="BasicUnitSpawnMenu" type="PanelContainer"]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -252.0
+offset_top = -103.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 0
@@ -19,6 +17,23 @@ SpawnScene = ExtResource("2_egvtj")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="RankSelector" type="OptionButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Frontline"
+popup/item_0/id = 0
+popup/item_1/text = "Support"
+popup/item_1/id = 1
+popup/item_2/text = "Rearguard"
+popup/item_2/id = 2
+
+[node name="PokeSelector" type="MenuButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Pick"
 
 [node name="SpawnUnit" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -26,28 +41,3 @@ layout_mode = 2
 focus_mode = 0
 text = "Spawn Unit
 "
-
-[node name="Frontline" type="CheckBox" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_ysu5i")
-text = "Frontline"
-
-[node name="Support" type="CheckBox" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_ysu5i")
-text = "Support
-"
-
-[node name="Rearguard" type="CheckBox" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_group = SubResource("ButtonGroup_ysu5i")
-text = "Rearguard
-"
-
-[node name="PokeSelector" type="MenuButton" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Pick"
