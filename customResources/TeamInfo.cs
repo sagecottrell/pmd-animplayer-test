@@ -2,6 +2,7 @@ using Godot;
 
 namespace breakout.customResources;
 
+[Tool]
 [GlobalClass]
 public partial class TeamInfo : Resource
 {

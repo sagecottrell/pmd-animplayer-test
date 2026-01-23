@@ -1,3 +1,4 @@
+using breakout.buildings;
 using breakout.components.scripts;
 using breakout.customResources;
 using breakout.squad;
@@ -6,7 +7,6 @@ using Godot.Collections;
 
 namespace breakout;
 
-[Tool]
 public partial class GameRoot : Node2D, IGameState
 {
     [Export]
@@ -18,6 +18,7 @@ public partial class GameRoot : Node2D, IGameState
         GlobalSignals.Instance?.PlayerResourcesChange(_resources);
 
         var selectorOverlay = GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay));
+        selectorOverlay.Enabled = true;
         var squadContainer = GetNode<SquadContainer>(nameof(SquadContainer));
         selectorOverlay.OnSquadSelected += squadContainer.OnSquadSelected;
         selectorOverlay.OnSquadSetPosition += (s, p, t) =>
@@ -36,8 +37,25 @@ public partial class GameRoot : Node2D, IGameState
                     newNode.Owner = this;
                 }
             };
+            GlobalSignals.Instance.OnRequestBuildingCreate += (def) =>
+            {
+                selectorOverlay.Enabled = false;
+                GetNode<BuildingPlacer>("%Buildings").StartPlacingBuilding(def);
+            };
+            GlobalSignals.Instance.OnBuildingCreate += (building) =>
+            {
+                selectorOverlay.Enabled = true;
+                if (building.TryGetComponent<TeamComponent>(out var teamComp) && PlayerTeam is not null)
+                {
+                    teamComp.SetTeam(PlayerTeam);
+                }
+            };
         }
 
+        if (GetNode("%TopUI").TryGetComponent<UIComponent>(out var component))
+        {
+            component.ShowUI();
+        }
     }
 
     [Export]

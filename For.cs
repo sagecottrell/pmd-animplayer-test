@@ -61,9 +61,21 @@ public class For<T, TContainer>
         }
         _nodes = newNodes;
         _values = newValues;
+        if (Container.IsInsideTree() == false)
+            return;
         foreach (var (idx, child) in indexes)
         {
             Container.MoveChild(child, idx);
         }
+    }
+
+    public void Dispose()
+    {
+        _nodes.Clear();
+        _values.Clear();
+        Container = null;
+        Items = null;
+        Key = null;
+        Map = null;
     }
 }

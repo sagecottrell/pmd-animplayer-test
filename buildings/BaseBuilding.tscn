@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://ctstpyv0qcssy"]
+[gd_scene load_steps=10 format=3 uid="uid://ctstpyv0qcssy"]
 
 [ext_resource type="Script" uid="uid://cr8mywd6yctko" path="res://buildings/BaseBuilding.cs" id="1_nyv1e"]
-[ext_resource type="Texture2D" uid="uid://cpcmcfa75mg8d" path="res://buildings/pmdtent.png" id="1_w6qvt"]
 [ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickAreaComponent.tscn" id="2_2idmy"]
 [ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="2_ggjgd"]
 [ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="3_ft1su"]
@@ -32,15 +31,14 @@ position = Vector2(0, 14)
 shape = SubResource("CapsuleShape2D_w6qvt")
 debug_color = Color(0.102933966, 0.64845014, 0, 0.41960785)
 
-[node name="Pmdtent" type="Sprite2D" parent="."]
-texture = ExtResource("1_w6qvt")
-
 [node name="TeamComponent" parent="." instance=ExtResource("3_ft1su")]
 
 [node name="HealthComponent" parent="." instance=ExtResource("4_nyv1e")]
 
 [node name="UIComponent" parent="." instance=ExtResource("6_vsrpd")]
 top_level = true
+offset_right = -700.0
+offset_bottom = -700.0
 SameTeam_Scene = ExtResource("7_x8ix5")
 
 [node name="UnitClickAreaComponent" parent="." instance=ExtResource("2_2idmy")]

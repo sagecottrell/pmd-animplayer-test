@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace breakout.components.scripts;
 
+[GlobalClass]
 public partial class SquadSelectorOverlay : Area2D
 {
     TeamInfo? PlayerTeam;
@@ -18,6 +19,8 @@ public partial class SquadSelectorOverlay : Area2D
 
     [Signal]
     public delegate void OnSquadSelectedEventHandler(SquadInfo? squadInfo);
+
+    public bool Enabled;
 
     bool m1_click_drag;
     Vector2 m1_start_drag;
@@ -34,14 +37,17 @@ public partial class SquadSelectorOverlay : Area2D
             PlayerTeam = gameState.PlayerTeam;
         }
 
-        InputEvent += _root_InputEvent;
-
-        GlobalSignals.Instance!.OnSingleClick += _on_SingleClick;
-        GlobalSignals.Instance.OnDoubleClick += _instance_OnSquadSelect;
+        InputEvent += _on_InputEvent;
+        if (GlobalSignals.Instance is not null)
+        {
+            GlobalSignals.Instance.OnSingleClick += _on_SingleClick;
+            GlobalSignals.Instance.OnDoubleClick += _on_DoubleClick;
+        }
     }
 
-    private void _root_InputEvent(Node viewport, InputEvent @event, long shapeIdx)
+    private void _on_InputEvent(Node viewport, InputEvent @event, long shapeIdx)
     {
+        if (!Enabled) return;
         switch (@event)
         {
             case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
@@ -85,27 +91,29 @@ public partial class SquadSelectorOverlay : Area2D
 
     private void _on_SingleClick(Node2D unit, MouseButton button)
     {
+        if (!Enabled) return;
         if (button == MouseButton.Left)
         {
             if (Input.IsKeyPressed(Key.Shift))
                 // add clicked units to selection
-                _on_toggleUnit([unit]);
+                _toggleUnit([unit]);
             else
-                _on_selectUnit([unit]);
+                _selectUnit([unit]);
             CheckAllSameSquad();
             EmitSignalOnSquadSelected(selectedSquad);
         }
     }
 
-    private void _instance_OnSquadSelect(Node2D unit, MouseButton b)
+    private void _on_DoubleClick(Node2D unit, MouseButton b)
     {
+        if (!Enabled) return;
         if (b == MouseButton.Left && GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
         {
-            _on_selectUnit([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
+            _selectUnit([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
         }
     }
 
-    private void _on_toggleUnit(List<Node2D> units)
+    private void _toggleUnit(List<Node2D> units)
     {
         List<Node2D> selection = [..selectedUnits];
         foreach (var unit in units)
@@ -113,10 +121,10 @@ public partial class SquadSelectorOverlay : Area2D
             if (!selection.Remove(unit))
                 selection.Add(unit);
         }
-        _on_selectUnit(selection);
+        _selectUnit(selection);
     }
 
-    private void _on_selectUnit(List<Node2D> units)
+    private void _selectUnit(List<Node2D> units)
     {
         selectedSquad = null;
         foreach (var unit in selectedUnits)
@@ -155,7 +163,7 @@ public partial class SquadSelectorOverlay : Area2D
                 }
             }
         }
-        _on_selectUnit([.. units]);
+        _selectUnit([.. units]);
     }
 
     public void NewOrExistingSquad(Vector2 position)

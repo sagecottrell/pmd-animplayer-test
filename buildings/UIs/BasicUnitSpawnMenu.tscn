@@ -5,49 +5,49 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ysu5i"]
 
-[node name="BasicUnitSpawnMenu" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="BasicUnitSpawnMenu" type="PanelContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -252.0
+grow_horizontal = 2
+grow_vertical = 0
 size_flags_horizontal = 0
 script = ExtResource("1_pye2l")
 SpawnScene = ExtResource("2_egvtj")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 109.0
-offset_bottom = 171.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="SpawnUnit" type="Button" parent="HBoxContainer/VBoxContainer"]
+[node name="SpawnUnit" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "Spawn Unit
 "
 
-[node name="Frontline" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
+[node name="Frontline" type="CheckBox" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_ysu5i")
 text = "Frontline"
 
-[node name="Support" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
+[node name="Support" type="CheckBox" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_ysu5i")
 text = "Support
 "
 
-[node name="Rearguard" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
+[node name="Rearguard" type="CheckBox" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 button_group = SubResource("ButtonGroup_ysu5i")
 text = "Rearguard
 "
 
-[node name="PokeSelector" type="MenuButton" parent="HBoxContainer/VBoxContainer"]
+[node name="PokeSelector" type="MenuButton" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Pick"

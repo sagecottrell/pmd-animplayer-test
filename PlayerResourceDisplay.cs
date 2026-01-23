@@ -49,7 +49,11 @@ public partial class PlayerResourceDisplay : VBoxContainer
         _resourceDisplay.Container = this;
         _resourceDisplay.Items = () => Resources.OrderBy(x => x.Key);
         _resourceDisplay.Update();
-        GlobalSignals.Instance!.OnPlayerResourcesChange += _on_PlayerResourcesChange;
+        if (GlobalSignals.Instance is not null)
+        {
+            GlobalSignals.Instance.OnPlayerResourcesChange += _on_PlayerResourcesChange;
+        }
+        
     }
 
     private void _on_PlayerResourcesChange(Godot.Collections.Dictionary<GameResourceNames, long> resources)
@@ -63,4 +67,9 @@ public partial class PlayerResourceDisplay : VBoxContainer
         _resourceDisplay.Update();
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        _resourceDisplay.Dispose();
+    }
 }

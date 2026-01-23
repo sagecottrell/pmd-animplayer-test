@@ -56,12 +56,12 @@ public partial class BasicUnitSpawnMenu : Control
 
     public void OnSpawn()
     {
-        if (SpawnScene == null || !this.TryGetContext<IGameState>(out var gameState) || !this.TryGetContext<BaseBuilding>(out var building))
+        if (SpawnScene == null || !this.TryGetContext<IGameState>(out var gameState) || !this.TryGetAncestorWithComponent<UnitSpawnerComponent>(out var building, out var spawnPoint))
             return;
         var newNode = SpawnScene.Instantiate<Node2D>();
         GlobalSignals.Instance?.UnitSpawn([newNode]);
 
-        newNode.GlobalPosition = building.GlobalPosition + building.SpawnPointRelative;
+        newNode.GlobalPosition = spawnPoint.GlobalPosition;
         if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent) && gameState.PlayerTeam is not null)
             teamComponent.SetTeam(gameState.PlayerTeam);
         if (GetComponent.TryGetPmdSprite(newNode, out var sprite) && _selectedUnit is not null)

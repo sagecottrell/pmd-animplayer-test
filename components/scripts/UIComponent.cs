@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace breakout.components.scripts;
 
-public partial class UIComponent : Control, INodeComponent
+public partial class UIComponent : CanvasLayer, INodeComponent
 {
     enum UIType
     {
@@ -42,7 +42,6 @@ public partial class UIComponent : Control, INodeComponent
             scene = unitTeam == playerTeam ? SameTeam_Scene : DifferentTeam_Scene;
             newType = unitTeam == playerTeam ? UIType.SameTeam : UIType.DifferentTeam;
         }
-
         if (scene is null || newType == currentType)
             return;
         if (currentDisplay is UIComponent c) {
@@ -72,7 +71,7 @@ public partial class UIComponent : Control, INodeComponent
     {
         displayStack.Push(this);
         currentType = UIType.None;
-        RemoveChild(ui);
+        ui?.GetParent().RemoveChild(ui);
     }
 
     public bool Displayed() => currentType != UIType.None;
