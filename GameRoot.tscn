@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1dngc4pumaig"]
+[gd_scene format=3 uid="uid://d1dngc4pumaig"]
 
 [ext_resource type="Script" uid="uid://c76c28c0o5ods" path="res://GameRoot.cs" id="1_hirbl"]
 [ext_resource type="Script" uid="uid://cgjulsb7a3hn1" path="res://customResources/TeamInfo.cs" id="2_kxd06"]
@@ -16,7 +16,7 @@ Id = 1
 Color = Color(0.1609711, 0.5334193, 0.75794095, 1)
 metadata/_custom_type_script = "uid://cgjulsb7a3hn1"
 
-[node name="GameRoot" type="Node2D"]
+[node name="GameRoot" type="Node2D" unique_id=1356941615]
 script = ExtResource("1_hirbl")
 PlayerTeam = SubResource("Resource_xpglq")
 Resources = Dictionary[int, int]({
@@ -26,28 +26,28 @@ Resources = Dictionary[int, int]({
 4: 34221
 })
 
-[node name="SquadSelectorOverlay" parent="." instance=ExtResource("4_a4rlw")]
+[node name="SquadSelectorOverlay" parent="." unique_id=1643873305 instance=ExtResource("4_a4rlw")]
 
-[node name="SquadContainer" type="Node2D" parent="." node_paths=PackedStringArray("FlagScenePrefab")]
+[node name="SquadContainer" type="Node2D" parent="." unique_id=2042773940 node_paths=PackedStringArray("FlagScenePrefab")]
 unique_name_in_owner = true
 script = ExtResource("5_pv2v4")
 FlagScenePrefab = NodePath("SquadFlag")
 
-[node name="SquadFlag" parent="SquadContainer" instance=ExtResource("6_kjgx1")]
+[node name="SquadFlag" parent="SquadContainer" unique_id=854302787 instance=ExtResource("6_kjgx1")]
 visible = false
 
-[node name="Units" type="Node2D" parent="."]
+[node name="Units" type="Node2D" parent="." unique_id=161005293]
 unique_name_in_owner = true
 
-[node name="Buildings" type="Node2D" parent="."]
+[node name="Buildings" type="Node2D" parent="." unique_id=1422503384]
 unique_name_in_owner = true
 script = ExtResource("6_xpglq")
 
-[node name="Holograms" type="Node2D" parent="Buildings"]
+[node name="Holograms" type="Node2D" parent="Buildings" unique_id=873654016]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1142398517]
 
-[node name="TopUI" type="Control" parent="CanvasLayer"]
+[node name="TopUI" type="Control" parent="CanvasLayer" unique_id=1166502911]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -60,7 +60,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="PlayerResourceDisplay" parent="CanvasLayer/TopUI" instance=ExtResource("5_8pgip")]
+[node name="PlayerResourceDisplay" parent="CanvasLayer/TopUI" unique_id=122657404 instance=ExtResource("5_8pgip")]
 unique_name_in_owner = true
 layout_mode = 1
 offset_right = 85.0
@@ -73,6 +73,6 @@ Resources = Dictionary[int, int]({
 4: 34221
 })
 
-[node name="UIComponent" parent="CanvasLayer/TopUI" instance=ExtResource("7_a4rlw")]
+[node name="UIComponent" parent="CanvasLayer/TopUI" unique_id=1286678068 instance=ExtResource("7_a4rlw")]
 Neutral_Scene = ExtResource("6_drpm8")
 OthersCanStack = true
