@@ -10,7 +10,6 @@ public enum SquadRank
     Rearguard = 3,
 }
 
-[Tool]
 [GlobalClass]
 public partial class SquadInfo : Resource
 {

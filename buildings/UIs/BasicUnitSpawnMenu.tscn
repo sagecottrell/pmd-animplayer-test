@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://2t50no3vese8"]
+[gd_scene format=3 uid="uid://2t50no3vese8"]
 
 [ext_resource type="Script" uid="uid://dp8f8scgnhkbc" path="res://buildings/UIs/BasicUnitSpawnMenu.cs" id="1_pye2l"]
 [ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="2_egvtj"]
 
-[node name="BasicUnitSpawnMenu" type="PanelContainer"]
+[node name="BasicUnitSpawnMenu" type="PanelContainer" unique_id=814767482]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -15,11 +15,11 @@ size_flags_horizontal = 0
 script = ExtResource("1_pye2l")
 SpawnScene = ExtResource("2_egvtj")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1263316072]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="RankSelector" type="OptionButton" parent="VBoxContainer"]
+[node name="RankSelector" type="OptionButton" parent="VBoxContainer" unique_id=1627325868]
 unique_name_in_owner = true
 layout_mode = 2
 item_count = 3
@@ -30,12 +30,12 @@ popup/item_1/id = 1
 popup/item_2/text = "Rearguard"
 popup/item_2/id = 2
 
-[node name="PokeSelector" type="MenuButton" parent="VBoxContainer"]
+[node name="PokeSelector" type="MenuButton" parent="VBoxContainer" unique_id=1810319849]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Pick"
 
-[node name="SpawnUnit" type="Button" parent="VBoxContainer"]
+[node name="SpawnUnit" type="Button" parent="VBoxContainer" unique_id=1825013728]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0

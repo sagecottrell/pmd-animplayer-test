@@ -5,12 +5,8 @@ using System.Linq;
 
 namespace breakout;
 
-[Tool]
 public partial class PlayerResourceDisplay : VBoxContainer
 {
-    [ExportToolButton("Refresh")]
-    public Callable RefreshButton => new(this, nameof(refresh));
-
     readonly For<KeyValuePair<GameResourceNames, long>, VBoxContainer> _resourceDisplay = new()
     {
         Key = kvp => kvp.Key.ToString(),
@@ -59,11 +55,6 @@ public partial class PlayerResourceDisplay : VBoxContainer
     private void _on_PlayerResourcesChange(Godot.Collections.Dictionary<GameResourceNames, long> resources)
     {
         Resources = resources;
-        _resourceDisplay.Update();
-    }
-
-    public void refresh()
-    {
         _resourceDisplay.Update();
     }
 

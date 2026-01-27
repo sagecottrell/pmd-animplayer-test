@@ -3,7 +3,6 @@ using System;
 
 namespace breakout.components.scripts;
 
-[Tool]
 [GlobalClass]
 public partial class PMDSprite : Node2D, INodeComponent
 {

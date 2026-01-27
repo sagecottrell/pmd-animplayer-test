@@ -25,6 +25,7 @@ buses/default_bus_layout="res://AudioBus.tres"
 [autoload]
 
 GlobalSignals="*res://GlobalSignals.cs"
+BetterTerrain="*uid://co420axj54cyb"
 
 [display]
 
@@ -38,7 +39,7 @@ project/assembly_name="breakout"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/import_pmd_zip/plugin.cfg")
+enabled=PackedStringArray("res://addons/better-terrain/plugin.cfg", "res://addons/import_pmd_zip/plugin.cfg")
 
 [gui]
 

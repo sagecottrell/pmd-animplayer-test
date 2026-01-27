@@ -3,7 +3,6 @@ using Godot;
 
 namespace breakout;
 
-[Tool]
 public partial class GameplayMenu : Control
 {
 
