@@ -27,6 +27,11 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
     [Signal]
     public delegate void OnChangedEventHandler();
 
+    [Export]
+    public Color SpawnBlockColor;
+    [Export]
+    public Color SpawnAllowColor;
+
     public override void DrawDebug()
     {
         var node = GetParent<Node2D>();
@@ -36,16 +41,16 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
         foreach (var blocker in SpawnBlocker)
         {
             var pos = node.ToLocal(blocker.GlobalPosition);
-            node.DrawCircle(pos, 8, Colors.Red, filled: false);
-            if (SpawnBlocker_Mode == Quantifiers.None) continue;
-            node.DrawArrow(pos, pos.Normalized(), Colors.Red, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnBlocker_Mode == Quantifiers.Some ? 4 : 0);
+            node.DrawCircle(pos, 8, SpawnBlockColor, filled: false);
+            if (node == blocker || SpawnBlocker_Mode == Quantifiers.None) continue;
+            node.DrawArrow(pos, pos.Normalized(), SpawnBlockColor, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnBlocker_Mode == Quantifiers.Some ? 4 : 0);
         }
         foreach (var allow in SpawnAllow)
         {
             var pos = node.ToLocal(allow.GlobalPosition);
-            node.DrawCircle(pos, 8, Colors.LightBlue, filled: false);
-            if (SpawnBlocker_Mode == Quantifiers.None) continue;
-            node.DrawArrow(pos, pos.Normalized(), Colors.LightBlue, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnAllow_Mode == Quantifiers.Some ? 4 : 0);
+            node.DrawCircle(pos, 8, SpawnAllowColor, filled: false);
+            if (node == allow || SpawnBlocker_Mode == Quantifiers.None) continue;
+            node.DrawArrow(pos, pos.Normalized(), SpawnAllowColor, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnAllow_Mode == Quantifiers.Some ? 4 : 0);
         }
     }
 

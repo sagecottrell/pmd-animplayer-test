@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PokeDefinition" format=3 uid="uid://d24m008wnvl4s"]
+
+[ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="1_iiyx5"]
+[ext_resource type="AnimationLibrary" uid="uid://7jvoau1xakyj" path="res://pmd_zips/primarina.zip" id="1_wecip"]
+[ext_resource type="Texture2D" uid="uid://capnib55o83hp" path="res://units/icons/primarina.png" id="3_pf0t8"]
+
+[resource]
+script = ExtResource("1_iiyx5")
+Name = "Primarina"
+Sprite = ExtResource("3_pf0t8")
+AnimationLibrary = ExtResource("1_wecip")
+Type1 = 3
+Type2 = 18
+LevelupMoveset = {}
+metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

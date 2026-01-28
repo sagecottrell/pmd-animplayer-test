@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MoveDefinition" format=3 uid="uid://dpwsp6l84mnq5"]
+
+[ext_resource type="Script" uid="uid://bfrvysgchdu1c" path="res://customResources/MoveDefinition.cs" id="1_rl4fc"]
+
+[resource]
+script = ExtResource("1_rl4fc")
+Name = "Water Gun"
+Power = 50
+IsSpecial = true
+Type = 3
+metadata/_custom_type_script = "uid://bfrvysgchdu1c"

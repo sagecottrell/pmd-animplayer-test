@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BuildableDefinition" format=3 uid="uid://bm4qg1c6ljhgb"]
+
+[ext_resource type="PackedScene" uid="uid://dhiwae2cditp3" path="res://buildings/MainBase.tscn" id="1_ca7uy"]
+[ext_resource type="Texture2D" uid="uid://d1qhvgwiqp8qi" path="res://buildings/mainbase.png" id="2_ca7uy"]
+[ext_resource type="Script" uid="uid://bhy5fyf72p4bq" path="res://customResources/BuildableDefinition.cs" id="3_y1ms4"]
+
+[resource]
+script = ExtResource("3_y1ms4")
+Name = 6
+Buildable = false
+Icon = ExtResource("2_ca7uy")
+BuildingScene = ExtResource("1_ca7uy")
+metadata/_custom_type_script = "uid://bhy5fyf72p4bq"

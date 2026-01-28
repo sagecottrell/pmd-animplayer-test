@@ -51,30 +51,28 @@ public partial class SquadSelectorOverlay : Area2D
         switch (@event)
         {
             case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
-                m1_end_drag = mouseEvent.GlobalPosition;
-                m1_start_drag = mouseEvent.GlobalPosition;
+                m1_end_drag = m1_start_drag = GetGlobalMousePosition();
                 break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left:
                 m1_click_drag = false;
                 QueueRedraw();
                 OnFinishSelection();
                 break;
-            case InputEventMouseMotion mouseMotion when Input.IsMouseButtonPressed(MouseButton.Left):
-                if (!m1_click_drag && mouseMotion.GlobalPosition.DistanceTo(m1_start_drag) > 5.0f)
+            case InputEventMouseMotion when Input.IsMouseButtonPressed(MouseButton.Left):
+                if (!m1_click_drag && GetGlobalMousePosition().DistanceTo(m1_start_drag) > 5.0f)
                 {
                     m1_click_drag = true;
                 }
                 if (m1_click_drag)
                 {
-                    m1_end_drag = mouseMotion.GlobalPosition;
+                    m1_end_drag = GetGlobalMousePosition();
                     QueueRedraw();
                 }
                 break;
             case InputEventMouseButton when selectedUnits.Count == 0:
                 break;
             case InputEventMouseButton mouseEvent when mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
-                m2_end_drag = mouseEvent.GlobalPosition;
-                m2_start_drag = mouseEvent.GlobalPosition;
+                m2_end_drag = m2_start_drag = GetGlobalMousePosition();
                 m2_click_drag = true;
                 break;
             case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
@@ -82,8 +80,8 @@ public partial class SquadSelectorOverlay : Area2D
                 QueueRedraw();
                 NewOrExistingSquad(m2_start_drag);
                 break;
-            case InputEventMouseMotion mouseMotion when Input.IsMouseButtonPressed(MouseButton.Right):
-                m2_end_drag = mouseMotion.GlobalPosition;
+            case InputEventMouseMotion when Input.IsMouseButtonPressed(MouseButton.Right):
+                m2_end_drag = GetGlobalMousePosition();
                 QueueRedraw();
                 break;
         }
@@ -210,6 +208,7 @@ public partial class SquadSelectorOverlay : Area2D
 
     public override void _Draw()
     {
+        DrawSetTransform(-GlobalPosition);
         if (m1_click_drag)
         {
             DrawRect(new Rect2(

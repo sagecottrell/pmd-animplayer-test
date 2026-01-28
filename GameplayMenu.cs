@@ -16,7 +16,7 @@ public partial class GameplayMenu : Control
         var buildingsContainer = GetNode("%Buildings");
         foreach (var (id, def) in BuildableDefinition.AllDefinitions)
         {
-            if (def.Name == BuildingNames.None)
+            if (def.Name == BuildingNames.None || !def.Buildable)
                 continue;
 
             var btn = new Button

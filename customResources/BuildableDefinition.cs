@@ -13,6 +13,9 @@ public partial class BuildableDefinition : Resource
     public BuildingNames Name { get; set; }
 
     [Export]
+    public bool Buildable { get; set; } = true;
+
+    [Export]
     public string Description { get; set; } = "";
 
     [Export]

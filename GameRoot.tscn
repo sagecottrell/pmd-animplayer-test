@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://2c0w8mgcf8jv" path="res://squad/SquadFlag.tscn" id="6_kjgx1"]
 [ext_resource type="Script" uid="uid://cqppqlenxkpp6" path="res://buildings/BuildingPlacer.cs" id="6_xpglq"]
 [ext_resource type="PackedScene" uid="uid://c1r3e7cp257os" path="res://components/UIComponent.tscn" id="7_a4rlw"]
+[ext_resource type="PackedScene" uid="uid://ckayig52d05kj" path="res://maps/Map1.tscn" id="10_pv2v4"]
 
 [sub_resource type="Resource" id="Resource_xpglq"]
 script = ExtResource("2_kxd06")
@@ -16,9 +17,10 @@ Id = 1
 Color = Color(0.1609711, 0.5334193, 0.75794095, 1)
 metadata/_custom_type_script = "uid://cgjulsb7a3hn1"
 
-[node name="GameRoot" type="Node2D" unique_id=1356941615]
+[node name="GameRoot" type="Node2D" unique_id=1356941615 node_paths=PackedStringArray("MapNode")]
 script = ExtResource("1_hirbl")
 PlayerTeam = SubResource("Resource_xpglq")
+MapNode = NodePath("Map1")
 Resources = Dictionary[int, int]({
 1: 350,
 2: 117117,
@@ -26,7 +28,11 @@ Resources = Dictionary[int, int]({
 4: 34221
 })
 
+[node name="Map1" parent="." unique_id=522595262 instance=ExtResource("10_pv2v4")]
+position = Vector2(547, 438)
+
 [node name="SquadSelectorOverlay" parent="." unique_id=1643873305 instance=ExtResource("4_a4rlw")]
+position = Vector2(-3618, -3645)
 
 [node name="SquadContainer" type="Node2D" parent="." unique_id=2042773940 node_paths=PackedStringArray("FlagScenePrefab")]
 unique_name_in_owner = true
@@ -76,3 +82,6 @@ Resources = Dictionary[int, int]({
 [node name="UIComponent" parent="CanvasLayer/TopUI" unique_id=1286678068 instance=ExtResource("7_a4rlw")]
 Neutral_Scene = ExtResource("6_drpm8")
 OthersCanStack = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1844495793]
+position = Vector2(286, 374)

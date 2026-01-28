@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cfdwdenwybed7"]
+[gd_scene format=3 uid="uid://cfdwdenwybed7"]
 
 [ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
@@ -23,41 +23,41 @@ radius = 14.035668
 [sub_resource type="CircleShape2D" id="CircleShape2D_uobji"]
 radius = 20.024984
 
-[node name="BasicDirectUnit" type="CharacterBody2D"]
+[node name="BasicDirectUnit" type="CharacterBody2D" unique_id=861947973]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_1bet7")
 clickable = true
 
-[node name="SelectableComponent" parent="." node_paths=PackedStringArray("SelectionShape") instance=ExtResource("8_rjmnn")]
-z_index = -1
-z_as_relative = false
+[node name="SelectableComponent" parent="." unique_id=1802547991 node_paths=PackedStringArray("SelectionShape") instance=ExtResource("8_rjmnn")]
 position = Vector2(0, -5)
 CanMultiSelect = true
 SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
 
-[node name="Hitbox" type="CollisionShape2D" parent="."]
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=810956098]
 shape = SubResource("CircleShape2D_odw8u")
 debug_color = Color(0.19205204, 0.63322234, 0.313985, 0.41960785)
 
-[node name="PMDSprite" parent="." instance=ExtResource("2_ecyxk")]
+[node name="PMDSprite" parent="." unique_id=559356214 instance=ExtResource("2_ecyxk")]
+z_index = 1
+z_as_relative = false
 
-[node name="AIComponent" parent="." instance=ExtResource("4_odw8u")]
+[node name="AIComponent" parent="." unique_id=2111022043 instance=ExtResource("4_odw8u")]
 Strategy = SubResource("Resource_gjqrm")
 
-[node name="HealthComponent" parent="." instance=ExtResource("5_uobji")]
+[node name="HealthComponent" parent="." unique_id=2065427937 instance=ExtResource("5_uobji")]
 
-[node name="HurtComponent" parent="." node_paths=PackedStringArray("Team") instance=ExtResource("6_rjmnn")]
+[node name="HurtComponent" parent="." unique_id=1015811018 node_paths=PackedStringArray("Team") instance=ExtResource("6_rjmnn")]
 Team = NodePath("../TeamComponent")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtComponent" unique_id=1373724723]
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
-[node name="TeamComponent" parent="." instance=ExtResource("7_uobji")]
+[node name="TeamComponent" parent="." unique_id=668713812 instance=ExtResource("7_uobji")]
 
-[node name="UnitClickAreaComponent" parent="." instance=ExtResource("9_gjqrm")]
+[node name="UnitClickAreaComponent" parent="." unique_id=1978612569 instance=ExtResource("9_gjqrm")]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" unique_id=1474799139]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_uobji")

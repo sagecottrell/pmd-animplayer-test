@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dhiwae2cditp3"]
+
+[ext_resource type="PackedScene" uid="uid://ctstpyv0qcssy" path="res://buildings/BaseBuilding.tscn" id="1_ba7wm"]
+[ext_resource type="Shader" uid="uid://56gss4yrgaxn" path="res://buildings/teamcolor.gdshader" id="2_ldpqt"]
+[ext_resource type="Texture2D" uid="uid://d1qhvgwiqp8qi" path="res://buildings/mainbase.png" id="2_mjxyq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_75lko"]
+shader = ExtResource("2_ldpqt")
+shader_parameter/team_color = Vector3(0, 0, 0)
+shader_parameter/replace_color = Vector3(0, 0, 0)
+
+[node name="BaseBuilding" unique_id=256090950 node_paths=PackedStringArray("Sprite") instance=ExtResource("1_ba7wm")]
+Sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." index="1" unique_id=681457032]
+material = SubResource("ShaderMaterial_75lko")
+position = Vector2(0, -20)
+texture = ExtResource("2_mjxyq")

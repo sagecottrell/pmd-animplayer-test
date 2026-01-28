@@ -12,6 +12,9 @@ public partial class GameRoot : Node2D, IGameState
     [Export]
     public TeamInfo? PlayerTeam { get; set; }
 
+    [Export]
+    public BaseMap? MapNode { get; set; }
+
     public override void _Ready()
     {
         GetViewport().PhysicsObjectPickingSort = true;
@@ -55,6 +58,16 @@ public partial class GameRoot : Node2D, IGameState
         if (GetNode("%TopUI").TryGetComponent<UIComponent>(out var component))
         {
             component.ShowUI();
+        }
+
+        if (FindChild("MainBase", false) is null && MapNode is BaseMap map && map.MainBaseScene is PackedScene mainBaseScene)
+        {
+            var b = mainBaseScene.Instantiate();
+            AddChild(b);
+            if (b.TryGetComponent<TeamComponent>(out var teamComp) && PlayerTeam is not null)
+            {
+                teamComp.SetTeam(PlayerTeam);
+            }
         }
     }
 

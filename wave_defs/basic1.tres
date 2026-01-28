@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WaveDefinition" format=3 uid="uid://do1p187ntmso"]
+
+[ext_resource type="Script" uid="uid://bjbagn83vv6ap" path="res://customResources/WaveDefinition.cs" id="1_7eq8g"]
+[ext_resource type="Script" uid="uid://bfrvysgchdu1c" path="res://customResources/MoveDefinition.cs" id="1_t5tm7"]
+[ext_resource type="Script" uid="uid://bte3bcitg62pe" path="res://components/scripts/BaseModifier.cs" id="2_v53nr"]
+[ext_resource type="Script" uid="uid://fo40l6kd7jju" path="res://customResources/WaveMember.cs" id="3_bqwup"]
+[ext_resource type="Resource" uid="uid://d24m008wnvl4s" path="res://poke_defs/primarina.tres" id="3_v53nr"]
+
+[sub_resource type="Resource" id="Resource_41fty"]
+script = ExtResource("3_bqwup")
+PokeDefinition = ExtResource("3_v53nr")
+metadata/_custom_type_script = "uid://fo40l6kd7jju"
+
+[resource]
+script = ExtResource("1_7eq8g")
+WaveMembers = [SubResource("Resource_41fty")]
+metadata/_custom_type_script = "uid://bjbagn83vv6ap"

@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctom5qyl12qqs"]
+[gd_scene format=3 uid="uid://ctom5qyl12qqs"]
 
 [ext_resource type="Script" uid="uid://cev6qhcxd2hwg" path="res://components/scripts/SquadSelectorOverlay.cs" id="1_jw4wy"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_pyidc"]
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jw4wy"]
 
-[node name="SquadSelectorOverlay" type="Area2D"]
+[node name="SquadSelectorOverlay" type="Area2D" unique_id=640099106]
 script = ExtResource("1_jw4wy")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("WorldBoundaryShape2D_pyidc")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1203362343]
+shape = SubResource("WorldBoundaryShape2D_jw4wy")

@@ -9,4 +9,5 @@ public enum BuildingNames
     PowerPlant,
     ResearchCenter,
     Turret,
+    MainBase,
 }
