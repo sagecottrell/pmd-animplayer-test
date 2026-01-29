@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://hrchtl6l4kjn"]
-
-[ext_resource type="Script" uid="uid://dscwcnonbgnha" path="res://components/scripts/AIComponent.cs" id="1_odgx0"]
-
-[node name="AIComponent" type="Node"]
-script = ExtResource("1_odgx0")

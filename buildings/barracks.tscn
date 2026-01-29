@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://ctstpyv0qcssy" path="res://buildings/BaseBuilding.tscn" id="1_p1778"]
 [ext_resource type="Shader" uid="uid://56gss4yrgaxn" path="res://buildings/teamcolor.gdshader" id="2_htohi"]
 [ext_resource type="Texture2D" uid="uid://cpcmcfa75mg8d" path="res://buildings/pmdtent.png" id="3_chnri"]
-[ext_resource type="PackedScene" uid="uid://7jchftj7sw4e" path="res://components/UnitSpawnerComponent.tscn" id="3_htohi"]
+[ext_resource type="Script" uid="uid://bpiwhp8so7483" path="res://components/scripts/UnitSpawnerComponent.cs" id="4_htohi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_npt7d"]
 shader = ExtResource("2_htohi")
@@ -17,4 +17,6 @@ Sprite = NodePath("Pmdtent")
 material = SubResource("ShaderMaterial_npt7d")
 texture = ExtResource("3_chnri")
 
-[node name="UnitSpawnerComponent" parent="." index="7" unique_id=1145462729 instance=ExtResource("3_htohi")]
+[node name="UnitSpawnerComponent" type="Node2D" parent="." index="7" unique_id=149791121]
+script = ExtResource("4_htohi")
+metadata/_custom_type_script = "uid://bpiwhp8so7483"

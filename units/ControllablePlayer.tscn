@@ -1,36 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://dm2idx7i3xmw1"]
+[gd_scene format=3 uid="uid://dm2idx7i3xmw1"]
 
 [ext_resource type="Script" uid="uid://0pi8wn2dj60p" path="res://units/controllable_player.gd" id="1_e2w0g"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_e2w0g"]
-[ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="4_v058p"]
-[ext_resource type="PackedScene" uid="uid://beuenfvaakf27" path="res://components/UserInputComponent.tscn" id="5_3hach"]
-[ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="5_t6k31"]
-[ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="6_pu6ya"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qmxph"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_t6k31"]
 radius = 14.0
 
-[node name="ControllablePlayer" type="CharacterBody2D"]
+[node name="ControllablePlayer" type="CharacterBody2D" unique_id=1731480466]
 motion_mode = 1
 script = ExtResource("1_e2w0g")
 
-[node name="Hitbox" type="CollisionShape2D" parent="."]
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1346153904]
 shape = SubResource("CircleShape2D_qmxph")
 
-[node name="PmdSprite" parent="." instance=ExtResource("2_e2w0g")]
+[node name="PmdSprite" parent="." unique_id=618636811 instance=ExtResource("2_e2w0g")]
 
-[node name="HealthComponent" parent="." instance=ExtResource("4_v058p")]
-
-[node name="UserInputComponent" parent="." instance=ExtResource("5_3hach")]
-
-[node name="HurtComponent" parent="." instance=ExtResource("5_t6k31")]
-
-[node name="TeamComponent" parent="." instance=ExtResource("6_pu6ya")]
-
-[node name="Hurtbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hurtbox"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=10265319]
 shape = SubResource("CircleShape2D_t6k31")
 debug_color = Color(0.9168353, 0.27352363, 0.23508272, 0.41960785)

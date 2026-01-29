@@ -14,7 +14,7 @@ public partial class SelectableComponent : Node2D, INodeComponent
     public bool Reselectable = true;
 
     [Export(PropertyHint.Range, "0,1,0.1")]
-    public float UnselectedAlpha = 0f;
+    public float UnselectedAlpha = 0.3f;
 
     [Export]
     public CollisionShape2D SelectionShape = new()

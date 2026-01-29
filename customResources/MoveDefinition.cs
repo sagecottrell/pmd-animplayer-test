@@ -20,4 +20,6 @@ public partial class MoveDefinition : Resource
     public bool IsSpecial { get; set; } = false;
     [Export]
     public PokeType Type { get; set; } = PokeType.Normal;
+    [Export]
+    public PokeType Type2 { get; set; } = PokeType.None;
 }

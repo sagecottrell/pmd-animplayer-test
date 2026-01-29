@@ -7,8 +7,6 @@
 	  <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="components\HealthComponent.tscn" />
     <None Include="components\PMDSprite.tscn" />
-    <None Include="components\UserInputComponent.tscn" />
   </ItemGroup>
 </Project>

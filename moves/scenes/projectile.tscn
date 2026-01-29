@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://b6pewdfipaq8y"]
+
+[ext_resource type="Script" uid="uid://b6p8j017sxid6" path="res://moves/components/CasterPosition.cs" id="1_yca4r"]
+[ext_resource type="Script" uid="uid://cj6dytc2wumc7" path="res://moves/components/CasterRotation.cs" id="2_1uni3"]
+[ext_resource type="Script" uid="uid://dcla6648dsqfq" path="res://moves/components/CircleComponent.cs" id="4_f512d"]
+[ext_resource type="Script" uid="uid://dwa56ossjmdkd" path="res://components/scripts/HitboxComponent.cs" id="6_f512d"]
+[ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="6_gwmup"]
+[ext_resource type="Script" uid="uid://doibe2bphjrqp" path="res://components/scripts/PokeTypeComponent.cs" id="6_gysd2"]
+
+[sub_resource type="Animation" id="Animation_biybd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_4nire"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(50, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_biybd"]
+_data = {
+&"RESET": SubResource("Animation_biybd"),
+&"new_animation": SubResource("Animation_4nire")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4nire"]
+radius = 59.135437
+
+[node name="Projectile" type="Node2D" unique_id=548642665]
+
+[node name="CasterPosition" type="Node" parent="." unique_id=377232247]
+script = ExtResource("1_yca4r")
+metadata/_custom_type_script = "uid://b6p8j017sxid6"
+
+[node name="CasterRotation" type="Node" parent="." unique_id=2135455170]
+script = ExtResource("2_1uni3")
+metadata/_custom_type_script = "uid://cj6dytc2wumc7"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1753181712]
+libraries/ = SubResource("AnimationLibrary_biybd")
+
+[node name="CircleComponent" type="Node2D" parent="." unique_id=1892287969 node_paths=PackedStringArray("TypeComponent")]
+script = ExtResource("4_f512d")
+Color = Color(0.3137255, 0.3764706, 0.88235295, 1)
+TypeComponent = NodePath("../PokeTypeComponent")
+
+[node name="PokeTypeComponent" type="Node" parent="." unique_id=1102846917]
+script = ExtResource("6_gysd2")
+Type1 = 15
+
+[node name="HitboxComponent" type="Area2D" parent="." unique_id=839998881]
+script = ExtResource("6_f512d")
+metadata/_custom_type_script = "uid://dwa56ossjmdkd"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" unique_id=1838810607]
+shape = SubResource("CircleShape2D_4nire")
+
+[node name="TeamComponent" type="Node" parent="." unique_id=1308062487]
+script = ExtResource("6_gwmup")
+metadata/_custom_type_script = "uid://cedots6i0j0b6"

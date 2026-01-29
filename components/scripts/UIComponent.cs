@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace breakout.components.scripts;
 
+[GlobalClass]
 public partial class UIComponent : CanvasLayer, INodeComponent
 {
     enum UIType

@@ -6,7 +6,7 @@ namespace breakout.components.scripts;
 /// Offensive component that deals damage to Hurtboxes on collision.
 /// </summary>
 [GlobalClass]
-public partial class HitboxComponent : Node, INodeComponent
+public partial class HitboxComponent : Area2D, INodeComponent
 {
 
     [Export]

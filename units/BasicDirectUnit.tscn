@@ -2,20 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
-[ext_resource type="PackedScene" uid="uid://hrchtl6l4kjn" path="res://components/AIComponent.tscn" id="4_odw8u"]
-[ext_resource type="Script" uid="uid://cvlopqjmfmjsr" path="res://components/AIStrategies/DirectPursuitStrategy.cs" id="5_rjmnn"]
-[ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="5_uobji"]
-[ext_resource type="PackedScene" uid="uid://c4kkih31i3r8" path="res://components/HurtboxComponent.tscn" id="6_rjmnn"]
-[ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="7_uobji"]
-[ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="8_rjmnn"]
-[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickAreaComponent.tscn" id="9_gjqrm"]
+[ext_resource type="Script" uid="uid://dscwcnonbgnha" path="res://components/scripts/AIComponent.cs" id="3_fn0tx"]
+[ext_resource type="Script" uid="uid://b6epatdk0ucc" path="res://components/scripts/HealthComponent.cs" id="4_ic3c0"]
+[ext_resource type="Script" uid="uid://c2noffquab3oc" path="res://components/scripts/HurtboxComponent.cs" id="5_ic3c0"]
+[ext_resource type="Script" uid="uid://c3j0uf7ruio61" path="res://components/scripts/SelectableComponent.cs" id="6_odw8u"]
+[ext_resource type="Script" uid="uid://c7vy4xm46n2yw" path="res://components/scripts/UnitClickAreaComponent.cs" id="7_uobji"]
+[ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="8_rjmnn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 radius = 8.0
-
-[sub_resource type="Resource" id="Resource_gjqrm"]
-script = ExtResource("5_rjmnn")
-metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
 radius = 14.035668
@@ -29,10 +24,11 @@ motion_mode = 1
 script = ExtResource("1_1bet7")
 clickable = true
 
-[node name="SelectableComponent" parent="." unique_id=1802547991 node_paths=PackedStringArray("SelectionShape") instance=ExtResource("8_rjmnn")]
-position = Vector2(0, -5)
+[node name="SelectableComponent" type="Node2D" parent="." unique_id=955804000 node_paths=PackedStringArray("SelectionShape")]
+script = ExtResource("6_odw8u")
 CanMultiSelect = true
-SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
+SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D2")
+metadata/_custom_type_script = "uid://c3j0uf7ruio61"
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=810956098]
 shape = SubResource("CircleShape2D_odw8u")
@@ -42,22 +38,31 @@ debug_color = Color(0.19205204, 0.63322234, 0.313985, 0.41960785)
 z_index = 1
 z_as_relative = false
 
-[node name="AIComponent" parent="." unique_id=2111022043 instance=ExtResource("4_odw8u")]
-Strategy = SubResource("Resource_gjqrm")
+[node name="AIComponent" type="Node" parent="." unique_id=446855277]
+script = ExtResource("3_fn0tx")
+metadata/_custom_type_script = "uid://dscwcnonbgnha"
 
-[node name="HealthComponent" parent="." unique_id=2065427937 instance=ExtResource("5_uobji")]
+[node name="HealthComponent" type="Node" parent="." unique_id=975645193]
+script = ExtResource("4_ic3c0")
+metadata/_custom_type_script = "uid://b6epatdk0ucc"
 
-[node name="HurtComponent" parent="." unique_id=1015811018 node_paths=PackedStringArray("Team") instance=ExtResource("6_rjmnn")]
+[node name="HurtboxComponent" type="Area2D" parent="." unique_id=194303979 node_paths=PackedStringArray("Team")]
+script = ExtResource("5_ic3c0")
 Team = NodePath("../TeamComponent")
+metadata/_custom_type_script = "uid://c2noffquab3oc"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtComponent" unique_id=1373724723]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=1373724723]
 shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
-[node name="TeamComponent" parent="." unique_id=668713812 instance=ExtResource("7_uobji")]
+[node name="UnitClickAreaComponent" type="Area2D" parent="." unique_id=1061162630]
+script = ExtResource("7_uobji")
+metadata/_custom_type_script = "uid://c7vy4xm46n2yw"
 
-[node name="UnitClickAreaComponent" parent="." unique_id=1978612569 instance=ExtResource("9_gjqrm")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" unique_id=1474799139]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="UnitClickAreaComponent" unique_id=1474799139]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_uobji")
+
+[node name="TeamComponent" type="Node" parent="." unique_id=1756266576]
+script = ExtResource("8_rjmnn")
+metadata/_custom_type_script = "uid://cedots6i0j0b6"

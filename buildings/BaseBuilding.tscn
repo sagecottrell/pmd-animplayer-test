@@ -1,11 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctstpyv0qcssy"]
+[gd_scene format=3 uid="uid://ctstpyv0qcssy"]
 
 [ext_resource type="Script" uid="uid://cr8mywd6yctko" path="res://buildings/BaseBuilding.cs" id="1_nyv1e"]
-[ext_resource type="PackedScene" uid="uid://doumadiuvg3vj" path="res://components/UnitClickAreaComponent.tscn" id="2_2idmy"]
-[ext_resource type="PackedScene" uid="uid://dkwxweeidvl53" path="res://components/SelectableComponent.tscn" id="2_ggjgd"]
-[ext_resource type="PackedScene" uid="uid://b5v3yqm0ujbj4" path="res://components/TeamComponent.tscn" id="3_ft1su"]
-[ext_resource type="PackedScene" uid="uid://bj8rx8ojj5vhk" path="res://components/HealthComponent.tscn" id="4_nyv1e"]
-[ext_resource type="PackedScene" uid="uid://c1r3e7cp257os" path="res://components/UIComponent.tscn" id="6_vsrpd"]
+[ext_resource type="Script" uid="uid://c7vy4xm46n2yw" path="res://components/scripts/UnitClickAreaComponent.cs" id="2_2idmy"]
+[ext_resource type="Script" uid="uid://dau52ov73xxir" path="res://components/scripts/UIComponent.cs" id="3_ppl22"]
+[ext_resource type="Script" uid="uid://c3j0uf7ruio61" path="res://components/scripts/SelectableComponent.cs" id="4_ft1su"]
+[ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="5_nyv1e"]
+[ext_resource type="Script" uid="uid://b6epatdk0ucc" path="res://components/scripts/HealthComponent.cs" id="6_vsrpd"]
 [ext_resource type="PackedScene" uid="uid://2t50no3vese8" path="res://buildings/UIs/BasicUnitSpawnMenu.tscn" id="7_x8ix5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w6qvt"]
@@ -15,34 +15,40 @@ height = 70.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ggjgd"]
 radius = 38.052597
 
-[node name="BaseBuilding" type="Node2D"]
+[node name="BaseBuilding" type="Node2D" unique_id=1529697322]
 script = ExtResource("1_nyv1e")
 
-[node name="SelectableComponent" parent="." node_paths=PackedStringArray("SelectionShape") instance=ExtResource("2_ggjgd")]
-UnselectedAlpha = 0.3
+[node name="SelectableComponent" type="Node2D" parent="." unique_id=882257511 node_paths=PackedStringArray("SelectionShape")]
+script = ExtResource("4_ft1su")
 SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
+metadata/_custom_type_script = "uid://c3j0uf7ruio61"
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1696262461]
 position = Vector2(14, 14)
 rotation = 1.5707964
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=924390652]
 position = Vector2(0, 14)
 shape = SubResource("CapsuleShape2D_w6qvt")
 debug_color = Color(0.102933966, 0.64845014, 0, 0.41960785)
 
-[node name="TeamComponent" parent="." instance=ExtResource("3_ft1su")]
+[node name="UnitClickAreaComponent" type="Area2D" parent="." unique_id=1442108352]
+script = ExtResource("2_2idmy")
+metadata/_custom_type_script = "uid://c7vy4xm46n2yw"
 
-[node name="HealthComponent" parent="." instance=ExtResource("4_nyv1e")]
-
-[node name="UIComponent" parent="." instance=ExtResource("6_vsrpd")]
-top_level = true
-offset_right = -700.0
-offset_bottom = -700.0
-SameTeam_Scene = ExtResource("7_x8ix5")
-
-[node name="UnitClickAreaComponent" parent="." instance=ExtResource("2_2idmy")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" unique_id=912124329]
 position = Vector2(0, 1)
 shape = SubResource("CircleShape2D_ggjgd")
+
+[node name="UIComponent" type="CanvasLayer" parent="." unique_id=1431863483]
+script = ExtResource("3_ppl22")
+SameTeam_Scene = ExtResource("7_x8ix5")
+metadata/_custom_type_script = "uid://dau52ov73xxir"
+
+[node name="TeamComponent" type="Node" parent="." unique_id=2141286606]
+script = ExtResource("5_nyv1e")
+metadata/_custom_type_script = "uid://cedots6i0j0b6"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1150822795]
+script = ExtResource("6_vsrpd")
+metadata/_custom_type_script = "uid://b6epatdk0ucc"

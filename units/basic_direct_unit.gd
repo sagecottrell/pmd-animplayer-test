@@ -1,4 +1,3 @@
-@tool
 extends CharacterBody2D
 
 enum State {
@@ -70,7 +69,7 @@ func _ready():
 	$PMDSprite.OnHit.connect(on_hit)
 	$PMDSprite.OnAnimFinish.connect(on_return)
 	
-	$HurtComponent.OnHurt.connect(on_hurt)
+	$HurtboxComponent.OnHurt.connect(on_hurt)
 	
 	$HealthComponent.OnDeath.connect(on_death)
 	

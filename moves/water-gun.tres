@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="MoveDefinition" format=3 uid="uid://dpwsp6l84mnq5"]
 
+[ext_resource type="PackedScene" uid="uid://b6pewdfipaq8y" path="res://moves/scenes/projectile.tscn" id="1_jgdjd"]
 [ext_resource type="Script" uid="uid://bfrvysgchdu1c" path="res://customResources/MoveDefinition.cs" id="1_rl4fc"]
 
 [resource]
 script = ExtResource("1_rl4fc")
 Name = "Water Gun"
+AnimationScene = ExtResource("1_jgdjd")
 Power = 50
 IsSpecial = true
 Type = 3
