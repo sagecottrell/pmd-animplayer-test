@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PokeDefinition" format=3 uid="uid://bgsf8pe4moslu"]
+
+[ext_resource type="AnimationLibrary" uid="uid://b6g0eokjk2q72" path="res://pmd_zips/machop.zip" id="1_mjhe7"]
+[ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="2_t681w"]
+[ext_resource type="Texture2D" uid="uid://c1i4fwg7jo4km" path="res://units/icons/machop.png" id="3_mjhe7"]
+
+[resource]
+script = ExtResource("2_t681w")
+Name = "Machop"
+Sprite = ExtResource("3_mjhe7")
+AnimationLibrary = ExtResource("1_mjhe7")
+Type1 = 7
+LevelupMoveset = {}
+metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

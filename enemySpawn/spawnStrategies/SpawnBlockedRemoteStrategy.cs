@@ -1,5 +1,7 @@
+using breakout.customResources;
 using Godot;
 using Godot.Collections;
+using System;
 using System.Linq;
 
 namespace breakout.enemySpawn.spawnStrategies;
@@ -8,7 +10,7 @@ namespace breakout.enemySpawn.spawnStrategies;
 public enum Quantifiers
 {
     All,
-    Some,
+    Partial,
     None,
 }
 
@@ -32,25 +34,27 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
     [Export]
     public Color SpawnAllowColor;
 
-    public override void DrawDebug()
+    public override void DrawDebug(Node2D node)
     {
-        var node = GetParent<Node2D>();
+        if (GetParent() is not Node2D parent)
+            return;
         var arrowWidth = 20;
         var arrowHeight = 40;
-        node.DrawCircle(Vector2.Zero, 6, Colors.Green);
+        var o = parent.ToLocal(node.GlobalPosition);
+        parent.DrawCircle(o, 6, Colors.Green);
         foreach (var blocker in SpawnBlocker)
         {
-            var pos = node.ToLocal(blocker.GlobalPosition);
-            node.DrawCircle(pos, 8, SpawnBlockColor, filled: false);
-            if (node == blocker || SpawnBlocker_Mode == Quantifiers.None) continue;
-            node.DrawArrow(pos, pos.Normalized(), SpawnBlockColor, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnBlocker_Mode == Quantifiers.Some ? 4 : 0);
+            var pos = parent.ToLocal(blocker.GlobalPosition);
+            parent.DrawCircle(pos, 8, SpawnBlockColor, filled: false);
+            if (node == blocker) continue;
+            parent.DrawArrow(pos, (pos - o).Normalized(), SpawnBlockColor, arrowHeight, arrowWidth, origin: o, line_dashed: SpawnBlocker_Mode == Quantifiers.None ? 4 : 0, line_width: SpawnBlocker_Mode == Quantifiers.All ? 10 : 2);
         }
         foreach (var allow in SpawnAllow)
         {
-            var pos = node.ToLocal(allow.GlobalPosition);
-            node.DrawCircle(pos, 8, SpawnAllowColor, filled: false);
-            if (node == allow || SpawnBlocker_Mode == Quantifiers.None) continue;
-            node.DrawArrow(pos, pos.Normalized(), SpawnAllowColor, arrowHeight, arrowWidth, origin: Vector2.Zero, line_dashed: SpawnAllow_Mode == Quantifiers.Some ? 4 : 0);
+            var pos = parent.ToLocal(allow.GlobalPosition);
+            parent.DrawCircle(pos, 8, SpawnAllowColor, filled: false);
+            if (node == allow) continue;
+            parent.DrawArrow(pos, (pos - o).Normalized(), SpawnAllowColor, arrowHeight, arrowWidth, origin: o, line_dashed: SpawnAllow_Mode == Quantifiers.None ? 7 : 0, line_width: SpawnAllow_Mode == Quantifiers.All ? 10 : 2);
         }
     }
 
@@ -78,18 +82,18 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
     public Quantifiers SpawnAllow_Mode { get => samode; set { samode = value; EmitSignalOnChanged(); } }
     Quantifiers samode = Quantifiers.All;
 
-    public override bool CanSpawnEnemies()
+    public override bool CanSpawnEnemies(DateTime _)
     {
         return _checkQuantifier(SpawnBlocker_Mode, SpawnBlocker.Select(_isBlocked).Count(), SpawnBlocker.Count)
-            && _checkQuantifier(SpawnAllow_Mode, SpawnAllow.Select(n => !_isBlocked(n)).Count(), SpawnAllow.Count);
+            && _checkQuantifier(SpawnAllow_Mode, SpawnAllow.Select(x => !_isBlocked(x)).Count(), SpawnAllow.Count);
     }
 
     private static bool _checkQuantifier(Quantifiers mode, int count, int total)
     {
-        return mode switch
+        return total == 0 || mode switch
         {
             Quantifiers.All => count == total,
-            Quantifiers.Some => count > 0,
+            Quantifiers.Partial => count != total && count > 0,
             Quantifiers.None => count == 0,
             _ => false,
         };
@@ -99,7 +103,7 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
     {
         return Block_Mode switch
         {
-            BlockMode.Invisible => !node.Visible,
+            BlockMode.Invisible => !node.IsInsideTree() || !node.Visible,
             _ => false,
         };
     }

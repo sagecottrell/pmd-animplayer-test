@@ -10,8 +10,7 @@ public partial class BaseBuilding : Node2D
 
     override public void _Ready()
     {
-        if (this.TryGetComponent<SelectableComponent>(out var selectableComponent) &&
-            this.TryGetComponent<UIComponent>(out var uiComponent))
+        this.Configure<SelectableComponent, UIComponent>((selectableComponent, uiComponent) =>
         {
             selectableComponent.OnSelectionChanged += (v) =>
             {
@@ -20,8 +19,7 @@ public partial class BaseBuilding : Node2D
                 else
                     uiComponent.RemoveUI();
             };
-        }
-
+        });
         CallDeferred(nameof(setupShader));
     }
 

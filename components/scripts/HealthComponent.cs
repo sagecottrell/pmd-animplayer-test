@@ -11,7 +11,7 @@ public partial class HealthComponent : Node, INodeComponent
     [Export]
     public int MaxHealth = 100;
 
-    public int ModifiedMaxHealth = 100;
+    public int CurrentMaxHealth = 100;
 
     private int currentHealth;
 

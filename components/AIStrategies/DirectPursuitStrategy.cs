@@ -2,6 +2,7 @@ using Godot;
 
 namespace breakout.components.AIStrategies;
 
+[Tool]
 [GlobalClass]
 public partial class DirectPursuitStrategy : AIStrategy
 {
@@ -11,9 +12,9 @@ public partial class DirectPursuitStrategy : AIStrategy
     public float StopRadius { get; set; } = 20.0f;
 
     [Export]
-    public float StartRadius { get; set; } = 20.0f;
+    public float StartRadius { get; set; } = 25.0f;
 
-    override public Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
+    override protected Vector2 Follow(Node2D agent, AIComponent aiStrategy)
     {
         if (aiStrategy.Target is null)
             return Vector2.Zero;

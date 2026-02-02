@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvww8kp56fn4i"]
+[gd_scene format=3 uid="uid://cvww8kp56fn4i"]
 
 [ext_resource type="Script" uid="uid://cdujhwbohn08e" path="res://GameplayMenu.cs" id="1_hbwh8"]
 
-[node name="GameplayMenu" type="PanelContainer"]
+[node name="GameplayMenu" type="PanelContainer" unique_id=1282685347]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -12,19 +12,19 @@ grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("1_hbwh8")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1492441215]
 layout_mode = 2
 
-[node name="TabContainer" type="TabContainer" parent="HBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="HBoxContainer" unique_id=1826412027]
 layout_mode = 2
 size_flags_horizontal = 3
 current_tab = 0
 
-[node name="Buildings" type="HBoxContainer" parent="HBoxContainer/TabContainer"]
+[node name="Buildings" type="HBoxContainer" parent="HBoxContainer/TabContainer" unique_id=2005898666]
 unique_name_in_owner = true
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Details" type="PanelContainer" parent="HBoxContainer"]
+[node name="Details" type="PanelContainer" parent="HBoxContainer" unique_id=658405609]
 unique_name_in_owner = true
 layout_mode = 2

@@ -5,12 +5,19 @@
 [ext_resource type="Script" uid="uid://dscwcnonbgnha" path="res://components/scripts/AIComponent.cs" id="3_fn0tx"]
 [ext_resource type="Script" uid="uid://b6epatdk0ucc" path="res://components/scripts/HealthComponent.cs" id="4_ic3c0"]
 [ext_resource type="Script" uid="uid://c2noffquab3oc" path="res://components/scripts/HurtboxComponent.cs" id="5_ic3c0"]
+[ext_resource type="Script" uid="uid://cvlopqjmfmjsr" path="res://components/AIStrategies/DirectPursuitStrategy.cs" id="5_rjmnn"]
 [ext_resource type="Script" uid="uid://c3j0uf7ruio61" path="res://components/scripts/SelectableComponent.cs" id="6_odw8u"]
 [ext_resource type="Script" uid="uid://c7vy4xm46n2yw" path="res://components/scripts/UnitClickAreaComponent.cs" id="7_uobji"]
 [ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="8_rjmnn"]
+[ext_resource type="Script" uid="uid://doibe2bphjrqp" path="res://components/scripts/PokeTypeComponent.cs" id="9_gjqrm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 radius = 8.0
+
+[sub_resource type="Resource" id="Resource_rc6f3"]
+script = ExtResource("5_rjmnn")
+StrategyType = 2
+metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
 radius = 14.035668
@@ -18,7 +25,7 @@ radius = 14.035668
 [sub_resource type="CircleShape2D" id="CircleShape2D_uobji"]
 radius = 20.024984
 
-[node name="BasicDirectUnit" type="CharacterBody2D" unique_id=861947973]
+[node name="BasicDirectUnit" type="CharacterBody2D" unique_id=861947973 groups=["Units"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_1bet7")
@@ -40,6 +47,7 @@ z_as_relative = false
 
 [node name="AIComponent" type="Node" parent="." unique_id=446855277]
 script = ExtResource("3_fn0tx")
+Strategy = SubResource("Resource_rc6f3")
 metadata/_custom_type_script = "uid://dscwcnonbgnha"
 
 [node name="HealthComponent" type="Node" parent="." unique_id=975645193]
@@ -66,3 +74,7 @@ shape = SubResource("CircleShape2D_uobji")
 [node name="TeamComponent" type="Node" parent="." unique_id=1756266576]
 script = ExtResource("8_rjmnn")
 metadata/_custom_type_script = "uid://cedots6i0j0b6"
+
+[node name="PokeTypeComponent" type="Node" parent="." unique_id=1003881830]
+script = ExtResource("9_gjqrm")
+metadata/_custom_type_script = "uid://doibe2bphjrqp"

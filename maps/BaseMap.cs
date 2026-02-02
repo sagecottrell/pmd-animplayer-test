@@ -1,6 +1,6 @@
 using Godot;
-using System;
 
+[Tool]
 public partial class BaseMap : Node2D
 {
     [Export]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace breakout.components.AIStrategies;
 
+[Tool]
 [GlobalClass]
 public partial class LineLeaderStrategy : AIStrategy
 {
@@ -13,7 +14,7 @@ public partial class LineLeaderStrategy : AIStrategy
     Queue<Vector2> positions = [];
     Vector2 _last_target_pos;
 
-    public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
+    protected override Vector2 Follow(Node2D agent, AIComponent aiStrategy)
     {
         var target = aiStrategy.Target;
         if (target is null)

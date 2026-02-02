@@ -23,6 +23,7 @@ public partial class PokeDefinition : Resource
     public Array<PokeDefinition> Evolutions { get; set; } = [];
 
     [Export]
+    [ExportGroup("Stats")]
     public int Stat_HP { get; set; } = 10;
     [Export]
     public int Stat_Attack { get; set; } = 10;

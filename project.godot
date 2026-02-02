@@ -41,6 +41,11 @@ project/assembly_name="breakout"
 
 enabled=PackedStringArray("res://addons/better-terrain/plugin.cfg", "res://addons/import_pmd_zip/plugin.cfg")
 
+[global_group]
+
+Buildings="contains all active buildings"
+Units="all mobile units"
+
 [gui]
 
 theme/custom="uid://cp4nesj42p88g"

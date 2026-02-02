@@ -1,4 +1,5 @@
 using breakout.customResources;
+using Godot;
 using System.Collections.Generic;
 
 namespace breakout;
@@ -15,4 +16,8 @@ public interface IGameState
     bool TryBuy(IDictionary<GameResourceNames, long> values);
 
     TeamInfo? PlayerTeam { get; }
+
+    Node2D? UnitsContainer { get; }
+
+    Node2D? BuildingsContainer { get; }
 }

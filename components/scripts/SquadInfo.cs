@@ -20,7 +20,7 @@ public partial class SquadInfo : Resource
     public delegate void OnMemberRemovedEventHandler(Node2D unit);
 
     [Export]
-    public Godot.Collections.Dictionary<NodePath, bool> Members { get; set; } = [];
+    public Dictionary<NodePath, bool> Members { get; set; } = [];
 
     [Export]
     public Dictionary<SquadRank, Array<NodePath>> RanksInSquad { get; set; } = [];

@@ -33,3 +33,7 @@ public partial class CircleComponent : Node2D, INodeComponent
         DrawCircle(Vector2.Zero, Radius, Color);
     }
 }
+
+public interface ICircleComponentModifier
+{
+}

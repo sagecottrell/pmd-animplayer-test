@@ -15,6 +15,12 @@ public partial class GameRoot : Node2D, IGameState
     [Export]
     public BaseMap? MapNode { get; set; }
 
+    [Export]
+    public Node2D? UnitsContainer { get; private set; }
+
+    [Export]
+    public Node2D? BuildingsContainer { get; private set; }
+
     public override void _Ready()
     {
         GetViewport().PhysicsObjectPickingSort = true;
@@ -36,7 +42,7 @@ public partial class GameRoot : Node2D, IGameState
             {
                 foreach (var newNode in units)
                 {
-                    GetNode("%Units").AddChild(newNode);
+                    UnitsContainer?.AddChild(newNode);
                     newNode.Owner = this;
                 }
             };
@@ -48,10 +54,7 @@ public partial class GameRoot : Node2D, IGameState
             GlobalSignals.Instance.OnBuildingCreate += (building) =>
             {
                 selectorOverlay.Enabled = true;
-                if (building.TryGetComponent<TeamComponent>(out var teamComp) && PlayerTeam is not null)
-                {
-                    teamComp.SetTeam(PlayerTeam);
-                }
+                building.Configure<TeamComponent>(teampCompt => teampCompt.SetTeam(PlayerTeam));
             };
         }
 
@@ -64,10 +67,7 @@ public partial class GameRoot : Node2D, IGameState
         {
             var b = mainBaseScene.Instantiate();
             AddChild(b);
-            if (b.TryGetComponent<TeamComponent>(out var teamComp) && PlayerTeam is not null)
-            {
-                teamComp.SetTeam(PlayerTeam);
-            }
+            b.Configure<TeamComponent>(teamComp => teamComp.SetTeam(PlayerTeam));
         }
     }
 

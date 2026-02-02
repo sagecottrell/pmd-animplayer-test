@@ -7,7 +7,7 @@ namespace breakout.customResources;
 public partial class TeamInfo : Resource
 {
     [Export]
-    public int Id { get; set; }
+    public TeamIdEnum Id { get; set; }
 
     [Export]
     public Color Color { get; set; } = Colors.White;

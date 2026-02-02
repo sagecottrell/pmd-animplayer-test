@@ -4,18 +4,17 @@ using System.Linq;
 
 namespace breakout.components.AIStrategies;
 
-
+[Tool]
 [GlobalClass]
 public partial class SquadStrategy : AIStrategy
 {
     [Export]
     public float FormationSpacing { get; set; } = 30.0f;
 
-
     [Export]
     public SquadInfo SquadInfo { get; set; } = new();
 
-    public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
+    protected override Vector2 Follow(Node2D agent, AIComponent aiStrategy)
     {
         if (SquadInfo == null || aiStrategy.Target is null)
             return Vector2.Zero;

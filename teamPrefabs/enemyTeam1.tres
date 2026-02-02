@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TeamInfo" format=3 uid="uid://e1dofr77invt"]
+
+[ext_resource type="Script" uid="uid://cgjulsb7a3hn1" path="res://customResources/TeamInfo.cs" id="1_2mt6r"]
+
+[resource]
+script = ExtResource("1_2mt6r")
+Id = 256
+Color = Color(1, 0, 0, 1)
+Name = "Enemy Team"
+metadata/_custom_type_script = "uid://cgjulsb7a3hn1"

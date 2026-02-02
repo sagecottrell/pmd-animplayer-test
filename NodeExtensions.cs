@@ -1,5 +1,6 @@
 using breakout.components.scripts;
 using Godot;
+using System.Collections.Generic;
 
 namespace breakout;
 
@@ -41,6 +42,39 @@ public static class NodeExtensions
     public static bool TryGetComponent<T>(this Node node, out T component) 
         where T : class, INodeComponent 
         => GetComponent.TryGetComponent(node, out component);
+
+    public static void Configure<T1>(this Node node, System.Action<T1> configure) 
+        where T1 : class, INodeComponent
+    {
+        if (node.TryGetComponent<T1>(out var t1))
+            configure(t1);
+    }
+
+    public static void Configure<T1, T2>(this Node node, System.Action<T1, T2> configure) 
+        where T1 : class, INodeComponent 
+        where T2 : class, INodeComponent
+    {
+        if (node.TryGetComponent<T1>(out var t1) && node.TryGetComponent<T2>(out var t2))
+            configure(t1, t2);
+    }
+
+    public static void Configure<T1, T2, T3>(this Node node, System.Action<T1, T2, T3> configure) 
+        where T1 : class, INodeComponent 
+        where T2 : class, INodeComponent 
+        where T3 : class, INodeComponent
+    {
+        if (node.TryGetComponent<T1>(out var t1) && node.TryGetComponent<T2>(out var t2) && node.TryGetComponent<T3>(out var t3))
+            configure(t1, t2, t3);
+    }
+
+    public static IEnumerable<Node>GetComponents(this Node node)
+    {
+        foreach (var child in node.GetChildren())
+        {
+            if (child is INodeComponent)
+                yield return child;
+        }
+    }
 
     /// <summary>
     /// 

@@ -1,4 +1,5 @@
 using breakout.components.AIStrategies;
+using breakout.components.AIStrategies.TargetChoose;
 using breakout.components.scripts;
 using Godot;
 namespace breakout.components;
@@ -13,6 +14,9 @@ public partial class AIComponent : Node, INodeComponent
     public AIStrategy? Strategy { get; set; }
 
     public bool HasReachedTarget = false;
+
+    [Export]
+    public BaseTargetChooseStrategy? TargetChooseStrategy { get; set; }
 
     [Signal]
     public delegate void OnNewVelocityEventHandler(Vector2 velocity);
@@ -32,7 +36,10 @@ public partial class AIComponent : Node, INodeComponent
 
     public void Pathfind()
     {
-        if (GetParent() is not Node2D parent) return;
+        if (GetParent() is not Node2D parent) 
+            return;
+        if (Target is null && TargetChooseStrategy is not null) 
+            Target = TargetChooseStrategy.GetTarget(parent);
         if (Strategy?.Pathfind(parent, this) is Vector2 v)
             EmitSignalOnNewVelocity(v);
     }

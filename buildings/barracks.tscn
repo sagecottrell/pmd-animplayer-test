@@ -4,6 +4,7 @@
 [ext_resource type="Shader" uid="uid://56gss4yrgaxn" path="res://buildings/teamcolor.gdshader" id="2_htohi"]
 [ext_resource type="Texture2D" uid="uid://cpcmcfa75mg8d" path="res://buildings/pmdtent.png" id="3_chnri"]
 [ext_resource type="Script" uid="uid://bpiwhp8so7483" path="res://components/scripts/UnitSpawnerComponent.cs" id="4_htohi"]
+[ext_resource type="Resource" uid="uid://e1dofr77invt" path="res://teamPrefabs/enemyTeam1.tres" id="4_npt7d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_npt7d"]
 shader = ExtResource("2_htohi")
@@ -16,6 +17,9 @@ Sprite = NodePath("Pmdtent")
 [node name="Pmdtent" type="Sprite2D" parent="." index="0" unique_id=564861798]
 material = SubResource("ShaderMaterial_npt7d")
 texture = ExtResource("3_chnri")
+
+[node name="TeamComponent" parent="." index="5" unique_id=2141286606]
+Team = ExtResource("4_npt7d")
 
 [node name="UnitSpawnerComponent" type="Node2D" parent="." index="7" unique_id=149791121]
 script = ExtResource("4_htohi")

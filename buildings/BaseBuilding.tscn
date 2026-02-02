@@ -15,7 +15,7 @@ height = 70.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ggjgd"]
 radius = 38.052597
 
-[node name="BaseBuilding" type="Node2D" unique_id=1529697322]
+[node name="BaseBuilding" type="Node2D" unique_id=1529697322 groups=["Buildings"]]
 script = ExtResource("1_nyv1e")
 
 [node name="SelectableComponent" type="Node2D" parent="." unique_id=882257511 node_paths=PackedStringArray("SelectionShape")]
