@@ -11,5 +11,12 @@ public enum GroupNames
 }
 public static class GroupNamesExtensions
 {
-    public static IEnumerable<string> ByName(this GroupNames kind) => kind.ToString().Split(", ");
+    public static IEnumerable<string> ByName(this GroupNames kind)
+    {
+        foreach (var val in Enum.GetValues<GroupNames>())
+        {
+            if (kind.HasFlag(val))
+                yield return val.ToString();
+        }
+    }
 }

@@ -21,6 +21,9 @@ public abstract partial class AIStrategy : Resource
 
     [Export]
     public AIStrategyType StrategyType { get; set; } = AIStrategyType.FollowTarget;
+
+    [Export]
+    public AISidetrackedType SidetrackedType { get; set; } = AISidetrackedType.Ignore;
 }
 
 public enum AIStrategyType
@@ -28,4 +31,13 @@ public enum AIStrategyType
     FollowTarget = 1,
     AttackTarget = 2,
     FleeTarget = 3,
+}
+
+public enum AISidetrackedType
+{
+    Ignore,
+    Attack,
+    Flee,
+    Chase,
+    Stop,
 }

@@ -112,4 +112,13 @@ public static class NodeExtensions
             else
                 node.DrawLine(origin.Value, pos - dir * length / 2, line_color ?? color, width: line_width);
     }
+
+    public static SignalAwaiter GodotSleep(this Node node, float seconds) => node.ToSignal(node.GetTree().CreateTimer(seconds), SceneTreeTimer.SignalName.Timeout);
+
+    public static T AddOwnedChild<T>(this Node node, T child) where T : Node
+    {
+        node.AddChild(child);
+        child.Owner = node.Owner ?? node;
+        return child;
+    }
 }

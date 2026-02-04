@@ -82,7 +82,7 @@ public partial class SpawnBlockedRemoteStrategy : BaseSpawnStrategy
     public Quantifiers SpawnAllow_Mode { get => samode; set { samode = value; EmitSignalOnChanged(); } }
     Quantifiers samode = Quantifiers.All;
 
-    public override bool CanSpawnEnemies(DateTime _)
+    public override bool CanSpawnEnemies()
     {
         return _checkQuantifier(SpawnBlocker_Mode, SpawnBlocker.Select(_isBlocked).Count(), SpawnBlocker.Count)
             && _checkQuantifier(SpawnAllow_Mode, SpawnAllow.Select(x => !_isBlocked(x)).Count(), SpawnAllow.Count);

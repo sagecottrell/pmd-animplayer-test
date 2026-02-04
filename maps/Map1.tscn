@@ -27,6 +27,9 @@ metadata/_custom_type_script = "uid://c5ssukfbjse5w"
 
 [sub_resource type="Resource" id="Resource_8sk6f"]
 script = ExtResource("8_7tlyo")
+StopRadius = 100.0
+StartRadius = 150.0
+StrategyType = 2
 metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 
 [sub_resource type="Resource" id="Resource_0r3v0"]
@@ -69,6 +72,7 @@ metadata/_custom_type_script = "uid://btcr8x2n1qj5g"
 position = Vector2(513, -26)
 script = ExtResource("5_55yl8")
 Waves = Array[ExtResource("10_n8iyc")]([ExtResource("11_jclyi"), SubResource("Resource_16x4k")])
+LoopWaves = [ExtResource("11_jclyi")]
 SpawnPoint = NodePath("../Barracks/SpawnPoint")
 metadata/_custom_type_script = "uid://6qd2ir0elqfu"
 
@@ -81,9 +85,8 @@ metadata/_custom_type_script = "uid://dt65xffiwf71p"
 
 [node name="SpawnTimerStrategy" type="Node" parent="SpawnManager" unique_id=956623281]
 script = ExtResource("6_bsx1b")
-Timer = 1.0
+WaitTime = 1.0
 
-[node name="SpawnPointWaitComplete" type="Node" parent="SpawnManager" unique_id=1162432836 node_paths=PackedStringArray("SpawnPoint")]
+[node name="SpawnPointWaitComplete" type="Node" parent="SpawnManager" unique_id=992092601]
 script = ExtResource("18_8sk6f")
-SpawnPoint = NodePath("../../Barracks/SpawnPoint")
 metadata/_custom_type_script = "uid://yvoxwo2m0lg0"

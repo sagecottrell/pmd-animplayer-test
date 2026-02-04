@@ -7,12 +7,30 @@ namespace breakout.components.AIStrategies;
 public partial class DirectPursuitStrategy : AIStrategy
 {
     private bool _stopped = false;
+    private float stopRadius = 20.0f;
+    private float startRadius = 25.0f;
 
     [Export]
-    public float StopRadius { get; set; } = 20.0f;
+    public float StopRadius
+    {
+        get => stopRadius; set 
+        {
+            stopRadius = value;
+            if (StartRadius < stopRadius)
+                StartRadius = stopRadius;
+        }
+    }
 
     [Export]
-    public float StartRadius { get; set; } = 25.0f;
+    public float StartRadius
+    {
+        get => startRadius; set
+        {
+            startRadius = value;
+            if (StopRadius > startRadius)
+                StopRadius = startRadius;
+        }
+    }
 
     override protected Vector2 Follow(Node2D agent, AIComponent aiStrategy)
     {
@@ -34,5 +52,10 @@ public partial class DirectPursuitStrategy : AIStrategy
             return d.Normalized();
         }
         return Vector2.Zero;
+    }
+
+    protected override Vector2 Attack(Node2D agent, AIComponent aiComponent)
+    {
+        return Follow(agent, aiComponent);
     }
 }

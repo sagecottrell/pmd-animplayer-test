@@ -55,6 +55,7 @@ public partial class SpawnPoint : Node2D
     private async Task _spawnMembers(WaveDefinition wave, Node2D unitsContainer)
     {
         IsWaveSpawnComplete = false;
+        // the state of this isn't saved to disk. if interrupted, the wave will be truncated
         foreach (var member in wave.WaveMembers ?? [])
         {
             if (member is null || member.PokeDefinition is null)
@@ -74,10 +75,10 @@ public partial class SpawnPoint : Node2D
                     if ((TeamHolder ?? GetParent()).TryGetComponent<TeamComponent>(out var ti))
                         t.SetTeam(ti.Team);
                 });
-                unitsContainer.AddChild(unitScene);
+                unitsContainer.AddOwnedChild(unitScene);
                 _setupUnit(unitScene);
 
-                await Task.Delay((int)(1000 * member.SpawnInterval));
+                await this.GodotSleep(member.SpawnInterval);
             }
         }
         EmitSignalOnWaveSpawnComplete(wave);

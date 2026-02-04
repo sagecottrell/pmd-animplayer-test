@@ -4,7 +4,6 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace breakout.enemySpawn;
 
@@ -18,16 +17,16 @@ public partial class SpawnManager : Node2D
     public delegate void OnSpawnEventHandler(WaveDefinition wave);
 
     [Export]
+    public int LastWaveIndex { get; private set; }
+
+    [Export]
     public Array<WaveDefinition> Waves { get; set; } = [];
 
     [Export]
-    public bool LoopWaves { get; set; } = true;
+    public Array<WaveDefinition> LoopWaves { get; set; } = [];
 
     [Export]
     public SpawnPoint? SpawnPoint { get; set; }
-
-    public DateTime LastSpawnTime { get; private set; } = DateTime.MinValue;
-    public int LastWaveIndex { get; private set; }
 
     public override void _Ready()
     {
@@ -51,14 +50,6 @@ public partial class SpawnManager : Node2D
     {
         if (!Engine.IsEditorHint()) return;
         SetNotifyLocalTransform(true);
-
-        foreach (var strategy in SpawnStrategies)
-        {
-            if (strategy is SpawnPointWaitComplete sp)
-            {
-                sp.SpawnPoint = SpawnPoint;
-            }
-        }
     }
 
     public override void _Process(double delta)
@@ -83,16 +74,18 @@ public partial class SpawnManager : Node2D
         }
     }
 
-    public bool CanSpawnWave() => SpawnStrategies.All(s => s.CanSpawnEnemies(LastSpawnTime));
+    public bool CanSpawnWave() => SpawnStrategies.All(s => s.CanSpawnEnemies());
     public async void TrySpawnWave()
     {
-        if (SpawnPoint is null || !CanSpawnWave() || LastWaveIndex >= Waves.Count)
+        if (SpawnPoint is null || !CanSpawnWave() || LastWaveIndex >= LoopWaves.Count + Waves.Count)
             return;
-        var wave = Waves[LastWaveIndex++];
-        if (LoopWaves && LastWaveIndex >= Waves.Count)
-            LastWaveIndex = 0;
+        var wave = LastWaveIndex < Waves.Count ? Waves[LastWaveIndex] : LoopWaves[LastWaveIndex - Waves.Count];
+        LastWaveIndex++;
+        if (LastWaveIndex >= LoopWaves.Count + Waves.Count)
+            LastWaveIndex = Waves.Count;
         await SpawnPoint.Spawn(wave);
-        LastSpawnTime = DateTime.Now;
+        foreach (var strategy in SpawnStrategies)
+            strategy.OnSpawned(wave);
         EmitSignalOnSpawn(wave);
         return;
     }
