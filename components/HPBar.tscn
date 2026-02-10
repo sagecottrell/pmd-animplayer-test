@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://ccdy4av1y2lyv"]
+
+[ext_resource type="Script" uid="uid://diyj8dojuglq5" path="res://components/scripts/HpBar.cs" id="1_d7vb4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7vb4"]
+bg_color = Color(0.13682574, 0.13682574, 0.13682568, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dth1g"]
+bg_color = Color(0.99215686, 0, 0, 1)
+
+[node name="HpBar" type="HBoxContainer" unique_id=1343319015]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -861.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d7vb4")
+
+[node name="progress" type="ProgressBar" parent="." unique_id=756884353]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_d7vb4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dth1g")
+rounded = true
+show_percentage = false

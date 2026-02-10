@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cfdwdenwybed7"]
 
-[ext_resource type="Script" uid="uid://bg5c7peg2nx7o" path="res://units/basic_direct_unit.gd" id="1_1bet7"]
+[ext_resource type="Script" uid="uid://bxrfrejsib1fa" path="res://units/BaseUnit.cs" id="1_x6hyg"]
+[ext_resource type="Script" uid="uid://baj0nkd5ldfrb" path="res://components/scripts/AggroArea.cs" id="2_crb5d"]
 [ext_resource type="PackedScene" uid="uid://g28qd5tm21q6" path="res://components/PMDSprite.tscn" id="2_ecyxk"]
 [ext_resource type="Script" uid="uid://dscwcnonbgnha" path="res://components/scripts/AIComponent.cs" id="3_fn0tx"]
 [ext_resource type="Script" uid="uid://b6epatdk0ucc" path="res://components/scripts/HealthComponent.cs" id="4_ic3c0"]
@@ -10,6 +11,14 @@
 [ext_resource type="Script" uid="uid://c7vy4xm46n2yw" path="res://components/scripts/UnitClickAreaComponent.cs" id="7_uobji"]
 [ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="8_rjmnn"]
 [ext_resource type="Script" uid="uid://doibe2bphjrqp" path="res://components/scripts/PokeTypeComponent.cs" id="9_gjqrm"]
+[ext_resource type="PackedScene" uid="uid://ccdy4av1y2lyv" path="res://components/HPBar.tscn" id="11_88qym"]
+[ext_resource type="Script" uid="uid://dpy6x3an40t1w" path="res://components/scripts/SpeedComponent.cs" id="13_crb5d"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_88qym"]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_88qym"]
+radius = 82.219215
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_odw8u"]
 radius = 8.0
@@ -25,11 +34,18 @@ radius = 14.035668
 [sub_resource type="CircleShape2D" id="CircleShape2D_uobji"]
 radius = 20.024984
 
-[node name="BasicDirectUnit" type="CharacterBody2D" unique_id=861947973 groups=["Units"]]
-collision_layer = 2
-motion_mode = 1
-script = ExtResource("1_1bet7")
-clickable = true
+[node name="BasicDirectUnit" type="RigidBody2D" unique_id=354031793 groups=["Units"]]
+physics_material_override = SubResource("PhysicsMaterial_88qym")
+lock_rotation = true
+custom_integrator = true
+script = ExtResource("1_x6hyg")
+
+[node name="AggroArea" type="Area2D" parent="." unique_id=1394627546]
+script = ExtResource("2_crb5d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroArea" unique_id=11455998]
+shape = SubResource("CircleShape2D_88qym")
+debug_color = Color(1, 0, 0, 0.41960785)
 
 [node name="SelectableComponent" type="Node2D" parent="." unique_id=955804000 node_paths=PackedStringArray("SelectionShape")]
 script = ExtResource("6_odw8u")
@@ -78,3 +94,20 @@ metadata/_custom_type_script = "uid://cedots6i0j0b6"
 [node name="PokeTypeComponent" type="Node" parent="." unique_id=1003881830]
 script = ExtResource("9_gjqrm")
 metadata/_custom_type_script = "uid://doibe2bphjrqp"
+
+[node name="HpBar" parent="." unique_id=1343319015 node_paths=PackedStringArray("Health") instance=ExtResource("11_88qym")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -24.0
+offset_top = -31.0
+offset_right = 24.0
+offset_bottom = -26.0
+grow_horizontal = 1
+grow_vertical = 1
+Health = NodePath("../HealthComponent")
+HideIfFull = true
+
+[node name="SpeedComponent" type="Node" parent="." unique_id=550317145]
+script = ExtResource("13_crb5d")
+Speed = 100.0

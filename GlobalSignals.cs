@@ -36,6 +36,8 @@ public partial class GlobalSignals : Node
     public delegate void OnBuildingCreateEventHandler(BaseBuilding buildingDefinition);
     [Signal]
     public delegate void OnBuildingCancelEventHandler();
+    [Signal]
+    public delegate void OnMoveFinishEventHandler(Node2D moveNode);
 
     public void GameOver()
     {
@@ -75,5 +77,10 @@ public partial class GlobalSignals : Node
     public void BuildingCancel()
     {
         EmitSignalOnBuildingCancel();
+    }
+
+    public void MoveFinish(Node2D node)
+    {
+        EmitSignalOnMoveFinish(node);
     }
 }

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="1_iiyx5"]
 [ext_resource type="AnimationLibrary" uid="uid://7jvoau1xakyj" path="res://pmd_zips/primarina.zip" id="1_wecip"]
 [ext_resource type="Texture2D" uid="uid://capnib55o83hp" path="res://units/icons/primarina.png" id="3_pf0t8"]
+[ext_resource type="Resource" uid="uid://dpwsp6l84mnq5" path="res://moves/water-gun.tres" id="3_siejh"]
 
 [resource]
 script = ExtResource("1_iiyx5")
@@ -11,5 +12,7 @@ Sprite = ExtResource("3_pf0t8")
 AnimationLibrary = ExtResource("1_wecip")
 Type1 = 3
 Type2 = 18
-LevelupMoveset = {}
+LevelupMoveset = {
+1: ExtResource("3_siejh")
+}
 metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

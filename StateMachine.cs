@@ -34,4 +34,6 @@ public partial class StateMachine : Resource
             value.CallDeferred();
         }
     }
+
+    public void Emit(object obj) => Emit(Variant.From((int)obj));
 }

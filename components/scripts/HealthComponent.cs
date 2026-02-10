@@ -8,38 +8,43 @@ public partial class HealthComponent : Node, INodeComponent
 {
     [Signal]
     public delegate void OnDeathEventHandler(DamageSource source);
+
+    [Signal]
+    public delegate void OnHpChangeEventHandler(DamageSource source);
+
     [Export]
     public int MaxHealth = 100;
 
-    public int CurrentMaxHealth = 100;
+    public int CurrentMaxHealth { get; private set; } = 100;
 
-    private int currentHealth;
+    [Export]
+    public int CurrentHealth = 100;
 
     public override void _Ready()
     {
         base._Ready();
-        currentHealth = MaxHealth;
+        CurrentHealth = MaxHealth;
     }
     public void TakeDamage(DamageSource amount)
     {
-        currentHealth -= amount.Amount;
-        if (currentHealth <= 0)
+        CurrentHealth -= amount.Amount;
+        if (CurrentHealth <= 0)
         {
-            currentHealth = 0;
+            CurrentHealth = 0;
             EmitSignalOnDeath(amount);
         }
     }
     public void Heal(DamageSource amount)
     {
-        currentHealth += amount.Amount;
-        if (currentHealth > MaxHealth)
+        CurrentHealth += amount.Amount;
+        if (CurrentHealth > MaxHealth)
         {
-            currentHealth = MaxHealth;
+            CurrentHealth = MaxHealth;
         }
     }
     public int GetCurrentHealth()
     {
-        return currentHealth;
+        return CurrentHealth;
     }
 
     public void Modify(IEnumerable<BaseModifier> modifiers)
