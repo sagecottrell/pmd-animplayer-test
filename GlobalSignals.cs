@@ -1,4 +1,6 @@
 using breakout.buildings;
+using breakout.components.AIStrategies;
+using breakout.components.scripts;
 using breakout.customResources;
 using Godot;
 
@@ -38,6 +40,10 @@ public partial class GlobalSignals : Node
     public delegate void OnBuildingCancelEventHandler();
     [Signal]
     public delegate void OnMoveFinishEventHandler(Node2D moveNode);
+    [Signal]
+    public delegate void OnSquadCreateEventHandler(SquadStrategy squadInfo);
+    [Signal]
+    public delegate void OnSquadDestroyEventHandler(SquadStrategy squadInfo);
 
     public void GameOver()
     {
@@ -83,4 +89,7 @@ public partial class GlobalSignals : Node
     {
         EmitSignalOnMoveFinish(node);
     }
+
+    public void SquadCreate(SquadStrategy squadInfo) => EmitSignalOnSquadCreate(squadInfo);
+    public void SquadDestroy(SquadStrategy squadInfo) => EmitSignalOnSquadDestroy(squadInfo);
 }

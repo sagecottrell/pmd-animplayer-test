@@ -2,7 +2,6 @@ using breakout.components.AIStrategies;
 using breakout.components.scripts;
 using breakout.customResources;
 using Godot;
-using System;
 using System.Collections.Generic;
 
 namespace breakout.buildings.UIs;
@@ -14,13 +13,14 @@ public partial class BasicUnitSpawnMenu : Control
     [Export]
     public PackedScene? SpawnScene;
 
-    private SquadStrategy baseSquadStrat = new();
-
-    public SquadRank squadRank = SquadRank.Frontline;
+    [Export]
+    public SquadStrategy BaseSquadStrategy = new();
 
     public override void _Ready()
     {
         GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
+
+        BaseSquadStrategy.Target ??= this.TryGetContext<Node2D>(out var n2d) ? n2d : null;
 
         var selector = GetNode<MenuButton>("%PokeSelector");
         var popup = selector.GetPopup();
@@ -33,9 +33,12 @@ public partial class BasicUnitSpawnMenu : Control
         popup.IdPressed += (id) => pick(resources[id]);
         pick(resources[0]);
 
-        var rank = GetNode<OptionButton>("%RankSelector");
-        rank.ItemSelected += RankSelected;
-        rank.Select(0);
+        CallDeferred(nameof(_setupSquad));
+    }
+
+    private void _setupSquad()
+    {
+        GlobalSignals.Instance?.SquadCreate(BaseSquadStrategy);
     }
 
     public void pick(UnitDefinition? def)
@@ -44,12 +47,6 @@ public partial class BasicUnitSpawnMenu : Control
         var selector = GetNode<MenuButton>("%PokeSelector");
         selector.Icon = def.Icon;
         _selectedUnit = def;
-    }
-
-    public void RankSelected(long idx)
-    {
-        var text = GetNode<OptionButton>("%RankSelector").GetItemText((int)idx);
-        squadRank = Enum.Parse<SquadRank>(text);
     }
 
     public void OnSpawn()
@@ -66,11 +63,13 @@ public partial class BasicUnitSpawnMenu : Control
             sprite.Sprites = _selectedUnit.Sprites;
         if (GetComponent.TryGetSelectableComponent(newNode, out var selectable))
             selectable.UnselectedAlpha = 0.3f;
-        if (GetComponent.TryGetAIComponent(newNode, out var aIComponent) && baseSquadStrat.Duplicate(deep: true) is SquadStrategy ss)
+        if (GetComponent.TryGetAIComponent(newNode, out var aIComponent))
         {
-            aIComponent.Strategy = ss;
-            ss.SquadInfo.AddUnit(newNode, squadRank);
+            aIComponent.Strategy = BaseSquadStrategy;
+            BaseSquadStrategy.AddUnit(newNode);
         }
+        if (newNode.TryGetComponent<UnitClickAreaComponent>(out var click))
+            click.InputPickable = true;
     }
 
 }

@@ -9,4 +9,7 @@
   <ItemGroup>
     <None Include="components\PMDSprite.tscn" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="helpers\prioQueue\" />
+  </ItemGroup>
 </Project>

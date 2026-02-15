@@ -1,65 +1,88 @@
-using breakout.components.scripts;
+using breakout.components.AIStrategies.TargetChoose;
 using Godot;
-using System.Linq;
+using System;
 
 namespace breakout.components.AIStrategies;
+
+public enum SquadState
+{
+    Moving,
+    Attacking,
+    Idle,
+}
 
 [Tool]
 [GlobalClass]
 public partial class SquadStrategy : AIStrategy
 {
-    [Export]
-    public float FormationSpacing { get; set; } = 30.0f;
-
-    [Export]
-    public SquadInfo SquadInfo { get; set; } = new();
-
-    protected override Vector2 Follow(Node2D agent, AIComponent aiStrategy)
+    public override AIStrategy OnWaveSpawn()
     {
-        if (SquadInfo == null || aiStrategy.Target is null)
-            return Vector2.Zero;
-        Vector2 desiredPosition = GetUnitTargetPosition(agent, aiStrategy.Target);
-        Vector2 d = desiredPosition - agent.GlobalPosition;
-        if (d.LengthSquared() < 1)
+        var newSquad = new SquadStrategy()
         {
-            if (!aiStrategy.HasReachedTarget)
-                aiStrategy.ReachedTarget();
-            return Vector2.Zero;
-        }
-        aiStrategy.HasReachedTarget = false;
-        return d.Normalized();
+            TargetChooseStrategy = TargetChooseStrategy,
+        };
+        GlobalSignals.Instance?.SquadCreate(newSquad);
+        return newSquad;
     }
 
-    public Vector2 GetUnitTargetPosition(Node2D unit, Node2D target)
+    public override Vector2 Pathfind(Node2D agent, AIComponent aiStrategy)
     {
-        if (SquadInfo.Members is null)
-            return unit.GlobalPosition;
-        if (SquadInfo.Members.Count == 1)
-            return target.GlobalPosition;
-
-        if (SquadInfo.UnitRanks.TryGetValue(unit.GetPath(), out var rank))
-        {
-            var depth = 0;
-            for (var i = 0; i < (int)rank; i++)
-                if (SquadInfo.RanksInSquad.ContainsKey((SquadRank)i))
-                    depth++;
-
-            var rankUnits = SquadInfo.RanksInSquad.TryGetValue(rank, out var value) ? value : [];
-            int rankIndex = rankUnits.IndexOf(unit.GetPath());
-            if (rankIndex != -1)
-            {
-                var o = -depth * SquadInfo.FacingDirection.Normalized() * FormationSpacing
-                    + SquadInfo.FacingDirection.Rotated(Mathf.Pi / 2) * (rankIndex - (float)rankUnits.Count / 2) * FormationSpacing;
-                return o + target.GlobalPosition;
-            }
-        }
-        int index = SquadInfo.Members.Keys.ToList().IndexOf(unit.GetPath());
-        if (index == -1)
-            return unit.GlobalPosition;
-        // Arrange units in a circle around the target position
-        float angle = index * (Mathf.Pi * 2 / SquadInfo.Members.Count);
-        float radius = 50.0f; // Distance from the center
-        Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-        return offset + target.GlobalPosition;
+        Target ??= TargetChooseStrategy?.GetTarget(agent);
+        if (Target is null)
+            return agent.GlobalPosition;
+        return Pathfind(Target.GlobalPosition, agent, aiStrategy);
     }
+
+    public override Vector2 Pathfind(Vector2 target, Node2D agent, AIComponent aIComponent)
+    {
+        if (State == SquadState.Moving)
+            return Approach?.Pathfind(target, agent, aIComponent) ?? target;
+        return target;
+    }
+
+    [Signal]
+    public delegate void OnMemberAddedEventHandler(Node2D unit);
+
+    [Signal]
+    public delegate void OnMemberRemovedEventHandler(Node2D unit);
+
+    [Export]
+    public bool PlayerControllable;
+
+    [Export]
+    public string SquadGroupName { get; set; } = $"squad-{DateTime.Now.Ticks}";
+
+    [Export]
+    public Vector2 FacingDirection { get; set; } = Vector2.Down;
+
+    [Export]
+    public BaseTargetChooseStrategy? TargetChooseStrategy { get; set; }
+    public Node2D? Target;
+
+    [Export]
+    public SquadState State { get; set; } = SquadState.Idle;
+
+    public void AddUnit(Node2D unit)
+    {
+        var existingGroup = unit.GetMeta(MetadataNames.SquadStrategy.GROUP, 0).AsString();
+        if (!string.IsNullOrWhiteSpace(existingGroup) && existingGroup != SquadGroupName && unit.TryGetComponent<AIComponent>(out var ai) && ai.Strategy is SquadStrategy ss)
+            ss.RemoveUnit(unit);
+        unit.AddToGroup(SquadGroupName);
+        unit.SetMeta(MetadataNames.SquadStrategy.GROUP, SquadGroupName);
+        EmitSignalOnMemberAdded(unit);
+    }
+
+    public void RemoveUnit(Node2D unit)
+    {
+        unit.RemoveMeta(MetadataNames.SquadStrategy.GROUP);
+        unit.RemoveFromGroup(SquadGroupName);
+        EmitSignalOnMemberRemoved(unit);
+    }
+
+    public override void OnEnemyNear(Node2D agent, Node2D enemy)
+    {
+    }
+
+    [Export]
+    public AIStrategy? Approach { get; set; }
 }

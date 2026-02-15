@@ -28,6 +28,9 @@ public partial class SpawnManager : Node2D
     [Export]
     public SpawnPoint? SpawnPoint { get; set; }
 
+    [Export]
+    public bool Enabled { get; set; } = true;
+
     public override void _Ready()
     {
         _getStrategyChildren();
@@ -77,7 +80,7 @@ public partial class SpawnManager : Node2D
     public bool CanSpawnWave() => SpawnStrategies.All(s => s.CanSpawnEnemies());
     public async void TrySpawnWave()
     {
-        if (SpawnPoint is null || !CanSpawnWave() || LastWaveIndex >= LoopWaves.Count + Waves.Count)
+        if (!Enabled || SpawnPoint is null || !CanSpawnWave() || LastWaveIndex >= LoopWaves.Count + Waves.Count)
             return;
         var wave = LastWaveIndex < Waves.Count ? Waves[LastWaveIndex] : LoopWaves[LastWaveIndex - Waves.Count];
         LastWaveIndex++;

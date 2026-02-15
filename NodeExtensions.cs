@@ -1,6 +1,9 @@
+using breakout.components.AIStrategies;
 using breakout.components.scripts;
 using Godot;
+using Godot.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace breakout;
 
@@ -121,4 +124,6 @@ public static class NodeExtensions
         child.Owner = node.Owner ?? node;
         return child;
     }
+
+    public static Array<Node2D> SquadMembers(this Node node, SquadStrategy squad) => [.. node.GetTree().GetNodesInGroup(squad.SquadGroupName).Cast<Node2D>()];
 }

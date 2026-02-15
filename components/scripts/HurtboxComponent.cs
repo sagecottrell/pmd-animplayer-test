@@ -41,9 +41,7 @@ public partial class HurtboxComponent : Area2D, INodeComponent
     {
         if (GetComponent.TryGetTeamComponent(node, out var otherTeam))
         {
-            if (Team is not TeamComponent myTeam || otherTeam == null)
-                return false;
-            return myTeam.Team == otherTeam.Team;
+            return Team == otherTeam;
         }
         return false;
     }

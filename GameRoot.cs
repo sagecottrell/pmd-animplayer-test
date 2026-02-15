@@ -24,7 +24,6 @@ public partial class GameRoot : Node2D, IGameState
     public override void _Ready()
     {
         GetViewport().PhysicsObjectPickingSort = true;
-        GlobalSignals.Instance?.PlayerResourcesChange(_resources);
 
         var selectorOverlay = GetNode<SquadSelectorOverlay>(nameof(SquadSelectorOverlay));
         selectorOverlay.Enabled = true;
@@ -36,22 +35,24 @@ public partial class GameRoot : Node2D, IGameState
             squadContainer.OnSquadSelected(s);
         };
 
-        if (GlobalSignals.Instance is not null)
+        if (GlobalSignals.Instance is GlobalSignals signals)
         {
-            GlobalSignals.Instance.OnUnitSpawn += (units) =>
+            signals.PlayerResourcesChange(_resources);
+            signals.OnSquadCreate += squadContainer.OnNewSquad;
+            signals.OnUnitSpawn += (units) =>
             {
                 foreach (var newNode in units)
                 {
                     UnitsContainer?.AddChild(newNode);
-                    newNode.Owner = this;
+                    newNode.Owner = UnitsContainer?.GetOwner();
                 }
             };
-            GlobalSignals.Instance.OnRequestBuildingCreate += (def) =>
+            signals.OnRequestBuildingCreate += (def) =>
             {
                 selectorOverlay.Enabled = false;
                 GetNode<BuildingPlacer>("%Buildings").StartPlacingBuilding(def);
             };
-            GlobalSignals.Instance.OnBuildingCreate += (building) =>
+            signals.OnBuildingCreate += (building) =>
             {
                 selectorOverlay.Enabled = true;
                 building.Configure<TeamComponent>(teampCompt => teampCompt.SetTeam(PlayerTeam));

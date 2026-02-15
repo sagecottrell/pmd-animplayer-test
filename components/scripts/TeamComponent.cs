@@ -1,5 +1,6 @@
 using breakout.customResources;
 using Godot;
+using System.Numerics;
 
 namespace breakout.components.scripts;
 
@@ -45,6 +46,11 @@ public partial class TeamComponent : Node, INodeComponent
     {
         _addToGroups();
     }
+
+    public bool EqTeam(TeamComponent? other, bool nullIsEq = false) => other?.Team?.Equals(Team) ?? (Team is null && nullIsEq);
+
+    public static bool operator ==(TeamComponent? self, TeamComponent? other) => self?.EqTeam(other) ?? false;
+    public static bool operator !=(TeamComponent? self, TeamComponent? other) => !(self == other);
 }
 
 public interface ITeamComponentModifier

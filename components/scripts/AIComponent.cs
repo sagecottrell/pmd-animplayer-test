@@ -1,5 +1,4 @@
 using breakout.components.AIStrategies;
-using breakout.components.AIStrategies.TargetChoose;
 using breakout.components.scripts;
 using Godot;
 namespace breakout.components;
@@ -7,50 +6,34 @@ namespace breakout.components;
 [GlobalClass]
 public partial class AIComponent : Node, INodeComponent
 {
-    [Export]
-    public Node2D? Target { get; set; }
+    private AIStrategy? strategy;
 
     [Export]
-    public AIStrategy? Strategy { get; set; }
-
-    public bool HasReachedTarget = false;
-
-    [Export]
-    public BaseTargetChooseStrategy? TargetChooseStrategy { get; set; }
+    public AIStrategy? Strategy { get => strategy; set 
+        {
+            if (value is SquadStrategy ss && GetParent() is Node2D n2d)
+                ss.AddUnit(n2d);
+            strategy = value;
+        } 
+    }
 
     [Signal]
-    public delegate void OnNewVelocityEventHandler(Vector2 velocity);
+    public delegate void OnNewTargetPointEventHandler(Vector2 newTargetPoint);
 
     [Signal]
-    public delegate void OnReachedTargetEventHandler();
+    public delegate void OnReachedTargetEventHandler(Vector2 globalPosition);
 
     public override void _Ready()
     {
-        Strategy = Strategy?.CreateCopyOnComponentReady != true ? Strategy : Strategy?.Duplicate() as AIStrategy;
-    }
-
-    public override void _Process(double delta)
-    {
-        Pathfind();
+        Strategy = Strategy?.OnComponentReady();
     }
 
     public void Pathfind()
     {
         if (GetParent() is not Node2D parent) 
             return;
-        if (Target is null && TargetChooseStrategy is not null) 
-            Target = TargetChooseStrategy.GetTarget(parent);
         if (Strategy?.Pathfind(parent, this) is Vector2 v)
-            EmitSignalOnNewVelocity(v);
-    }
-
-    public void ReachedTarget()
-    {
-        if (!HasReachedTarget)
-        {
-            HasReachedTarget = true;
-            EmitSignalOnReachedTarget();
-        }
+            EmitSignalOnNewTargetPoint(v);
     }
 }
 

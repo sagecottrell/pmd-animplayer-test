@@ -71,42 +71,72 @@ public partial class BaseUnit : RigidBody2D
     {
         CustomIntegrator = this.TryGetComponent<SpeedComponent>(out var _);
         state = State.Idle;
-        this.Configure<PMDSprite>(p =>
+        this.Configure<PMDSprite, SpeedComponent>((p, speed) =>
         {
-            p.OnHit += on_hit;
-            p.OnAnimFinish += on_return;
+            p.OnHit += _on_hit;
+            p.OnAnimFinish += _on_return;
         });
-        this.Configure<HurtboxComponent>(h => h.OnHurt += on_hurt);
-        this.Configure<HealthComponent>(h => h.OnDeath += on_death);
-        this.Configure<AIComponent>(ai =>
+        this.Configure<HurtboxComponent>(h => h.OnHurt += _on_hurt);
+        this.Configure<HealthComponent>(h => h.OnDeath += _on_death);
+        this.Configure<AIComponent, SpeedComponent>((ai, s) =>
         {
-            ai.OnNewVelocity += on_move;
-            ai.OnReachedTarget += on_reach_target;
+            ai.OnNewTargetPoint += pt => _on_move(pt, s);
+            ai.OnReachedTarget += _on_reach_target;
+        });
+        this.Configure<AggroArea, AIComponent>((a, ai) =>
+        {
+            a.AreaEntered += area => _on_aggro_area_entered(area, ai);
+            a.AreaExited += area => _on_aggro_area_exited(area, ai);
         });
     }
 
-    void on_hit()
+    private void _on_aggro_area_entered(Area2D area, AIComponent ai)
+    {
+        if (area.GetParent() is BaseUnit unit)
+        {
+            if (unit.TryGetComponent<TeamComponent>(out var otherTeam) && this.TryGetComponent<TeamComponent>(out var myTeam) && myTeam == otherTeam)
+            {
+                ai.Strategy?.OnFriendlyNear(this, unit);
+                return;
+            }
+            ai.Strategy?.OnEnemyNear(this, unit);
+        }
+    }
+
+    private void _on_aggro_area_exited(Area2D area, AIComponent ai)
+    {
+        if (area.GetParent() is BaseUnit unit)
+        {
+            if (unit.TryGetComponent<TeamComponent>(out var otherTeam) && this.TryGetComponent<TeamComponent>(out var myTeam) && myTeam == otherTeam)
+            {
+                ai.Strategy?.OnFriendlyLeave(this, unit);
+                return;
+            }
+            ai.Strategy?.OnEnemyLeave(this, unit);
+        }
+    }
+
+    void _on_hit()
     {
 
     }
 
-    void on_death(DamageSource hurt)
+    void _on_death(DamageSource hurt)
     {
 
     }
 
-    void on_hurt(DamageSource hurt)
+    void _on_hurt(DamageSource hurt)
     {
 
     }
 
-    void on_return()
+    void _on_return()
     {
-        if (this.TryGetComponent<SpeedComponent>(out var speed))
-            _stateMachine.Emit(speed.Velocity.IsZeroApprox() ? State.Idle : State.Walking);
+        _stateMachine.Emit(this.TryGetComponent<SpeedComponent>(out var speed) && !speed.Velocity.IsZeroApprox() ? State.Walking : State.Idle);
     }
 
-    void on_attack()
+    void _on_attack()
     {
         switch (state)
         {
@@ -119,7 +149,7 @@ public partial class BaseUnit : RigidBody2D
         }
     }
 
-    void on_shoot()
+    void _on_shoot()
     {
         switch (state)
         {
@@ -132,7 +162,7 @@ public partial class BaseUnit : RigidBody2D
         }
     }
 
-    void on_charge()
+    void _on_charge()
     {
         switch (state)
         {
@@ -143,35 +173,37 @@ public partial class BaseUnit : RigidBody2D
                     break;
                 }
             case State.Attacking:
-                on_return();
+                _on_return();
                 break;
         }
     }
 
-    void on_reach_target()
+    void _on_reach_target(Vector2 globalPosition)
     {
         if (this.TryGetComponent<AIComponent>(out var ai) && ai.Strategy is SquadStrategy ss)
-            this.Configure<PMDSprite>(p => p.Direction = ss.SquadInfo.FacingDirection);
+            this.Configure<PMDSprite>(p => p.Direction = ss.FacingDirection);
+        GlobalPosition = globalPosition;
     }
 
-    void on_move(Vector2 dir)
+    void _on_move(Vector2 targetPoint, SpeedComponent speed)
     {
+        var dir = (targetPoint - GlobalPosition).Normalized();
         switch (state)
         {
             case State.Idle or State.Walking:
                 {
-                    if (dir.IsZeroApprox())
+                    if (targetPoint.DistanceTo(GlobalPosition) < speed.Speed * 2 / Engine.GetFramesPerSecond())
                     {
+                        GlobalPosition = targetPoint;
                         _stateMachine.Emit(State.Idle);
+                        speed.Velocity = Vector2.Zero;
                     }
                     else
                     {
-                        if (dir.LengthSquared() < 40)
-                            dir = dir.Rotated(Mathf.Sin(Time.GetTicksMsec() / 1000) * 0.1f);
+                        dir = dir.Rotated(Mathf.Sin(Time.GetTicksMsec() / 1000) * 0.1f);
                         _stateMachine.Emit(State.Walking);
-                    }
-                    if (this.TryGetComponent<SpeedComponent>(out var speed))
                         speed.Velocity = dir * speed.Speed;
+                    }
                     this.Configure<PMDSprite>(p => p.Direction = dir);
                     break;
                 }

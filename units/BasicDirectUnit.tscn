@@ -25,7 +25,6 @@ radius = 8.0
 
 [sub_resource type="Resource" id="Resource_rc6f3"]
 script = ExtResource("5_rjmnn")
-StrategyType = 2
 metadata/_custom_type_script = "uid://cvlopqjmfmjsr"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bet7"]
@@ -80,6 +79,7 @@ shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
 [node name="UnitClickAreaComponent" type="Area2D" parent="." unique_id=1061162630]
+input_pickable = false
 script = ExtResource("7_uobji")
 metadata/_custom_type_script = "uid://c7vy4xm46n2yw"
 

@@ -13,9 +13,6 @@ namespace breakout.enemySpawn;
 public partial class SpawnPoint : Node2D
 {
     [Export]
-    public BaseTargetChooseStrategy? TargetChooserStrategy;
-
-    [Export]
     public PackedScene? SpawnScene;
 
     /// <summary>
@@ -34,26 +31,23 @@ public partial class SpawnPoint : Node2D
 
     public Task Spawn(WaveDefinition wave)
     {
-        if (TargetChooserStrategy == null)
-            throw new System.Exception($"No target chooser strategy available!");
         if (!this.TryGetContext<IGameState>(out var ctx) || ctx.UnitsContainer is not Node2D unitsContainer)
             return Task.FromResult(0);
         return _spawnMembers(wave, unitsContainer);
     }
 
-    private void _setupUnit(Node2D unit)
+    private void _setupUnit(Node2D unit, AIStrategy? aiStrategy)
     {
-        if (AIStrategy is SquadStrategy strat)
-            strat.SquadInfo.AddUnit(unit, SquadRank.Frontline);
         unit.Configure<AIComponent>(ai =>
         {
-            ai.Strategy = AIStrategy;
-            ai.TargetChooseStrategy = TargetChooserStrategy;
+            ai.Strategy = aiStrategy;
         });
     }
 
     private async Task _spawnMembers(WaveDefinition wave, Node2D unitsContainer)
     {
+        var aiStrategy = AIStrategy.OnWaveSpawn();
+
         IsWaveSpawnComplete = false;
         // the state of this isn't saved to disk. if interrupted, the wave will be truncated
         foreach (var member in wave.WaveMembers ?? [])
@@ -76,7 +70,7 @@ public partial class SpawnPoint : Node2D
                         t.SetTeam(ti.Team);
                 });
                 unitsContainer.AddOwnedChild(unitScene);
-                _setupUnit(unitScene);
+                _setupUnit(unitScene, aiStrategy);
 
                 await this.GodotSleep(member.SpawnInterval);
             }

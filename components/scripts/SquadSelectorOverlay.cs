@@ -2,6 +2,7 @@
 using breakout.components.AIStrategies;
 using breakout.customResources;
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,23 +13,23 @@ public partial class SquadSelectorOverlay : Area2D
 {
     TeamInfo? PlayerTeam;
     List<Node2D> selectedUnits = [];
-    SquadInfo? selectedSquad;
+    SquadStrategy? selectedSquad;
 
     [Signal]
-    public delegate void OnSquadSetPositionEventHandler(SquadInfo squadInfo, Vector2 squadGlobalPosition, TeamInfo team);
+    public delegate void OnSquadSetPositionEventHandler(SquadStrategy squadInfo, Vector2 squadGlobalPosition, TeamInfo team);
 
     [Signal]
-    public delegate void OnSquadSelectedEventHandler(SquadInfo? squadInfo);
+    public delegate void OnSquadSelectedEventHandler(SquadStrategy? squadInfo);
 
     public bool Enabled;
 
     bool m1_click_drag;
-    Vector2 m1_start_drag;
-    Vector2 m1_end_drag;
+    Vector2? m1_start_drag;
+    Vector2? m1_end_drag;
 
     bool m2_click_drag;
-    Vector2 m2_start_drag;
-    Vector2 m2_end_drag;
+    Vector2? m2_start_drag;
+    Vector2? m2_end_drag;
 
     public override void _Ready()
     {
@@ -57,9 +58,10 @@ public partial class SquadSelectorOverlay : Area2D
                 m1_click_drag = false;
                 QueueRedraw();
                 OnFinishSelection();
+                m1_end_drag = m1_start_drag = null;
                 break;
-            case InputEventMouseMotion when Input.IsMouseButtonPressed(MouseButton.Left):
-                if (!m1_click_drag && GetGlobalMousePosition().DistanceTo(m1_start_drag) > 5.0f)
+            case InputEventMouseMotion when Input.IsMouseButtonPressed(MouseButton.Left) && m1_start_drag.HasValue:
+                if (!m1_click_drag && GetGlobalMousePosition().DistanceTo(m1_start_drag.Value) > 5.0f)
                 {
                     m1_click_drag = true;
                 }
@@ -75,10 +77,11 @@ public partial class SquadSelectorOverlay : Area2D
                 m2_end_drag = m2_start_drag = GetGlobalMousePosition();
                 m2_click_drag = true;
                 break;
-            case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right:
+            case InputEventMouseButton mouseEvent when !mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right && m2_start_drag.HasValue:
                 m2_click_drag = false;
                 QueueRedraw();
-                NewOrExistingSquad(m2_start_drag);
+                NewOrExistingSquad(m2_start_drag.Value);
+                m2_start_drag = m2_end_drag = null;
                 break;
             case InputEventMouseMotion when Input.IsMouseButtonPressed(MouseButton.Right):
                 m2_end_drag = GetGlobalMousePosition();
@@ -105,15 +108,15 @@ public partial class SquadSelectorOverlay : Area2D
     private void _on_DoubleClick(Node2D unit, MouseButton b)
     {
         if (!Enabled) return;
-        if (b == MouseButton.Left && GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss && ss.SquadInfo is SquadInfo squad)
+        if (b == MouseButton.Left && GetComponent.TryGetAIComponent(unit, out var ai) && ai?.Strategy is SquadStrategy ss)
         {
-            _selectUnit([.. squad.Members.Keys.Select(GetTree().Root.GetNode<Node2D>)]);
+            _selectUnit(this.SquadMembers(ss));
         }
     }
 
-    private void _toggleUnit(List<Node2D> units)
+    private void _toggleUnit(Godot.Collections.Array<Node2D> units)
     {
-        List<Node2D> selection = [..selectedUnits];
+        Godot.Collections.Array<Node2D> selection = [..selectedUnits]; // duplicating this list so we can toggle
         foreach (var unit in units)
         {
             if (!selection.Remove(unit))
@@ -122,19 +125,19 @@ public partial class SquadSelectorOverlay : Area2D
         _selectUnit(selection);
     }
 
-    private void _selectUnit(List<Node2D> units)
+    private void _selectUnit(Godot.Collections.Array<Node2D> units)
     {
         selectedSquad = null;
         foreach (var unit in selectedUnits)
-            if (GetComponent.TryGetSelectableComponent(unit, out var selectable) && selectable.IsSelected && (!units.Contains(unit) || selectable.Reselectable))
+            if (unit.TryGetComponent<SelectableComponent>(out var selectable) && selectable.IsSelected && (!units.Contains(unit) || selectable.Reselectable))
                 selectable.Deselect();
         selectedUnits.Clear();
         foreach (var unit in units)
         {
             // select unit only if it can be multi-selected or if it is the only unit selected
-            if (GetComponent.TryGetSelectableComponent(unit, out var selectable) && selectable.IsSelected == false && (selectable.CanMultiSelect || units.Count == 1))
+            if (unit.TryGetComponent<SelectableComponent>(out var selectable) && selectable.IsSelected == false && (selectable.CanMultiSelect || units.Count == 1))
             {
-                var teamMatch = !GetComponent.TryGetTeamComponent(unit, out var team) || team.Team is null || team.Team == PlayerTeam;
+                var teamMatch = !unit.TryGetComponent<TeamComponent>(out var team) || team.Team is null || team.Team == PlayerTeam;
                 if (!teamMatch) continue;
                 selectable.Select();
                 selectedUnits.Add(unit);
@@ -146,14 +149,17 @@ public partial class SquadSelectorOverlay : Area2D
 
     public void OnFinishSelection()
     {
+        if (m1_start_drag is not Vector2 start || m1_end_drag is not Vector2 end)
+            return;
+
         Rect2 selectionRect = new(
-            new Vector2(Mathf.Min(m1_start_drag.X, m1_end_drag.X), Mathf.Min(m1_start_drag.Y, m1_end_drag.Y)),
-            new Vector2(Mathf.Abs(m1_end_drag.X - m1_start_drag.X), Mathf.Abs(m1_end_drag.Y - m1_start_drag.Y))
+            new Vector2(Mathf.Min(start.X, end.X), Mathf.Min(start.Y, end.Y)),
+            new Vector2(Mathf.Abs(end.X - start.X), Mathf.Abs(end.Y - start.Y))
         );
         var units = new List<Node2D>();
         foreach (var unit in GetNode("%Units").GetChildren().Cast<Node2D>())
         {
-            if (GetComponent.TryGetSelectableComponent(unit, out var selectable))
+            if (unit.TryGetComponent<SelectableComponent>(out var selectable))
             {
                 if (selectionRect.HasPoint(selectable.GlobalPosition))
                 {
@@ -169,12 +175,15 @@ public partial class SquadSelectorOverlay : Area2D
         if (selectedSquad is null)
             CheckAllSameSquad();
 
-        var facingDirection = m2_end_drag.IsEqualApprox(m2_start_drag) ? Vector2.Up : (m2_end_drag - m2_start_drag).Normalized();
+        if (m2_start_drag is not Vector2 start || m2_end_drag is not Vector2 end)
+            return;
+
+        var facingDirection = end.IsEqualApprox(start) ? Vector2.Up : (end - start).Normalized();
         // if the selected squad matches the selected units, return it
-        if (selectedSquad is not null && selectedSquad.Members.Keys.ToHashSet().SetEquals(selectedUnits.Select(x => x.GetPath()).ToHashSet()))
+        if (selectedSquad is not null && selectedSquad.PlayerControllable && this.SquadMembers(selectedSquad).ToHashSet().SetEquals(selectedUnits))
         {
 #if TOOLS
-            GD.Print($"Reusing existing squad with {selectedSquad.Members.Count} members");
+            GD.Print("Reusing existing squad");
 #endif
             selectedSquad.FacingDirection = facingDirection;
             EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);
@@ -182,27 +191,20 @@ public partial class SquadSelectorOverlay : Area2D
         }
 
         // set up a new squad
-        var squad_info = new SquadInfo
-        {
-            FacingDirection = facingDirection,
-        };
+        GD.Print($"Setup new squad for {selectedUnits.Count} units");
         var strategy = new SquadStrategy
         {
-            SquadInfo = squad_info,
+            FacingDirection = facingDirection,
+            PlayerControllable = true,
         };
 
         foreach (var unit in selectedUnits)
         {
-            if (GetComponent.TryGetAIComponent(unit, out var ai) && ai.Strategy is SquadStrategy ss && ss.SquadInfo is not null)
-            {
-                squad_info.AddUnit(unit, ss.SquadInfo.UnitRanks.TryGetValue(unit.GetPath(), out var rank) ? rank : SquadRank.Frontline);
-                ss.SquadInfo.RemoveUnit(unit);
+            if (GetComponent.TryGetAIComponent(unit, out var ai))
                 ai.Strategy = strategy;
-            }
-            else
-                squad_info.AddUnit(unit, SquadRank.Frontline);
         }
-        selectedSquad = squad_info;
+        selectedSquad = strategy;
+        GlobalSignals.Instance?.SquadCreate(strategy);
         EmitSignalOnSquadSetPosition(selectedSquad, position, PlayerTeam);
     }
 
@@ -211,22 +213,26 @@ public partial class SquadSelectorOverlay : Area2D
         DrawSetTransform(-GlobalPosition);
         if (m1_click_drag)
         {
+            if (m1_start_drag is not Vector2 start || m1_end_drag is not Vector2 end)
+                return;
             DrawRect(new Rect2(
-                new Vector2(Mathf.Min(m1_start_drag.X, m1_end_drag.X), Mathf.Min(m1_start_drag.Y, m1_end_drag.Y)),
-                new Vector2(Mathf.Abs(m1_end_drag.X - m1_start_drag.X), Mathf.Abs(m1_end_drag.Y - m1_start_drag.Y))
+                new Vector2(Mathf.Min(start.X, end.X), Mathf.Min(start.Y, end.Y)),
+                new Vector2(Mathf.Abs(end.X - start.X), Mathf.Abs(end.Y - start.Y))
             ), PlayerTeam?.Color ?? Colors.Red, false, 2.0f);
         }
         if (m2_click_drag)
         {
-            var dist = m2_end_drag.DistanceTo(m2_start_drag);
-            var dir = (m2_end_drag - m2_start_drag).Normalized();
-            var end = m2_start_drag + dir * Mathf.Min(dist, 100f);
-            DrawDashedLine(m2_start_drag, end, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
-            DrawCircle(m2_start_drag, 10.0f, PlayerTeam?.Color ?? Colors.Blue, filled: false, width: 2.0f);
+            if (m2_start_drag is not Vector2 start || m2_end_drag is not Vector2 end)
+                return;
+            var dist = end.DistanceTo(start);
+            var dir = (end - start).Normalized();
+            var end_pos = start + dir * Mathf.Min(dist, 100f);
+            DrawDashedLine(start, end_pos, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
+            DrawCircle(start, 10.0f, PlayerTeam?.Color ?? Colors.Blue, filled: false, width: 2.0f);
             // draw arrowhead
             var perp = new Vector2(-dir.Y, dir.X);
-            DrawLine(end, end - dir * 20 + perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
-            DrawLine(end, end - dir * 20 - perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
+            DrawLine(end, end_pos - dir * 20 + perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
+            DrawLine(end, end_pos - dir * 20 - perp * 10, PlayerTeam?.Color ?? Colors.Blue, 2.0f);
         }
     }
 
@@ -238,7 +244,7 @@ public partial class SquadSelectorOverlay : Area2D
             .ToList();
         if (s.Count == 1 && s[0] is SquadStrategy ss)
         {
-            selectedSquad = ss.SquadInfo;
+            selectedSquad = ss;
         }
     }
 }
