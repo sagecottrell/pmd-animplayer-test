@@ -1,6 +1,5 @@
 using breakout.buildings;
 using breakout.components.AIStrategies;
-using breakout.components.scripts;
 using breakout.customResources;
 using Godot;
 
@@ -44,52 +43,29 @@ public partial class GlobalSignals : Node
     public delegate void OnSquadCreateEventHandler(SquadStrategy squadInfo);
     [Signal]
     public delegate void OnSquadDestroyEventHandler(SquadStrategy squadInfo);
+    [Signal]
+    public delegate void OnSpawnAttackEventHandler(MoveDefinition moveDefinition, Node2D caster);
 
-    public void GameOver()
-    {
-        EmitSignal(nameof(OnGameOver));
-    }
+    public void GameOver() => EmitSignal(nameof(OnGameOver));
 
-    public void DoubleClick(Node2D unit, MouseButton button)
-    {
-        EmitSignalOnDoubleClick(unit, button);
-    }
+    public void DoubleClick(Node2D unit, MouseButton button) => EmitSignalOnDoubleClick(unit, button);
 
-    public void SingleClick(Node2D units, MouseButton button)
-    {
-        EmitSignalOnSingleClick(units, button);
-    }
+    public void SingleClick(Node2D units, MouseButton button) => EmitSignalOnSingleClick(units, button);
 
-    public void UnitSpawn(Godot.Collections.Array<Node2D> units)
-    {
-        EmitSignalOnUnitSpawn(units);
-    }
+    public void UnitSpawn(Godot.Collections.Array<Node2D> units) => EmitSignalOnUnitSpawn(units);
 
-    public void PlayerResourcesChange(Godot.Collections.Dictionary<GameResourceNames, long> resources)
-    {
-        EmitSignalOnPlayerResourcesChange(resources);
-    }
+    public void PlayerResourcesChange(Godot.Collections.Dictionary<GameResourceNames, long> resources) => EmitSignalOnPlayerResourcesChange(resources);
 
-    public void RequestBuildingCreate(BuildableDefinition buildingDefinition)
-    {
-        EmitSignalOnRequestBuildingCreate(buildingDefinition);
-    }
+    public void RequestBuildingCreate(BuildableDefinition buildingDefinition) => EmitSignalOnRequestBuildingCreate(buildingDefinition);
 
-    public void BuildingCreate(BaseBuilding buildingDefinition)
-    {
-        EmitSignalOnBuildingCreate(buildingDefinition);
-    }
+    public void BuildingCreate(BaseBuilding buildingDefinition) => EmitSignalOnBuildingCreate(buildingDefinition);
 
-    public void BuildingCancel()
-    {
-        EmitSignalOnBuildingCancel();
-    }
+    public void BuildingCancel() => EmitSignalOnBuildingCancel();
 
-    public void MoveFinish(Node2D node)
-    {
-        EmitSignalOnMoveFinish(node);
-    }
+    public void MoveFinish(Node2D node) => EmitSignalOnMoveFinish(node);
 
     public void SquadCreate(SquadStrategy squadInfo) => EmitSignalOnSquadCreate(squadInfo);
     public void SquadDestroy(SquadStrategy squadInfo) => EmitSignalOnSquadDestroy(squadInfo);
+
+    public void SpawnAttack(MoveDefinition moveDefinition, Node2D caster) => EmitSignalOnSpawnAttack(moveDefinition, caster);
 }

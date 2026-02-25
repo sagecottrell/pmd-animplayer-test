@@ -110,8 +110,11 @@ public partial class PMDSprite : Node2D, INodeComponent
                     if (Player.CurrentAnimation == name)
                         break;
                     previous_animation = Player.CurrentAnimation;
+
+                    var cpos = anim == current_animation ? Player.CurrentAnimationPosition : 0;
                     current_animation = anim;
                     Player.Play(name);
+                    Player.Seek(cpos);
                     return;
                 }
             }

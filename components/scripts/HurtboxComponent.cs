@@ -17,24 +17,16 @@ public partial class HurtboxComponent : Area2D, INodeComponent
     [Export]
     public TeamComponent? Team;
 
-    public override void _Ready()
-    {
-        AreaEntered += OnHit;
-    }
-
-    public void OnHit(Area2D area)
+    public void OnHit(HitboxComponent area)
     {
         var node = area.GetParent();
-        if (GetComponent.TryGetHitboxComponent(node, out var hit))
+        if (_isFriendly(node))
         {
-            if (_isFriendly(node))
-            {
-                if (DeleteFriendlyFire)
-                    hit.DeleteFromFriendlyFire();
-                return;
-            }
-            EmitSignalOnHurt(hit.DamageSource);
+            if (DeleteFriendlyFire)
+                area.DeleteFromFriendlyFire();
+            return;
         }
+        EmitSignalOnHurt(area.DamageSource);
     }
 
     private bool _isFriendly(Node node)

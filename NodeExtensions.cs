@@ -2,6 +2,7 @@ using breakout.components.AIStrategies;
 using breakout.components.scripts;
 using Godot;
 using Godot.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -126,4 +127,9 @@ public static class NodeExtensions
     }
 
     public static Array<Node2D> SquadMembers(this Node node, SquadStrategy squad) => [.. node.GetTree().GetNodesInGroup(squad.SquadGroupName).Cast<Node2D>()];
+
+    public static void Log(this Node node, string message)
+    {
+        GD.Print($"{DateTime.Now}|{node.GetPath()}|{message}");
+    }
 }

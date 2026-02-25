@@ -14,3 +14,4 @@ dest_files=["res://.godot/imported/rapidash.zip-89ab3f02c601ad1ead0078052d6abbfc
 
 FPS=30
 loops="Walk,Idle,Sleep,Charge"
+Rename={}

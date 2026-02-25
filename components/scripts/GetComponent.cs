@@ -9,7 +9,9 @@ public partial class GetComponent : GodotObject
         where T : class, INodeComponent
     {
         component = null!;
-        if (node?.FindChild(typeof(T).Name, recursive: false) is T found)
+        if (node is null)
+            return false;
+        if (node.HasNode(typeof(T).Name) && node.GetNode(typeof(T).Name) is T found)
             component = found;
         return component != null;
     }

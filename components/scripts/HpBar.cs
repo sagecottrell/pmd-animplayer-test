@@ -2,7 +2,8 @@ using Godot;
 
 namespace breakout.components.scripts;
 
-public partial class HpBar : HBoxContainer
+[GlobalClass]
+public partial class HpBar : HBoxContainer, INodeComponent
 {
     [Export]
     public HealthComponent? Health { get; set; }

@@ -57,6 +57,8 @@ public partial class GameRoot : Node2D, IGameState
                 selectorOverlay.Enabled = true;
                 building.Configure<TeamComponent>(teampCompt => teampCompt.SetTeam(PlayerTeam));
             };
+            signals.OnSpawnAttack += _signals_OnSpawnAttack;
+            signals.OnMoveFinish += _signals_OnMoveFinish;
         }
 
         if (GetNode("%TopUI").TryGetComponent<UIComponent>(out var component))
@@ -70,6 +72,18 @@ public partial class GameRoot : Node2D, IGameState
             AddChild(b);
             b.Configure<TeamComponent>(teamComp => teamComp.SetTeam(PlayerTeam));
         }
+    }
+
+    private void _signals_OnMoveFinish(Node2D moveNode)
+    {
+        moveNode.QueueFree();
+    }
+
+    private void _signals_OnSpawnAttack(MoveDefinition moveDefinition, Node2D caster)
+    {
+        // todo: pull node from pool to avoid allocation
+        //GD.Print($"Spawning attack: {moveDefinition}");
+        moveDefinition.SpawnMove(UnitsContainer, caster, null);
     }
 
     [Export]

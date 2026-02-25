@@ -37,6 +37,8 @@ metadata/_edit_lock_ = true
 
 [node name="SquadSelectorOverlay" parent="." unique_id=1643873305 instance=ExtResource("4_a4rlw")]
 position = Vector2(-3618, -3645)
+monitoring = false
+monitorable = false
 
 [node name="SquadContainer" type="Node2D" parent="." unique_id=2042773940 node_paths=PackedStringArray("FlagScenePrefab")]
 unique_name_in_owner = true
@@ -84,11 +86,13 @@ Resources = Dictionary[int, int]({
 4: 34221
 })
 
-[node name="UIComponent" type="CanvasLayer" parent="CanvasLayer/TopUI" unique_id=21304570]
+[node name="UIComponent" type="CanvasLayer" parent="CanvasLayer/TopUI" unique_id=21304570 node_paths=PackedStringArray("NeutralUI")]
 script = ExtResource("9_a4rlw")
-Neutral_Scene = ExtResource("6_drpm8")
+NeutralUI = NodePath("GameplayMenu")
 OthersCanStack = true
 metadata/_custom_type_script = "uid://dau52ov73xxir"
+
+[node name="GameplayMenu" parent="CanvasLayer/TopUI/UIComponent" unique_id=1282685347 instance=ExtResource("6_drpm8")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1844495793]
 position = Vector2(286, 374)

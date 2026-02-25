@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://cekj7sr1qnqkd" path="res://buildings/barracks.tscn" id="6_63i5o"]
 [ext_resource type="Script" uid="uid://ddky4a70rckje" path="res://enemySpawn/spawnStrategies/SpawnTimerStrategy.cs" id="6_bsx1b"]
 [ext_resource type="Script" uid="uid://c5ssukfbjse5w" path="res://components/AIStrategies/TargetChoose/TargetByTeam.cs" id="7_8sk6f"]
+[ext_resource type="Script" uid="uid://cvlopqjmfmjsr" path="res://components/AIStrategies/DirectPursuitStrategy.cs" id="7_dxwkm"]
+[ext_resource type="Script" uid="uid://c2xin005lx0x8" path="res://components/AIStrategies/Attacking/DirectAttackStrategy.cs" id="7_lc3nw"]
 [ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="8_bsx1b"]
 [ext_resource type="Script" uid="uid://btcr8x2n1qj5g" path="res://enemySpawn/SpawnPoint.cs" id="8_tuf7a"]
 [ext_resource type="Script" uid="uid://bejua61o27cdj" path="res://components/AIStrategies/SquadStrategy.cs" id="9_dxwkm"]
@@ -19,16 +21,24 @@
 [ext_resource type="Script" uid="uid://fo40l6kd7jju" path="res://customResources/WaveMember.cs" id="16_j6knm"]
 [ext_resource type="Script" uid="uid://yvoxwo2m0lg0" path="res://enemySpawn/spawnStrategies/SpawnPointWaitComplete.cs" id="18_8sk6f"]
 
+[sub_resource type="Resource" id="Resource_dxwkm"]
+script = ExtResource("7_dxwkm")
+
+[sub_resource type="Resource" id="Resource_j6knm"]
+script = ExtResource("7_lc3nw")
+
 [sub_resource type="Resource" id="Resource_lc3nw"]
 script = ExtResource("7_8sk6f")
 TargetTeams = 1
-Kind = 2
+Kind = 3
 metadata/_custom_type_script = "uid://c5ssukfbjse5w"
 
 [sub_resource type="Resource" id="Resource_mcani"]
 script = ExtResource("9_dxwkm")
 SquadGroupName = "squad-639065237113753256"
 TargetChooseStrategy = SubResource("Resource_lc3nw")
+StrategyApproach = SubResource("Resource_dxwkm")
+StrategyAttack = SubResource("Resource_j6knm")
 
 [sub_resource type="Resource" id="Resource_0r3v0"]
 script = ExtResource("16_j6knm")
@@ -71,7 +81,6 @@ script = ExtResource("5_55yl8")
 Waves = Array[ExtResource("10_n8iyc")]([ExtResource("11_jclyi"), SubResource("Resource_16x4k")])
 LoopWaves = Array[ExtResource("10_n8iyc")]([ExtResource("11_jclyi")])
 SpawnPoint = NodePath("../Barracks/SpawnPoint")
-Enabled = false
 metadata/_custom_type_script = "uid://6qd2ir0elqfu"
 
 [node name="SpawnBlockedRemoteStrategy" type="Node" parent="SpawnManager" unique_id=1945076946 node_paths=PackedStringArray("SpawnAllow")]

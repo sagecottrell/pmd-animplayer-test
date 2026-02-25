@@ -9,6 +9,7 @@
 [sub_resource type="Resource" id="Resource_41fty"]
 script = ExtResource("3_bqwup")
 PokeDefinition = ExtResource("3_v53nr")
+Level = 1
 metadata/_custom_type_script = "uid://fo40l6kd7jju"
 
 [resource]

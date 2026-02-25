@@ -25,9 +25,12 @@ public partial class HealthComponent : Node, INodeComponent
         base._Ready();
         CurrentHealth = MaxHealth;
     }
-    public void TakeDamage(DamageSource amount)
+    public void TakeDamage(DamageSource? amount)
     {
+        if (amount is null)
+            return;
         CurrentHealth -= amount.Amount;
+        EmitSignalOnHpChange(amount);
         if (CurrentHealth <= 0)
         {
             CurrentHealth = 0;

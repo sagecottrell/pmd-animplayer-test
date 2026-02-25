@@ -13,6 +13,10 @@
 [ext_resource type="Script" uid="uid://doibe2bphjrqp" path="res://components/scripts/PokeTypeComponent.cs" id="9_gjqrm"]
 [ext_resource type="PackedScene" uid="uid://ccdy4av1y2lyv" path="res://components/HPBar.tscn" id="11_88qym"]
 [ext_resource type="Script" uid="uid://dpy6x3an40t1w" path="res://components/scripts/SpeedComponent.cs" id="13_crb5d"]
+[ext_resource type="Script" uid="uid://vdqq43xyssg8" path="res://components/scripts/AttackSpawnComponent.cs" id="14_a8fh5"]
+[ext_resource type="Script" uid="uid://b7xdp5x5yn0te" path="res://components/scripts/UnitLevelComponent.cs" id="15_43roh"]
+[ext_resource type="Resource" uid="uid://dpwsp6l84mnq5" path="res://moves/water-gun.tres" id="16_ceaa5"]
+[ext_resource type="Resource" uid="uid://d24m008wnvl4s" path="res://poke_defs/primarina.tres" id="17_03wmm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_88qym"]
 friction = 0.0
@@ -40,6 +44,9 @@ custom_integrator = true
 script = ExtResource("1_x6hyg")
 
 [node name="AggroArea" type="Area2D" parent="." unique_id=1394627546]
+collision_layer = 0
+input_pickable = false
+monitorable = false
 script = ExtResource("2_crb5d")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AggroArea" unique_id=11455998]
@@ -70,7 +77,11 @@ script = ExtResource("4_ic3c0")
 metadata/_custom_type_script = "uid://b6epatdk0ucc"
 
 [node name="HurtboxComponent" type="Area2D" parent="." unique_id=194303979 node_paths=PackedStringArray("Team")]
+collision_mask = 0
+input_pickable = false
+monitoring = false
 script = ExtResource("5_ic3c0")
+DeleteFriendlyFire = false
 Team = NodePath("../TeamComponent")
 metadata/_custom_type_script = "uid://c2noffquab3oc"
 
@@ -79,6 +90,8 @@ shape = SubResource("CircleShape2D_1bet7")
 debug_color = Color(0.93709373, 0.23481286, 0.24235511, 0.41960785)
 
 [node name="UnitClickAreaComponent" type="Area2D" parent="." unique_id=1061162630]
+collision_layer = 0
+collision_mask = 0
 input_pickable = false
 script = ExtResource("7_uobji")
 metadata/_custom_type_script = "uid://c7vy4xm46n2yw"
@@ -111,3 +124,13 @@ HideIfFull = true
 [node name="SpeedComponent" type="Node" parent="." unique_id=550317145]
 script = ExtResource("13_crb5d")
 Speed = 100.0
+
+[node name="AttackSpawnComponent" type="Node2D" parent="." unique_id=1895571901]
+script = ExtResource("14_a8fh5")
+metadata/_custom_type_script = "uid://vdqq43xyssg8"
+
+[node name="UnitLevelComponent" type="Node" parent="." unique_id=1083902992]
+script = ExtResource("15_43roh")
+Move1 = ExtResource("16_ceaa5")
+BaseDefinition = ExtResource("17_03wmm")
+metadata/_custom_type_script = "uid://b7xdp5x5yn0te"

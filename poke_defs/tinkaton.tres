@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PokeDefinition" format=3 uid="uid://b2pgih65mhxsj"]
+
+[ext_resource type="AnimationLibrary" uid="uid://e1ylv0dvhu04" path="res://pmd_zips/tinkaton.zip" id="1_6sgh1"]
+[ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="2_0x2a5"]
+[ext_resource type="Texture2D" uid="uid://cr2qjto1pvopt" path="res://units/icons/tinkaton.png" id="3_0x2a5"]
+
+[resource]
+script = ExtResource("2_0x2a5")
+Name = "Tinkaton"
+Sprite = ExtResource("3_0x2a5")
+AnimationLibrary = ExtResource("1_6sgh1")
+Type1 = 18
+Type2 = 17
+LevelupMoveset = {}
+metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

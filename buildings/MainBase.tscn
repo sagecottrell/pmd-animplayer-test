@@ -9,10 +9,40 @@ shader = ExtResource("2_ldpqt")
 shader_parameter/team_color = Vector3(0, 0, 0)
 shader_parameter/replace_color = Vector3(0, 0, 0)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ldpqt"]
+radius = 26.0
+height = 108.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ldpqt"]
+radius = 53.235325
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_75lko"]
+radius = 66.0
+
 [node name="BaseBuilding" unique_id=256090950 node_paths=PackedStringArray("Sprite") instance=ExtResource("1_ba7wm")]
 Sprite = NodePath("Sprite2D")
+
+[node name="SelectableComponent" parent="." index="0" unique_id=882257511 node_paths=PackedStringArray("SelectionShape")]
+SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." index="1" unique_id=681457032]
 material = SubResource("ShaderMaterial_75lko")
 position = Vector2(0, -20)
 texture = ExtResource("2_mjxyq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" parent_id_path=PackedInt32Array(1696262461) index="0" unique_id=146143410]
+position = Vector2(-6.999999, 14)
+shape = SubResource("CapsuleShape2D_ldpqt")
+debug_color = Color(0.102933966, 0.64845014, 0, 0.41960785)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" parent_id_path=PackedInt32Array(1442108352) index="0" unique_id=274096290]
+shape = SubResource("CircleShape2D_ldpqt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" parent_id_path=PackedInt32Array(507804593) index="0" unique_id=5305818]
+shape = SubResource("CircleShape2D_75lko")
+
+[node name="HpBar" parent="." index="8" unique_id=1343319015]
+offset_left = -42.0
+offset_top = -56.0
+offset_right = 43.0
+offset_bottom = -39.0

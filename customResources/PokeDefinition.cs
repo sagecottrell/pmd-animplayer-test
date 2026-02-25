@@ -1,3 +1,4 @@
+using breakout.components.scripts;
 using Godot;
 using Godot.Collections;
 
@@ -23,16 +24,54 @@ public partial class PokeDefinition : Resource
     public Array<PokeDefinition> Evolutions { get; set; } = [];
 
     [Export]
-    [ExportGroup("Stats")]
-    public int Stat_HP { get; set; } = 10;
+    public LevelXPRate XPRate { get; set; } = LevelXPRate.MediumFast;
+
     [Export]
-    public int Stat_Attack { get; set; } = 10;
+    [ExportGroup("StatsPerLevel")]
+    public float HitPoints_PL { get; set; } = 1;
     [Export]
-    public int Stat_Defense { get; set; } = 10;
+    public float Attack_PL { get; set; } = 1;
     [Export]
-    public int Stat_SpAttack { get; set; } = 10;
+    public float Defense_PL { get; set; } = 1;
     [Export]
-    public int Stat_SpDefense { get; set; } = 10;
+    public float SpAttack_PL { get; set; } = 1;
     [Export]
-    public int Stat_Speed { get; set; } = 10;
+    public float SpDefense_PL { get; set; } = 1;
+    [Export]
+    public float Speed_PL { get; set; } = 1;
+
+    static Dictionary<string, PokeDefinition>? _allDefinitions;
+    public static Dictionary<string, PokeDefinition> AllDefinitions => LoadDefs.LoadAll(ref _allDefinitions, "res://poke_defs/", r => r.Name);
+
+    public void ConfigureUnit(Node2D unit, int level)
+    {
+        unit.Configure<PMDSprite>(p => p.Sprites = AnimationLibrary);
+        unit.Configure<PokeTypeComponent>(t =>
+        {
+            t.Type1 = Type1;
+            t.Type2 = Type2;
+            t.BaseDefinition = this;
+        });
+        unit.Configure<UnitLevelComponent>(m =>
+        {
+            m.Level = level;
+            m.BaseDefinition = this;
+            m.LevelupMoveset = LevelupMoveset;
+            m.HitPoints_PL = HitPoints_PL;
+            m.Attack_PL = Attack_PL;
+            m.Defense_PL = Defense_PL;
+            m.SpAttack_PL = SpAttack_PL;
+            m.SpDefense_PL = SpDefense_PL;
+            m.Speed_PL = Speed_PL;
+        });
+    }
+}
+
+public enum LevelXPRate
+{
+    Fast,
+    MediumFast,
+    MediumSlow,
+    Slow,
+    Erratic,
 }

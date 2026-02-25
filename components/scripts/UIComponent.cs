@@ -16,11 +16,11 @@ public partial class UIComponent : CanvasLayer, INodeComponent
     }
 
     [Export]
-    public PackedScene? SameTeam_Scene;
+    public Control? SameTeamUI;
     [Export]
-    public PackedScene? DifferentTeam_Scene;
+    public Control? DifferentTeamUI;
     [Export]
-    public PackedScene? Neutral_Scene;
+    public Control? NeutralUI;
 
     [Export]
     /// if true, other UI components should restore this one when they hide themselves
@@ -28,19 +28,28 @@ public partial class UIComponent : CanvasLayer, INodeComponent
 
     static UIComponent? currentDisplay;
     static readonly Stack<UIComponent> displayStack = [];
-    Node? ui;
+    Control? ui;
     UIType currentType = UIType.None;
+
+    public override void _Ready()
+    {
+        foreach (var child in GetChildren())
+        {
+            if (child == SameTeamUI || child == DifferentTeamUI || child == NeutralUI)
+                RemoveChild(child);
+        }
+    }
 
     public void ShowUI()
     {
-        var scene = Neutral_Scene;
+        var scene = NeutralUI;
         var newType = UIType.Neutral;
         if (this.TryGetContext<IGameState>(out var gameState) &&
             gameState.PlayerTeam is TeamInfo playerTeam &&
             this.TryGetAncestorWithComponent<TeamComponent>(out var _, out var unitComponent) &&
             unitComponent.Team is TeamInfo unitTeam)
         {
-            scene = unitTeam == playerTeam ? SameTeam_Scene : DifferentTeam_Scene;
+            scene = unitTeam == playerTeam ? SameTeamUI : DifferentTeamUI;
             newType = unitTeam == playerTeam ? UIType.SameTeam : UIType.DifferentTeam;
         }
         if (scene is null || newType == currentType)
@@ -51,7 +60,7 @@ public partial class UIComponent : CanvasLayer, INodeComponent
         }
         currentDisplay = this;
         currentType = newType;
-        ui ??= scene.Instantiate();
+        ui ??= scene;
         AddChild(ui);
     }
 
@@ -59,7 +68,7 @@ public partial class UIComponent : CanvasLayer, INodeComponent
     {
         currentDisplay = null;
         currentType = UIType.None;
-        ui?.QueueFree();
+        RemoveChild(ui);
         ui = null;
 
         if (displayStack.TryPop(out var nextDisplay))
@@ -72,7 +81,7 @@ public partial class UIComponent : CanvasLayer, INodeComponent
     {
         displayStack.Push(this);
         currentType = UIType.None;
-        ui?.GetParent().RemoveChild(ui);
+        RemoveChild(ui);
     }
 
     public bool Displayed() => currentType != UIType.None;

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PokeDefinition" format=3 uid="uid://dhh0kfdypduyx"]
+
+[ext_resource type="AnimationLibrary" uid="uid://d3j8a732cb8qh" path="res://pmd_zips/rapidash.zip" id="1_ob1me"]
+[ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="2_yygpa"]
+[ext_resource type="Texture2D" uid="uid://btx6rfisotm7j" path="res://units/icons/rapidash.png" id="4_ob1me"]
+
+[resource]
+script = ExtResource("2_yygpa")
+Name = "Rapidash"
+Sprite = ExtResource("4_ob1me")
+AnimationLibrary = ExtResource("1_ob1me")
+Type1 = 2
+LevelupMoveset = {}
+metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

@@ -3,13 +3,41 @@
 [ext_resource type="PackedScene" uid="uid://ctstpyv0qcssy" path="res://buildings/BaseBuilding.tscn" id="1_p1778"]
 [ext_resource type="Shader" uid="uid://56gss4yrgaxn" path="res://buildings/teamcolor.gdshader" id="2_htohi"]
 [ext_resource type="Texture2D" uid="uid://cpcmcfa75mg8d" path="res://buildings/pmdtent.png" id="3_chnri"]
+[ext_resource type="PackedScene" uid="uid://2t50no3vese8" path="res://buildings/UIs/BasicUnitSpawnMenu.tscn" id="4_hbacj"]
 [ext_resource type="Script" uid="uid://bpiwhp8so7483" path="res://components/scripts/UnitSpawnerComponent.cs" id="4_htohi"]
 [ext_resource type="Resource" uid="uid://e1dofr77invt" path="res://teamPrefabs/enemyTeam1.tres" id="4_npt7d"]
+[ext_resource type="PackedScene" uid="uid://cfdwdenwybed7" path="res://units/BasicDirectUnit.tscn" id="7_wo8y3"]
+[ext_resource type="Script" uid="uid://cvlopqjmfmjsr" path="res://components/AIStrategies/DirectPursuitStrategy.cs" id="8_e4vci"]
+[ext_resource type="Script" uid="uid://bejua61o27cdj" path="res://components/AIStrategies/SquadStrategy.cs" id="8_qlwkr"]
+[ext_resource type="Script" uid="uid://c2xin005lx0x8" path="res://components/AIStrategies/Attacking/DirectAttackStrategy.cs" id="9_wthfb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_npt7d"]
 shader = ExtResource("2_htohi")
 shader_parameter/team_color = Vector3(0, 0, 0)
 shader_parameter/replace_color = Vector3(0, 0, 0)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qlwkr"]
+radius = 18.0
+height = 64.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qlwkr"]
+radius = 38.052597
+
+[sub_resource type="Resource" id="Resource_gsldo"]
+script = ExtResource("8_e4vci")
+
+[sub_resource type="Resource" id="Resource_7pbsm"]
+script = ExtResource("9_wthfb")
+
+[sub_resource type="Resource" id="Resource_xeafh"]
+script = ExtResource("8_qlwkr")
+SquadGroupName = "squad-639070450749276637"
+StrategyApproach = SubResource("Resource_gsldo")
+StrategyAttack = SubResource("Resource_7pbsm")
+metadata/_custom_type_script = "uid://bejua61o27cdj"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xeafh"]
+radius = 49.0
 
 [node name="Barracks" unique_id=1810618249 node_paths=PackedStringArray("Sprite") instance=ExtResource("1_p1778")]
 Sprite = NodePath("Pmdtent")
@@ -18,9 +46,38 @@ Sprite = NodePath("Pmdtent")
 material = SubResource("ShaderMaterial_npt7d")
 texture = ExtResource("3_chnri")
 
+[node name="SelectableComponent" parent="." index="1" unique_id=882257511 node_paths=PackedStringArray("SelectionShape")]
+SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" parent_id_path=PackedInt32Array(1696262461) index="0" unique_id=1278507733]
+position = Vector2(3.000001, 14)
+shape = SubResource("CapsuleShape2D_qlwkr")
+debug_color = Color(0.102933966, 0.64845014, 0, 0.41960785)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" parent_id_path=PackedInt32Array(1442108352) index="0" unique_id=1014336430]
+shape = SubResource("CircleShape2D_qlwkr")
+
+[node name="UIComponent" parent="." index="4" unique_id=1431863483 node_paths=PackedStringArray("SameTeamUI")]
+SameTeamUI = NodePath("BasicUnitSpawnMenu")
+
+[node name="BasicUnitSpawnMenu" parent="UIComponent" index="0" unique_id=814767482 instance=ExtResource("4_hbacj")]
+
 [node name="TeamComponent" parent="." index="5" unique_id=2141286606]
 Team = ExtResource("4_npt7d")
 
 [node name="UnitSpawnerComponent" type="Node2D" parent="." index="7" unique_id=149791121]
 script = ExtResource("4_htohi")
+SpawnScene = ExtResource("7_wo8y3")
+BaseSquadStrategy = SubResource("Resource_xeafh")
 metadata/_custom_type_script = "uid://bpiwhp8so7483"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" parent_id_path=PackedInt32Array(507804593) index="0" unique_id=1394073598]
+shape = SubResource("CircleShape2D_xeafh")
+
+[node name="HpBar" parent="." index="9" unique_id=1343319015]
+offset_left = -19.0
+offset_top = -38.0
+offset_right = 20.0
+offset_bottom = -34.0
+
+[connection signal="SpawnUnit" from="UIComponent/BasicUnitSpawnMenu" to="UnitSpawnerComponent" method="SpawnUnit"]

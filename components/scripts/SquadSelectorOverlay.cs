@@ -198,6 +198,13 @@ public partial class SquadSelectorOverlay : Area2D
             PlayerControllable = true,
         };
 
+        if (selectedSquad is not null)
+        {
+            strategy.StrategyApproach = selectedSquad.StrategyApproach;
+            strategy.StrategyAttack = selectedSquad.StrategyAttack;
+            strategy.TargetChooseStrategy = selectedSquad.TargetChooseStrategy;
+        }
+
         foreach (var unit in selectedUnits)
         {
             if (GetComponent.TryGetAIComponent(unit, out var ai))

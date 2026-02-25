@@ -6,12 +6,14 @@ namespace breakout.moves.components;
 [GlobalClass]
 public partial class AnimationFinish : AnimationPlayer, INodeComponent
 {
-    public void OnFinish(StringName _anim)
+    public override void _Ready()
     {
-        GlobalSignals.Instance?.MoveFinish(GetParent<Node2D>());
+        var lib = (AnimationLibrary)GetAnimationLibrary("").Duplicate();
+        RemoveAnimationLibrary("");
+        AddAnimationLibrary("", lib);
     }
 
-    public override void _EnterTree()
+    public void PlayAnimation()
     {
         Play(GetAnimationList()[0]);
     }

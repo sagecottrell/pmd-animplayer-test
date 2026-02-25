@@ -6,43 +6,30 @@
 [ext_resource type="Script" uid="uid://c3j0uf7ruio61" path="res://components/scripts/SelectableComponent.cs" id="4_ft1su"]
 [ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="5_nyv1e"]
 [ext_resource type="Script" uid="uid://b6epatdk0ucc" path="res://components/scripts/HealthComponent.cs" id="6_vsrpd"]
-[ext_resource type="PackedScene" uid="uid://2t50no3vese8" path="res://buildings/UIs/BasicUnitSpawnMenu.tscn" id="7_x8ix5"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w6qvt"]
-radius = 22.0
-height = 70.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_ggjgd"]
-radius = 38.052597
+[ext_resource type="Script" uid="uid://c2noffquab3oc" path="res://components/scripts/HurtboxComponent.cs" id="7_vsrpd"]
+[ext_resource type="PackedScene" uid="uid://ccdy4av1y2lyv" path="res://components/HPBar.tscn" id="8_x8ix5"]
 
 [node name="BaseBuilding" type="Node2D" unique_id=1529697322 groups=["Buildings"]]
 script = ExtResource("1_nyv1e")
 
-[node name="SelectableComponent" type="Node2D" parent="." unique_id=882257511 node_paths=PackedStringArray("SelectionShape")]
+[node name="SelectableComponent" type="Node2D" parent="." unique_id=882257511]
 script = ExtResource("4_ft1su")
-SelectionShape = NodePath("../UnitClickAreaComponent/CollisionShape2D")
 metadata/_custom_type_script = "uid://c3j0uf7ruio61"
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1696262461]
 position = Vector2(14, 14)
 rotation = 1.5707964
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=924390652]
-position = Vector2(0, 14)
-shape = SubResource("CapsuleShape2D_w6qvt")
-debug_color = Color(0.102933966, 0.64845014, 0, 0.41960785)
-
 [node name="UnitClickAreaComponent" type="Area2D" parent="." unique_id=1442108352]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+monitorable = false
 script = ExtResource("2_2idmy")
 metadata/_custom_type_script = "uid://c7vy4xm46n2yw"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UnitClickAreaComponent" unique_id=912124329]
-position = Vector2(0, 1)
-shape = SubResource("CircleShape2D_ggjgd")
-
 [node name="UIComponent" type="CanvasLayer" parent="." unique_id=1431863483]
 script = ExtResource("3_ppl22")
-SameTeam_Scene = ExtResource("7_x8ix5")
 metadata/_custom_type_script = "uid://dau52ov73xxir"
 
 [node name="TeamComponent" type="Node" parent="." unique_id=2141286606]
@@ -52,3 +39,16 @@ metadata/_custom_type_script = "uid://cedots6i0j0b6"
 [node name="HealthComponent" type="Node" parent="." unique_id=1150822795]
 script = ExtResource("6_vsrpd")
 metadata/_custom_type_script = "uid://b6epatdk0ucc"
+
+[node name="HurtboxComponent" type="Area2D" parent="." unique_id=507804593 node_paths=PackedStringArray("Team")]
+collision_mask = 0
+monitoring = false
+script = ExtResource("7_vsrpd")
+Team = NodePath("../TeamComponent")
+metadata/_custom_type_script = "uid://c2noffquab3oc"
+
+[node name="HpBar" parent="." unique_id=1343319015 node_paths=PackedStringArray("Health") instance=ExtResource("8_x8ix5")]
+offset_right = 48.0
+offset_bottom = 20.0
+Health = NodePath("../HealthComponent")
+HideIfFull = true

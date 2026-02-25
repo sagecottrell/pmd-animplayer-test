@@ -32,13 +32,13 @@ public partial class TargetByTeam : BaseTargetChooseStrategy
         var possibleTargets = new List<Node2D>();
         var teamNames = TargetTeams.ToString().Split(", ");
         var tree = unit.GetTree();
-        var kinds = Kind.ByName().ToList();
+        var kinds = Kind.ByStringName();
         foreach (var team in teamNames)
         {
             foreach (var teamComponent in tree.GetNodesInGroup(team))
             {
                 var node = teamComponent.GetParent();
-                if (kinds.Any(x => node.IsInGroup(x)) && node is Node2D n2d)
+                if (kinds.Any(node.IsInGroup) && node is Node2D n2d)
                     possibleTargets.Add(n2d);
             }
         }

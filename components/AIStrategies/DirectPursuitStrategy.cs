@@ -7,7 +7,6 @@ namespace breakout.components.AIStrategies;
 [GlobalClass]
 public partial class DirectPursuitStrategy : AIStrategy
 {
-    private bool _stopped = false;
     private float stopRadius = 20.0f;
     private float startRadius = 25.0f;
 
@@ -48,18 +47,19 @@ public partial class DirectPursuitStrategy : AIStrategy
     public override Vector2 Pathfind(Vector2 target, Node2D agent, AIComponent aIComponent)
     {
         var d = target - agent.GlobalPosition;
-        if (!_stopped)
+        using var stopped = new RefGetSetMeta<bool>(agent, MetadataNames.DirectPursuitStrategy.STOPPED, false);
+        if (!stopped.Value)
         {
             if (d.Length() < StopRadius)
             {
-                _stopped = true;
+                stopped.Value = true;
                 return agent.GlobalPosition;
             }
             return target;
         }
         if (d.Length() > StartRadius)
         {
-            _stopped = false;
+            stopped.Value = false;
             return target;
         }
         return agent.GlobalPosition;

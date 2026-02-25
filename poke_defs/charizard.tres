@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PokeDefinition" format=3 uid="uid://c5o3qwtt6s0rs"]
+
+[ext_resource type="AnimationLibrary" uid="uid://7qebx2tamdmu" path="res://pmd_zips/charizard.zip" id="1_omaqb"]
+[ext_resource type="Script" uid="uid://bjdyyy7e16i2s" path="res://customResources/PokeDefinition.cs" id="2_c525s"]
+[ext_resource type="Texture2D" uid="uid://bpxsd5h0rnh6" path="res://units/icons/charizard.png" id="3_c525s"]
+
+[resource]
+script = ExtResource("2_c525s")
+Name = "Charizard"
+Sprite = ExtResource("3_c525s")
+AnimationLibrary = ExtResource("1_omaqb")
+Type1 = 2
+Type2 = 10
+LevelupMoveset = {}
+metadata/_custom_type_script = "uid://bjdyyy7e16i2s"

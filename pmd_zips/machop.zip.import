@@ -14,3 +14,4 @@ dest_files=["res://.godot/imported/machop.zip-e7225e6a433a9d9137ad49067f5cc160.r
 
 FPS=30
 loops="Walk,Idle,Sleep,Charge"
+Rename={}

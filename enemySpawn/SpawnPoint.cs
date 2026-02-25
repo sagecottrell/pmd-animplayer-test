@@ -36,14 +36,6 @@ public partial class SpawnPoint : Node2D
         return _spawnMembers(wave, unitsContainer);
     }
 
-    private void _setupUnit(Node2D unit, AIStrategy? aiStrategy)
-    {
-        unit.Configure<AIComponent>(ai =>
-        {
-            ai.Strategy = aiStrategy;
-        });
-    }
-
     private async Task _spawnMembers(WaveDefinition wave, Node2D unitsContainer)
     {
         var aiStrategy = AIStrategy.OnWaveSpawn();
@@ -55,22 +47,23 @@ public partial class SpawnPoint : Node2D
             if (member is null || member.PokeDefinition is null)
                 continue;
 
-            var a = member.PokeDefinition?.AnimationLibrary;
-
             for (var i = 0; i < member.Quantity; i++)
             {
                 var unitScene = SpawnScene?.Instantiate<Node2D>();
                 if (unitScene == null)
                     continue;
                 unitScene.GlobalPosition = GlobalPosition;
-                unitScene.Configure<PMDSprite>(s => s.Sprites = a);
+                member.PokeDefinition.ConfigureUnit(unitScene, member.Level);
                 unitScene.Configure<TeamComponent>(t =>
                 {
                     if ((TeamHolder ?? GetParent()).TryGetComponent<TeamComponent>(out var ti))
                         t.SetTeam(ti.Team);
                 });
                 unitsContainer.AddOwnedChild(unitScene);
-                _setupUnit(unitScene, aiStrategy);
+                unitScene.Configure<AIComponent>(ai =>
+                {
+                    ai.Strategy = aiStrategy;
+                });
 
                 await this.GodotSleep(member.SpawnInterval);
             }

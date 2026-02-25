@@ -1,5 +1,3 @@
-using breakout.components.AIStrategies;
-using breakout.components.scripts;
 using breakout.customResources;
 using Godot;
 using System.Collections.Generic;
@@ -8,68 +6,37 @@ namespace breakout.buildings.UIs;
 
 public partial class BasicUnitSpawnMenu : Control
 {
-    private UnitDefinition? _selectedUnit;
+    private PokeDefinition? _selectedUnit;
 
-    [Export]
-    public PackedScene? SpawnScene;
-
-    [Export]
-    public SquadStrategy BaseSquadStrategy = new();
+    [Signal]
+    public delegate void SpawnUnitEventHandler(PokeDefinition poke);
 
     public override void _Ready()
     {
         GetNode<Button>("%SpawnUnit").Pressed += OnSpawn;
-
-        BaseSquadStrategy.Target ??= this.TryGetContext<Node2D>(out var n2d) ? n2d : null;
-
         var selector = GetNode<MenuButton>("%PokeSelector");
         var popup = selector.GetPopup();
-        var resources = new Dictionary<long, UnitDefinition>();
-        foreach (var (id, res) in UnitDefinition.AllDefinitions)
+        var resources = new Dictionary<long, PokeDefinition>();
+        foreach (var (id, res) in PokeDefinition.AllDefinitions)
         {
-            popup.AddIconItem(res.Icon, res.Name, resources.Count);
+            popup.AddIconItem(res.Sprite, res.Name, resources.Count);
             resources[resources.Count] = res;
         }
         popup.IdPressed += (id) => pick(resources[id]);
         pick(resources[0]);
-
-        CallDeferred(nameof(_setupSquad));
     }
 
-    private void _setupSquad()
-    {
-        GlobalSignals.Instance?.SquadCreate(BaseSquadStrategy);
-    }
-
-    public void pick(UnitDefinition? def)
+    public void pick(PokeDefinition? def)
     {
         if (_selectedUnit == def || def is null) return;
         var selector = GetNode<MenuButton>("%PokeSelector");
-        selector.Icon = def.Icon;
+        selector.Icon = def.Sprite;
         _selectedUnit = def;
     }
 
     public void OnSpawn()
     {
-        if (SpawnScene == null || !this.TryGetContext<IGameState>(out var gameState) || !this.TryGetAncestorWithComponent<UnitSpawnerComponent>(out var building, out var spawnPoint))
-            return;
-        var newNode = SpawnScene.Instantiate<Node2D>();
-        GlobalSignals.Instance?.UnitSpawn([newNode]);
-
-        newNode.GlobalPosition = spawnPoint.GlobalPosition;
-        if (GetComponent.TryGetTeamComponent(newNode, out var teamComponent) && gameState.PlayerTeam is not null)
-            teamComponent.SetTeam(gameState.PlayerTeam);
-        if (GetComponent.TryGetPmdSprite(newNode, out var sprite) && _selectedUnit is not null)
-            sprite.Sprites = _selectedUnit.Sprites;
-        if (GetComponent.TryGetSelectableComponent(newNode, out var selectable))
-            selectable.UnselectedAlpha = 0.3f;
-        if (GetComponent.TryGetAIComponent(newNode, out var aIComponent))
-        {
-            aIComponent.Strategy = BaseSquadStrategy;
-            BaseSquadStrategy.AddUnit(newNode);
-        }
-        if (newNode.TryGetComponent<UnitClickAreaComponent>(out var click))
-            click.InputPickable = true;
+        EmitSignalSpawnUnit(_selectedUnit);
     }
 
 }

@@ -1,6 +1,7 @@
 using breakout.customResources;
 using Godot;
-using System.Numerics;
+using System;
+using System.Collections.Generic;
 
 namespace breakout.components.scripts;
 
@@ -34,11 +35,11 @@ public partial class TeamComponent : Node, INodeComponent
         if (!IsInsideTree())
             return;
         foreach (var group in GetGroups())
-            RemoveFromGroup(group);
+            this.RemoveFromGroupsAndSignal(group);
         if (Team?.Id is TeamIdEnum id)
         {
             foreach (var team in id.ToString().Split(", "))
-                AddToGroup(team);
+                this.AddToGroupsAndSignal(team);
         }
     }
 
@@ -48,6 +49,19 @@ public partial class TeamComponent : Node, INodeComponent
     }
 
     public bool EqTeam(TeamComponent? other, bool nullIsEq = false) => other?.Team?.Equals(Team) ?? (Team is null && nullIsEq);
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TeamComponent component &&
+               EqualityComparer<TeamInfo?>.Default.Equals(team, component.team);
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(team);
+        return hash.ToHashCode();
+    }
 
     public static bool operator ==(TeamComponent? self, TeamComponent? other) => self?.EqTeam(other) ?? false;
     public static bool operator !=(TeamComponent? self, TeamComponent? other) => !(self == other);

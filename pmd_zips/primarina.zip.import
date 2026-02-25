@@ -14,3 +14,4 @@ dest_files=["res://.godot/imported/primarina.zip-9ba40f40d21df6968417572bf2c45d5
 
 FPS=30
 loops="Walk,Idle,Sleep,Charge"
+Rename={}

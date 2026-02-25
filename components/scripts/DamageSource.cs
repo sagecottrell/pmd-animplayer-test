@@ -6,6 +6,6 @@ namespace breakout.components;
 public partial class DamageSource : GodotObject
 {
     public int Amount;
-    public object? Source;
+    public Node2D? Source;
     public string? DamageType;
 }

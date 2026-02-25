@@ -8,30 +8,9 @@
 [ext_resource type="Script" uid="uid://cedots6i0j0b6" path="res://components/scripts/TeamComponent.cs" id="6_gwmup"]
 [ext_resource type="Script" uid="uid://doibe2bphjrqp" path="res://components/scripts/PokeTypeComponent.cs" id="6_gysd2"]
 [ext_resource type="Script" uid="uid://ktinwb3xoqs5" path="res://moves/components/MoveRangeComponent.cs" id="7_f512d"]
-[ext_resource type="Script" uid="uid://du6inpdt2b48a" path="res://moves/components/AnimationFinish.cs" id="8_gwmup"]
-
-[sub_resource type="Animation" id="Animation_f512d"]
-resource_name = "MOVE"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_biybd"]
-_data = {
-&"MOVE": SubResource("Animation_f512d")
-}
+[ext_resource type="Script" uid="uid://bsgli6uyblutb" path="res://moves/components/CasterTeam.cs" id="10_q52k1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4nire"]
-radius = 59.135437
 
 [node name="Projectile" type="Node2D" unique_id=548642665]
 script = ExtResource("1_3gsgl")
@@ -44,32 +23,35 @@ metadata/_custom_type_script = "uid://b6p8j017sxid6"
 script = ExtResource("2_1uni3")
 metadata/_custom_type_script = "uid://cj6dytc2wumc7"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1753181712]
-libraries/ = SubResource("AnimationLibrary_biybd")
-script = ExtResource("8_gwmup")
-
 [node name="CircleComponent" type="Node2D" parent="." unique_id=1892287969 node_paths=PackedStringArray("TypeComponent")]
+z_index = 100
+z_as_relative = false
 script = ExtResource("4_f512d")
+Radius = 10.0
 Color = Color(0.3137255, 0.3764706, 0.88235295, 1)
 TypeComponent = NodePath("../PokeTypeComponent")
 
-[node name="PokeTypeComponent" type="Node" parent="." unique_id=1102846917]
-script = ExtResource("6_gysd2")
-Type1 = 15
-
 [node name="HitboxComponent" type="Area2D" parent="." unique_id=839998881]
+collision_layer = 0
+monitorable = false
 script = ExtResource("6_f512d")
 metadata/_custom_type_script = "uid://dwa56ossjmdkd"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" unique_id=1838810607]
 shape = SubResource("CircleShape2D_4nire")
 
+[node name="PokeTypeComponent" type="Node" parent="." unique_id=1102846917]
+script = ExtResource("6_gysd2")
+Type1 = 15
+
 [node name="TeamComponent" type="Node" parent="." unique_id=1308062487]
 script = ExtResource("6_gwmup")
 metadata/_custom_type_script = "uid://cedots6i0j0b6"
 
-[node name="MoveRangeComponent" type="Node" parent="." unique_id=236643251 node_paths=PackedStringArray("AnimationPlayer")]
+[node name="MoveRangeComponent" type="Node" parent="." unique_id=236643251 node_paths=PackedStringArray("NodesToAnimate")]
 script = ExtResource("7_f512d")
-AnimationPlayer = NodePath("../AnimationPlayer")
+NodesToAnimate = [NodePath("../CircleComponent"), NodePath("../HitboxComponent")]
 
-[connection signal="animation_finished" from="AnimationPlayer" to="AnimationPlayer" method="OnFinish"]
+[node name="CasterTeam" type="Node" parent="." unique_id=1498575351]
+script = ExtResource("10_q52k1")
+metadata/_custom_type_script = "uid://bsgli6uyblutb"
